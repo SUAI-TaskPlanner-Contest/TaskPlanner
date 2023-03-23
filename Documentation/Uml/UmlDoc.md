@@ -1,5 +1,7 @@
 Диаграмма развертывания
-![](Images/uml-deployment diagram.vsdx)
+
+![](Images/uml-deployment-diagram.svg)
 
 Диаграмма нашей базы данных
-![](Images/uml-db.vsdx)
+
+![](Images/uml-db.svg)
