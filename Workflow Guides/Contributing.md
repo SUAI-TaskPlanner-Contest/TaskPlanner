@@ -40,7 +40,7 @@ git clone https://github.com/SUAI-TaskPlanner-Contest/TaskPlanner.git
 <details>
 <summary>InteliJ</summary>
 
-![](./Images/Rider-open-repo.png)
+![](../Workflow%20Guides/Images/Rider-open-repo.png)
 
 </details>
 
@@ -54,7 +54,7 @@ git clone https://github.com/SUAI-TaskPlanner-Contest/TaskPlanner.git
 <details>
 <summary>Создание ветки в GitHub</summary>
 
-![](./Images/GitHub-create-branch.png)
+![](../Workflow%20Guides/Images/GitHub-create-branch.png)
 
 </details>
 
@@ -64,7 +64,7 @@ git clone https://github.com/SUAI-TaskPlanner-Contest/TaskPlanner.git
 <details>
 <summary>Настройки новой ветки</summary>
 
-![](./Images/Create-branch-dialog.png)
+![](../Workflow%20Guides/Images/Create-branch-dialog.png)
 
 </details>
 
@@ -82,14 +82,14 @@ git fetch origin
 <details>
 <summary>Аналогичная команда VS Code</summary>
 
-![](./Images/VS-Code-fetch.png)
+![](../Workflow%20Guides/Images/VS-Code-fetch.png)
 
 </details>
 
 <details>
 <summary>Аналогичная команда в InteliJ (View -> Tool Windows -> Git) </summary>
 
-![](./Images/Fetch-Rider.png)
+![](../Workflow%20Guides/Images/Fetch-Rider.png)
 
 </details>
 
@@ -105,14 +105,14 @@ git checkout 11-create-сontributing-file
 <details>
 <summary>Аналогичная команда VS Code</summary>
 
-![](./Images/Checkou-dialog.png)
+![](../Workflow%20Guides/Images/Checkou-dialog.png)
 
 </details>
 
 <details>
 <summary>Аналогичная команда InteliJ</summary>
 
-![](./Images/Rider-Checkout.png)
+![](../Workflow%20Guides/Images/Rider-Checkout.png)
 
 </details>
 
@@ -143,7 +143,7 @@ git add "название файла"
 <details>
 <summary>Та же операция в InteliJ</summary>
 
-![](/Images/Rider-git-add.png)
+![](../Workflow%20Guides/Images/Rider-git-add.png)
 
 </details>
 
@@ -170,14 +170,14 @@ git commit -a -m "Сообщение к коммиту"
 <details>
 <summary>Коммит в InteliJ</summary>
 
-![](./Images/Rider-commit.png)
+![](../Workflow%20Guides/Images/Rider-commit.png)
 
 </details>
 
 <details>
 <summary>Коммит в VS Code</summary>
 
-![](./Images/VS-Code-commit.png)
+![](../Workflow%20Guides/Images/VS-Code-commit.png)
 
 </details>
 
@@ -199,14 +199,14 @@ rebase весьма сложная команда. Подробно про не�
 <details>
 <summary>Пример в VS Code</summary>
 
-![](./Images/VS-code-rebase.png)
+![](../Workflow%20Guides/Images/VS-code-rebase.png)
 
 </details>
 
 <details>
 <summary>Пример в InteliJ</summary>
 
-![](./Images/Rider-rebase.png)
+![](../Workflow%20Guides/Images/Rider-rebase.png)
 
 </details>
 
@@ -225,7 +225,7 @@ rebase весьма сложная команда. Подробно про не�
 <details>
 <summary>Склеивание (сквош) коммитов в InteliJ</summary>
 
-![](./Images/Rider-squash.png)
+![](../Workflow%20Guides/Images/Rider-squash.png)
 
 </details>
 
@@ -243,6 +243,13 @@ rebase весьма сложная команда. Подробно про не�
 git push TaskPlanner "название локальной ветки":"название remote ветки"
 ```
 
+<details>
+<summary>Операция в InteliJ</summary>
+
+![](../Workflow%20Guides/Images/Rider-push.png)
+
+</details>
+
 Данная команда отправляет на удаленный репозиторий коммиты из выбранной вами ветки. Самая простая команда.
 
 2. Force push
@@ -253,6 +260,13 @@ _Игрушка дьявола_
 ```bash
 git push TaskPlanner "название локальной ветки":"название remote ветки" --force
 ```
+
+<details>
+<summary>Операция в InteliJ</summary>
+
+![](../Workflow%20Guides/Images/Rider-force-push.png)
+
+</details>
 
 Данная команда делает тоже самое, что и предыдущая. Но с большим отличием. Обычно push добавляет в remote ветку коммиты из вашей локальной ветки. Для этого необходимо, что бы ветки были синхронизированны (имеют начало в одном и том же коммите, и имеют одни и те же коммиты). Но после rebase, ваша ветка будет иметь начало в другом коммите. Поэтому обычный push будет невозможен. 
 
