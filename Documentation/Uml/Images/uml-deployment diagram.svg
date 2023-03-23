@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Создано Microsoft Visio, экспорт SVG uml-deployment diagram.svg Страница-1 -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="6.07683in" height="5.55549in"
+		viewBox="0 0 437.531 399.995" xml:space="preserve" color-interpolation-filters="sRGB" class="st9">
+	<v:documentProperties v:langID="1049" v:metric="true" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st2 {fill:#000000;font-family:Calibri;font-size:0.833336em}
+		.st3 {font-size:1em}
+		.st4 {fill:#000000;font-family:Calibri;font-size:1.00001em}
+		.st5 {fill:#ffffff}
+		.st6 {stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st7 {fill:#000000;font-family:Calibri;font-size:0.666664em}
+		.st8 {fill:#ffffff;stroke:#000000;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st9 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="NodeCount" v:prompt="" v:val="VT0(8):26"/>
+			<v:ud v:nameU="ArtiCount" v:prompt="" v:val="VT0(4):26"/>
+		</v:userDefs>
+		<title>Страница-1</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Контейнер" v:index="0"/>
+		<v:layer v:name="Сеть" v:index="1"/>
+		<v:layer v:name="Соединительная линия" v:index="2"/>
+		<g id="group134-1" transform="translate(89.5059,-205.596)" v:mID="134" v:groupContext="group" v:layerMember="0">
+			<v:userDefs>
+				<v:ud v:nameU="UMLShapeType" v:val="VT0(26):26"/>
+				<v:ud v:nameU="UMLObjectGUID" v:val="VT4()"/>
+				<v:ud v:nameU="UMLError" v:val="VT0(0):26"/>
+				<v:ud v:nameU="UMLVersion" v:val="VT4(2.X)"/>
+				<v:ud v:nameU="visDescription" v:val="VT4(Represents a run-time computational or physical resource.)"/>
+				<v:ud v:nameU="visVersion" v:val="VT0(17):26"/>
+				<v:ud v:nameU="StereoType" v:prompt="" v:val="VT0(1):5"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="MinWidth" v:prompt="" v:val="VT0(2.4015748031496):24"/>
+				<v:ud v:nameU="MinHeight" v:prompt="" v:val="VT0(0.70866141732283):24"/>
+				<v:ud v:nameU="msvStructureType" v:prompt="" v:val="VT4(Container)"/>
+				<v:ud v:nameU="msvShapeCategories" v:prompt="" v:val="VT4(ContainerStyleDefaults)"/>
+				<v:ud v:nameU="msvSDContainerMargin" v:prompt="" v:val="VT0(0.11811023622047):24"/>
+				<v:ud v:nameU="msvSDContainerResize" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDContainerLocked" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoHighlight" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoRibbon" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerStyle" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="msvSDContainerStyleCount" v:prompt="" v:val="VT0(14):26"/>
+				<v:ud v:nameU="msvSDContainerRequiredCategories" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="msvSDContainerExcludedCategories" v:prompt="" v:val="VT4(DoNotContain)"/>
+				<v:ud v:nameU="msvSDHeadingStyle" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDHeadingStyleCount" v:prompt="" v:val="VT0(4):26"/>
+				<v:ud v:nameU="HeadingSide" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="HeadingSpan" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="HeadingAlign" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="RTL" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="StereotypeOffset" v:prompt="" v:val="VT0(0.049299212598425):24"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(4):26"/>
+			</v:userDefs>
+			<title>Узел</title>
+			<g id="shape135-2" v:mID="135" v:groupContext="shape" v:layerMember="0" transform="translate(260.114,5.68434E-14)">
+				<title>Лист.135</title>
+				<path d="M0 400 L9 391 L9 205.85 L0 214.85 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape136-4" v:mID="136" v:groupContext="shape" v:layerMember="0" transform="translate(0,-185.15)">
+				<title>Лист.136</title>
+				<path d="M0 400 L260.11 400 L269.11 391 L9 391 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape137-6" v:mID="137" v:groupContext="shape" v:layerMember="0">
+				<title>Name</title>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<rect x="0" y="214.846" width="260.114" height="185.15" class="st1"/>
+			</g>
+			<g id="shape138-8" v:mID="138" v:groupContext="shape" v:layerMember="0" transform="translate(0,-161.597)">
+				<title>Class.11</title>
+				<desc>&#60;&#60;Ubuntu Device&#62;&#62;</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="130.057" cy="389.994" width="169.08" height="20.0036"/>
+				<text x="90" y="392.99" class="st2" v:langID="1049"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;<tspan
+							class="st3" v:langID="1033">Ubuntu Device</tspan>&#62;&#62;</text>			</g>
+			<g id="shape139-11" v:mID="139" v:groupContext="shape" v:layerMember="0" transform="translate(0,-142.743)">
+				<title>Лист.139</title>
+				<desc>Database Server</desc>
+				<v:userDefs>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(4):26"/>
+				</v:userDefs>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="130.057" cy="388.794" width="182.08" height="22.4037"/>
+				<text x="90.27" y="392.39" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Database Server</text>			</g>
+		</g>
+		<g id="shape140-13" v:mID="140" v:groupContext="shape" v:layerMember="1" transform="translate(126.321,-248.269)">
+			<title>Хранилище данных</title>
+			<desc>BoardDB</desc>
+			<v:custProps>
+				<v:cp v:nameU="Manufacturer" v:lbl="Изготовитель" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="ProductNumber" v:lbl="Код товара" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="PartNumber" v:lbl="Код позиции" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="ProductDescription" v:lbl="Описание товара" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="AssetNumber" v:lbl="Инвентарный номер" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="SerialNumber" v:lbl="Серийный номер" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="Location" v:lbl="Расположение" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="Building" v:lbl="Здание" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+				<v:cp v:nameU="Room" v:lbl="Комната" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+				<v:cp v:nameU="Department" v:lbl="Отдел" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visDescription"
+						v:val="VT4(Используйте для добавления базы данных, источника данных или устройства накопления данных в схему системы.)"/>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(0,0,0,0)" v:tabSpace="42.5197"/>
+			<v:textRect cx="37.5945" cy="367.1" width="75.19" height="46.9931"/>
+			<path d="M0 334.21 L0 390.6 A37.5945 9.39862 -180 1 0 75.19 390.6 L75.19 334.21 A37.5945 9.39862 -180 0 0 0 334.21 Z"
+					class="st5"/>
+			<path d="M0 334.21 L0 390.6 A37.5945 9.39862 -180 1 0 75.19 390.6 L75.19 334.21 A37.5945 9.39862 -180 0 0 0 334.21"
+					class="st6"/>
+			<path d="M0 334.21 A37.5945 9.39862 -180 0 0 75.19 334.21" class="st6"/>
+			<text x="23.26" y="369.5" class="st7" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>BoardDB</text>		</g>
+		<g id="shape141-18" v:mID="141" v:groupContext="shape" v:layerMember="1" transform="translate(240.451,-248.269)">
+			<title>Хранилище данных.141</title>
+			<desc>Nextcloud Calendar</desc>
+			<v:custProps>
+				<v:cp v:nameU="Manufacturer" v:lbl="Изготовитель" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="ProductNumber" v:lbl="Код товара" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="PartNumber" v:lbl="Код позиции" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="ProductDescription" v:lbl="Описание товара" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="AssetNumber" v:lbl="Инвентарный номер" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="SerialNumber" v:lbl="Серийный номер" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="Location" v:lbl="Расположение" v:type="0" v:sortKey="1" v:invis="false" v:ask="false"
+						v:langID="1049" v:val="VT4()"/>
+				<v:cp v:nameU="Building" v:lbl="Здание" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+				<v:cp v:nameU="Room" v:lbl="Комната" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+				<v:cp v:nameU="Department" v:lbl="Отдел" v:type="0" v:sortKey="1" v:invis="false" v:ask="false" v:langID="1049"
+						v:val="VT4()"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visDescription"
+						v:val="VT4(Используйте для добавления базы данных, источника данных или устройства накопления данных в схему системы.)"/>
+				<v:ud v:nameU="visVersion" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(0,0,0,0)" v:tabSpace="42.5197"/>
+			<v:textRect cx="37.5945" cy="367.1" width="75.19" height="46.9931"/>
+			<path d="M0 334.21 L0 390.6 A37.5945 9.39862 -180 1 0 75.19 390.6 L75.19 334.21 A37.5945 9.39862 -180 0 0 0 334.21 Z"
+					class="st5"/>
+			<path d="M0 334.21 L0 390.6 A37.5945 9.39862 -180 1 0 75.19 390.6 L75.19 334.21 A37.5945 9.39862 -180 0 0 0 334.21"
+					class="st6"/>
+			<path d="M0 334.21 A37.5945 9.39862 -180 0 0 75.19 334.21" class="st6"/>
+			<text x="5.65" y="369.5" class="st7" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>Nextcloud Calendar</text>		</g>
+		<g id="group152-23" transform="translate(0.25,-0.25)" v:mID="152" v:groupContext="group" v:layerMember="0">
+			<v:userDefs>
+				<v:ud v:nameU="UMLShapeType" v:val="VT0(26):26"/>
+				<v:ud v:nameU="UMLObjectGUID" v:val="VT4()"/>
+				<v:ud v:nameU="UMLError" v:val="VT0(0):26"/>
+				<v:ud v:nameU="UMLVersion" v:val="VT4(2.X)"/>
+				<v:ud v:nameU="visDescription" v:val="VT4(Represents a run-time computational or physical resource.)"/>
+				<v:ud v:nameU="visVersion" v:val="VT0(17):26"/>
+				<v:ud v:nameU="StereoType" v:prompt="" v:val="VT0(1):5"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="MinWidth" v:prompt="" v:val="VT0(2.4015748031496):24"/>
+				<v:ud v:nameU="MinHeight" v:prompt="" v:val="VT0(0.70866141732283):24"/>
+				<v:ud v:nameU="msvStructureType" v:prompt="" v:val="VT4(Container)"/>
+				<v:ud v:nameU="msvShapeCategories" v:prompt="" v:val="VT4(ContainerStyleDefaults)"/>
+				<v:ud v:nameU="msvSDContainerMargin" v:prompt="" v:val="VT0(0.11811023622047):24"/>
+				<v:ud v:nameU="msvSDContainerResize" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDContainerLocked" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoHighlight" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoRibbon" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerStyle" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="msvSDContainerStyleCount" v:prompt="" v:val="VT0(14):26"/>
+				<v:ud v:nameU="msvSDContainerRequiredCategories" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="msvSDContainerExcludedCategories" v:prompt="" v:val="VT4(DoNotContain)"/>
+				<v:ud v:nameU="msvSDHeadingStyle" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDHeadingStyleCount" v:prompt="" v:val="VT0(4):26"/>
+				<v:ud v:nameU="HeadingSide" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="HeadingSpan" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="HeadingAlign" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="RTL" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="StereotypeOffset" v:prompt="" v:val="VT0(0.049299212598425):24"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(5):26"/>
+			</v:userDefs>
+			<title>Узел.152</title>
+			<g id="shape153-24" v:mID="153" v:groupContext="shape" v:layerMember="0" transform="translate(201.26,5.68434E-14)">
+				<title>Лист.153</title>
+				<path d="M0 400 L9 391 L9 249.21 L0 258.21 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape154-26" v:mID="154" v:groupContext="shape" v:layerMember="0" transform="translate(0,-141.783)">
+				<title>Лист.154</title>
+				<path d="M0 400 L201.26 400 L210.26 391 L9 391 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape155-28" v:mID="155" v:groupContext="shape" v:layerMember="0">
+				<title>Name</title>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<rect x="0" y="258.213" width="201.26" height="141.783" class="st1"/>
+			</g>
+			<g id="shape156-30" v:mID="156" v:groupContext="shape" v:layerMember="0" transform="translate(0,-118.229)">
+				<title>Class.11</title>
+				<desc>&#60;&#60;Windows Device&#62;&#62;</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="100.63" cy="389.994" width="130.82" height="20.0036"/>
+				<text x="56.95" y="392.99" class="st2" v:langID="1049"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;<tspan
+							class="st3" v:langID="1033">Windows Device</tspan>&#62;&#62;</text>			</g>
+			<g id="shape157-33" v:mID="157" v:groupContext="shape" v:layerMember="0" transform="translate(0,-99.3753)">
+				<title>Лист.157</title>
+				<desc>User</desc>
+				<v:userDefs>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(5):26"/>
+				</v:userDefs>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="100.63" cy="388.794" width="140.89" height="22.4037"/>
+				<text x="89.36" y="392.39" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>User</text>			</g>
+		</g>
+		<g id="group158-35" transform="translate(227.022,-0.300368)" v:mID="158" v:groupContext="group" v:layerMember="0">
+			<v:userDefs>
+				<v:ud v:nameU="UMLShapeType" v:val="VT0(26):26"/>
+				<v:ud v:nameU="UMLObjectGUID" v:val="VT4()"/>
+				<v:ud v:nameU="UMLError" v:val="VT0(0):26"/>
+				<v:ud v:nameU="UMLVersion" v:val="VT4(2.X)"/>
+				<v:ud v:nameU="visDescription" v:val="VT4(Represents a run-time computational or physical resource.)"/>
+				<v:ud v:nameU="visVersion" v:val="VT0(17):26"/>
+				<v:ud v:nameU="StereoType" v:prompt="" v:val="VT0(1):5"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="MinWidth" v:prompt="" v:val="VT0(2.4015748031496):24"/>
+				<v:ud v:nameU="MinHeight" v:prompt="" v:val="VT0(0.70866141732283):24"/>
+				<v:ud v:nameU="msvStructureType" v:prompt="" v:val="VT4(Container)"/>
+				<v:ud v:nameU="msvShapeCategories" v:prompt="" v:val="VT4(ContainerStyleDefaults)"/>
+				<v:ud v:nameU="msvSDContainerMargin" v:prompt="" v:val="VT0(0.11811023622047):24"/>
+				<v:ud v:nameU="msvSDContainerResize" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDContainerLocked" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoHighlight" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerNoRibbon" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="msvSDContainerStyle" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="msvSDContainerStyleCount" v:prompt="" v:val="VT0(14):26"/>
+				<v:ud v:nameU="msvSDContainerRequiredCategories" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="msvSDContainerExcludedCategories" v:prompt="" v:val="VT4(DoNotContain)"/>
+				<v:ud v:nameU="msvSDHeadingStyle" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="msvSDHeadingStyleCount" v:prompt="" v:val="VT0(4):26"/>
+				<v:ud v:nameU="HeadingSide" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="HeadingSpan" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="HeadingAlign" v:prompt="" v:val="VT0(2):26"/>
+				<v:ud v:nameU="RTL" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="StereotypeOffset" v:prompt="" v:val="VT0(0.049299212598425):24"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(6):26"/>
+			</v:userDefs>
+			<title>Узел.158</title>
+			<g id="shape159-36" v:mID="159" v:groupContext="shape" v:layerMember="0" transform="translate(201.26,5.68434E-14)">
+				<title>Лист.159</title>
+				<path d="M0 400 L9 391 L9 249.26 L0 258.26 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape160-38" v:mID="160" v:groupContext="shape" v:layerMember="0" transform="translate(0,-141.732)">
+				<title>Лист.160</title>
+				<path d="M0 400 L201.26 400 L210.26 391 L9 391 L0 400 Z" class="st1"/>
+			</g>
+			<g id="shape161-40" v:mID="161" v:groupContext="shape" v:layerMember="0">
+				<title>Name</title>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<rect x="0" y="258.263" width="201.26" height="141.732" class="st1"/>
+			</g>
+			<g id="shape162-42" v:mID="162" v:groupContext="shape" v:layerMember="0" transform="translate(0,-118.179)">
+				<title>Class.11</title>
+				<desc>&#60;&#60;Unix Device&#62;&#62;</desc>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="100.63" cy="389.994" width="130.82" height="20.0036"/>
+				<text x="66.82" y="392.99" class="st2" v:langID="1049"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;<tspan
+							class="st3" v:langID="1033">Unix Device</tspan>&#62;&#62;</text>			</g>
+			<g id="shape163-45" v:mID="163" v:groupContext="shape" v:layerMember="0" transform="translate(0,-99.3249)">
+				<title>Лист.163</title>
+				<desc>User</desc>
+				<v:userDefs>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(6):26"/>
+				</v:userDefs>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="100.63" cy="388.794" width="140.89" height="22.4037"/>
+				<text x="89.36" y="392.39" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>User</text>			</g>
+		</g>
+		<g id="group171-47" transform="translate(8.75394,-21.7926)" v:mID="171" v:groupContext="group">
+			<v:userDefs>
+				<v:ud v:nameU="StereoType" v:prompt="" v:val="VT0(1):5"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="MinWidth" v:prompt="" v:val="VT0(1.5748031496063):24"/>
+				<v:ud v:nameU="MinHeight" v:prompt="" v:val="VT0(0.70866141732283):24"/>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(17):26"/>
+				<v:ud v:nameU="StereotypeOffset" v:prompt="" v:val="VT0(0.06):24"/>
+				<v:ud v:nameU="DataObjectXOffset" v:prompt="" v:val="VT0(0.28129921259843):24"/>
+				<v:ud v:nameU="DataObjectYOffset" v:prompt="" v:val="VT0(0.25):24"/>
+			</v:userDefs>
+			<title>Артефакт</title>
+			<g id="shape172-48" v:mID="172" v:groupContext="shape">
+				<title>Лист.172</title>
+				<rect x="0" y="329.129" width="184.252" height="70.8661" class="st8"/>
+			</g>
+			<g id="shape174-50" v:mID="174" v:groupContext="shape" transform="translate(0,-28.4624)">
+				<title>Лист.174</title>
+				<desc>TaskPlanner.exe</desc>
+				<v:userDefs>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				</v:userDefs>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="92.126" cy="388.794" width="128.98" height="22.4037"/>
+				<text x="52.44" y="392.39" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>TaskPlanner.exe</text>			</g>
+			<g id="group175-52" transform="translate(155.494,-40.1102)" v:mID="175" v:groupContext="group">
+				<title>Data Object</title>
+				<g id="shape176-53" v:mID="176" v:groupContext="shape">
+					<title>Лист.176</title>
+					<path d="M17.01 381.83 L10.89 381.83 L10.89 374.48 L0 374.48 L0 400 L17.01 400 L17.01 381.83 ZM17.01 381.22 L10.89
+								 374.48 L10.89 381.83 L17.01 381.83 L17.01 381.22 Z" class="st8"/>
+				</g>
+				<g id="shape177-55" v:mID="177" v:groupContext="shape" transform="translate(7.44094,5.68434E-14)">
+					<title>Лист.177</title>
+				</g>
+			</g>
+		</g>
+		<g id="group191-57" transform="translate(235.526,-21.7926)" v:mID="191" v:groupContext="group">
+			<v:userDefs>
+				<v:ud v:nameU="StereoType" v:prompt="" v:val="VT0(1):5"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="MinWidth" v:prompt="" v:val="VT0(1.5748031496063):24"/>
+				<v:ud v:nameU="MinHeight" v:prompt="" v:val="VT0(0.70866141732283):24"/>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(17):26"/>
+				<v:ud v:nameU="StereotypeOffset" v:prompt="" v:val="VT0(0.06):24"/>
+				<v:ud v:nameU="DataObjectXOffset" v:prompt="" v:val="VT0(0.28129921259843):24"/>
+				<v:ud v:nameU="DataObjectYOffset" v:prompt="" v:val="VT0(0.25):24"/>
+				<v:ud v:nameU="Label" v:prompt="" v:val="VT0(3):26"/>
+			</v:userDefs>
+			<title>Артефакт.191</title>
+			<g id="shape192-58" v:mID="192" v:groupContext="shape">
+				<title>Лист.192</title>
+				<rect x="0" y="329.129" width="184.252" height="70.8661" class="st8"/>
+			</g>
+			<g id="shape194-60" v:mID="194" v:groupContext="shape" transform="translate(0,-28.4624)">
+				<title>Лист.194</title>
+				<desc>TaskPlanner.exe</desc>
+				<v:userDefs>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(1):26"/>
+					<v:ud v:nameU="Label" v:prompt="" v:val="VT0(3):26"/>
+				</v:userDefs>
+				<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+				<v:textRect cx="92.126" cy="388.794" width="128.98" height="22.4037"/>
+				<text x="52.44" y="392.39" class="st4" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>TaskPlanner.exe</text>			</g>
+			<g id="group195-62" transform="translate(155.494,-40.1102)" v:mID="195" v:groupContext="group">
+				<title>Data Object</title>
+				<g id="shape196-63" v:mID="196" v:groupContext="shape">
+					<title>Лист.196</title>
+					<path d="M17.01 381.83 L10.89 381.83 L10.89 374.48 L0 374.48 L0 400 L17.01 400 L17.01 381.83 ZM17.01 381.22 L10.89
+								 374.48 L10.89 381.83 L17.01 381.83 L17.01 381.22 Z" class="st8"/>
+				</g>
+				<g id="shape197-65" v:mID="197" v:groupContext="shape" transform="translate(7.44094,5.68434E-14)">
+					<title>Лист.197</title>
+				</g>
+			</g>
+		</g>
+		<g id="group198-67" transform="translate(219.563,-205.596)" v:mID="198" v:groupContext="group" v:layerMember="2">
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(17):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4()"/>
+				<v:ud v:nameU="ShowMulti" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="Identifying" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(2.2204460492503E-16):1"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.029527559055118):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0.029527559055118):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(0):1"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(-1.5707963267949):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(0):32"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.037967913418528):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(-4.4408920985006E-16):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-0.037967913418528):1"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-1.5707963267949):32"/>
+			</v:userDefs>
+			<title>Association</title>
+			<g id="shape198-68" v:mID="198" v:groupContext="groupContent" v:layerMember="2">
+				<path d="M0 400 L0 410.63 L-118.68 410.63 L-118.68 463.56" class="st6"/>
+			</g>
+		</g>
+		<g id="group203-71" transform="translate(219.563,-205.596)" v:mID="203" v:groupContext="group" v:layerMember="2">
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(17):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4()"/>
+				<v:ud v:nameU="ShowMulti" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="Identifying" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(2.2204460492503E-16):1"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.029527559055118):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0.029527559055118):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(0):1"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(-1.5707963267949):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(0):32"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.035760728451853):24"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-0.035760728451855):24"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-1.5707963267949):32"/>
+			</v:userDefs>
+			<title>Association.203</title>
+			<g id="shape203-72" v:mID="203" v:groupContext="groupContent" v:layerMember="2">
+				<path d="M0 400 L0 410.63 L108.09 410.63 L108.09 463.56" class="st6"/>
+			</g>
+		</g>
+	</g>
+</svg>
