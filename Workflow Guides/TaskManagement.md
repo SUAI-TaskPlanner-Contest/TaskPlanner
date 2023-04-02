@@ -80,7 +80,7 @@
 <td>Описание работы и список подзадач</td>
 <td>
 
-[Шаблон задачи](./Templates/TaskBug.md)
+[Шаблон задачи](./Templates/TaskEpic.md)
 
 </td>
 </tr>
