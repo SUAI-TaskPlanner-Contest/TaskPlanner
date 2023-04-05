@@ -48,8 +48,7 @@ ApplicationWindow {
                 Button{
                     text:qsTr("2 окнo")
                     anchors.fill: parent
-                    width: 300
-                    height: 50
+
 
                     onClicked: {
                         secondWindow.show()
