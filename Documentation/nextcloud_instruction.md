@@ -29,9 +29,9 @@ Nextcloud требуется минимум 128 МБ ОЗУ на процесс,
 - Apple Safari
 
 ## 2. Шаги по развертыванию NextCloud
-Следующие шаги были осуществлены на ОС Ubuntu 22.10
+Следующие шаги были осуществлены на ОС Ubuntu 23.04 (Lunar Lobster) в VirtualBox
 
-![image](https://user-images.githubusercontent.com/78814540/230610603-df2a48d9-d2ea-48ee-b12e-4d4c8e5eda0c.png)
+![image](https://user-images.githubusercontent.com/78814540/230652975-766f47c5-fc57-415e-b4fe-64d5886aa7b9.png)
 
 ### 2.1 Обновите систему
 Перед началом установки обновите систему до последней версии:
@@ -44,7 +44,11 @@ NextCloud требует работающую LAMP-среду, которая в
 
 После установки LAMP проверьте, что Apache и MySQL запущены:
 > sudo systemctl status apache2
+
 > sudo systemctl status mysql
+
+![image](https://user-images.githubusercontent.com/78814540/230653378-9ad37b67-c1a8-4fd2-8d6f-23bb9fe6e99c.png)
+![image](https://user-images.githubusercontent.com/78814540/230653442-59c7cbfd-f7ca-4246-a94a-6ac703180d5f.png)
 
 
 ### 2.3 Создайте базу данных MySQL
@@ -65,7 +69,7 @@ NextCloud требует работающую LAMP-среду, которая в
 Вместо 'password' используйте пароль, который вы хотите использовать для пользователя nextclouduser.
 
 ### 2.4 Установите NextCloud
-Скачайте и установите последнюю версию NextCloud с официального сайта:
+Скачайте и установите последнюю версию NextCloud с официального сайта (около 142Мб):
 > wget https://download.nextcloud.com/server/releases/latest.tar.bz2
 > 
 > sudo tar -xjf latest.tar.bz2 -C /var/www/html/
@@ -77,34 +81,60 @@ NextCloud требует работающую LAMP-среду, которая в
 > sudo nano /etc/apache2/sites-available/nextcloud.conf
 
 Добавьте следующий текст:
-<VirtualHost *:80>
-     ServerAdmin admin@example.com
-     DocumentRoot /var/www/html/nextcloud/
-     ServerName example.com
 
-     <Directory /var/www/html/nextcloud/>
-        Options +FollowSymlinks
-        AllowOverride All
-        Require all granted
-          <IfModule mod_dav.c>
-            Dav off
-          </IfModule>
-        SetEnv HOME /var/www/html/nextcloud
-        SetEnv HTTP_HOME /var/www/html/nextcloud
-     </Directory>
+     <VirtualHost *:80>
+          ServerAdmin admin@example.com
+          DocumentRoot /var/www/html/nextcloud/
+          ServerName example.com
 
-     ErrorLog ${APACHE_LOG_DIR}/error.log
-     CustomLog ${APACHE_LOG_DIR}/access.log combined
+          <Directory /var/www/html/nextcloud/>
+             Options +FollowSymlinks
+             AllowOverride All
+             Require all granted
+               <IfModule mod_dav.c>
+                 Dav off
+               </IfModule>
+             SetEnv HOME /var/www/html/nextcloud
+             SetEnv HTTP_HOME /var/www/html/nextcloud
+          </Directory>
 
-</VirtualHost>
+          ErrorLog ${APACHE_LOG_DIR}/error.log
+          CustomLog ${APACHE_LOG_DIR}/access.log combined
+     </VirtualHost>
+
+Я делал для localhost, поэтому nextcloud.conf выглядел следующим образом:
+
+     <VirtualHost *:80>
+          ServerAdmin admin@example.com
+          DocumentRoot /var/www/html/nextcloud/
+          ServerName localhost
+
+          <Directory /var/www/html/nextcloud/>
+             Options +FollowSymlinks
+             AllowOverride All
+             Require all granted
+               <IfModule mod_dav.c>
+                 Dav off
+               </IfModule>
+             SetEnv HOME /var/www/html/nextcloud
+             SetEnv HTTP_HOME /var/www/html/nextcloud
+          </Directory>
+
+          ErrorLog ${APACHE_LOG_DIR}/error.log
+          CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+     </VirtualHost>
 
 Замените ServerAdmin и ServerName на свой домен. Сохраните и закройте файл.
 Активируйте новый виртуальный хост и перезапустите Apache:
 > sudo a2ensite nextcloud.conf
+
 > sudo systemctl reload apache2
 
 ### 2.6 Завершите установку через веб-интерфейс
-Откройте веб-браузер и перейдите на свой домен (например, example.com).
+Откройте веб-браузер и перейдите на свой домен (например, example.com или localhost).
+
+![image](https://user-images.githubusercontent.com/78814540/230659983-ebf33b4f-3a85-498e-86c9-3c8d24ed9ee8.png)
 
 Подробная инструкция для завершения установки через веб-интерфейс:
 1. Введите свой домен в адресную строку браузера и нажмите Enter. Вы увидите страницу приветствия NextCloud.
@@ -121,4 +151,4 @@ NextCloud требует работающую LAMP-среду, которая в
 
 7. После завершения установки вы будете перенаправлены на страницу входа. Введите имя пользователя и пароль администратора, чтобы войти в панель управления NextCloud.
 
-Теперь у вас есть рабочая установка NextCloud на Ubuntu 22.10!
+Теперь у вас есть рабочая установка NextCloud на Ubuntu 22.04!
