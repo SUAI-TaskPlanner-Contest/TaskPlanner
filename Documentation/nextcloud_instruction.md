@@ -31,6 +31,8 @@ Nextcloud требуется минимум 128 МБ ОЗУ на процесс,
 ## 2. Шаги по развертыванию NextCloud
 Следующие шаги были осуществлены на ОС Ubuntu 23.04 (Lunar Lobster) в VirtualBox
 
+Ссылка для скачивания образа: https://cdimage.ubuntu.com/daily-live/current/
+
 ![image](https://user-images.githubusercontent.com/78814540/230652975-766f47c5-fc57-415e-b4fe-64d5886aa7b9.png)
 
 ### 2.1 Обновите систему
