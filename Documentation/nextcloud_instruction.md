@@ -67,7 +67,9 @@ NextCloud требует работающую LAMP-среду, которая в
 ### 2.4 Установите NextCloud
 Скачайте и установите последнюю версию NextCloud с официального сайта:
 > wget https://download.nextcloud.com/server/releases/latest.tar.bz2
+> 
 > sudo tar -xjf latest.tar.bz2 -C /var/www/html/
+> 
 > sudo chown -R www-data:www-data /var/www/html/nextcloud/
 
 ### 2.5 Настройте Apache
