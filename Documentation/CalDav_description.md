@@ -468,12 +468,12 @@ defined in RFC6638
 ```bash
 calendars()
 ```
-Return the principials calendars
+Возвращает principials календари.
 
 ```bash
 get_vcal_address()
 ```
-Returns the principal, as an icalendar.vCalAddress object
+Возвращает principal как объект icalendar.vCalAddress
 
 ```bash
 make_calendar(name=None, cal_id=None, supported_calendar_component_set=None)
