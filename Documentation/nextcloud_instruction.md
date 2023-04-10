@@ -64,6 +64,17 @@ sudo systemctl status mysql
 ![image](https://user-images.githubusercontent.com/78814540/230653378-9ad37b67-c1a8-4fd2-8d6f-23bb9fe6e99c.png)
 ![image](https://user-images.githubusercontent.com/78814540/230653442-59c7cbfd-f7ca-4246-a94a-6ac703180d5f.png)
 
+В случае, если Apache и MySQL не запустились автоматически, можно использовать команды:
+- Для Apache:
+```
+sudo systemctl enable apache2
+```
+- Для MySQL:
+```
+sudo systemctl enable mysql
+```
+Эти команды добавят необходимые ссылки в системные директории, чтобы сервисы Apache2 и MySQL автоматически запускались при загрузке системы.
+После выполнения команды enable, вы можете использовать команду systemctl status, чтобы убедиться, что сервисы Apache2 и MySQL теперь имеют статус enabled.
 
 ### 2.3 Создайте базу данных MySQL для NextCloud
 Запустите командную строку MySQL в режиме администратора (root) с запросом пароля:
