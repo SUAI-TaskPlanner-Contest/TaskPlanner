@@ -29,6 +29,11 @@ Nextcloud требуется минимум 128 МБ ОЗУ на процесс,
 - Google Chrome/Chromium
 - Apple Safari
 
+### 1.6 Рекомендации по настройке виртуальной машины (минимальные требования)
+При выключенной машине зайти в:
+- Настроить -> Дисплей -> Видеопамять - 128 мб;
+- Настроить -> Система -> Процессоры - 4;
+
 ## 2. Шаги по развертыванию NextCloud
 Следующие шаги были осуществлены на ОС Ubuntu 23.04 (Lunar Lobster) в VirtualBox
 
@@ -45,7 +50,7 @@ sudo apt update && sudo apt upgrade -y
 ```
 
 ### 2.2 Установите LAMP
-NextCloud требует работающую LAMP-среду, которая включает в себя Apache, MySQL и PHP (Потребуется около 274Мб). Для установки LAMP на Ubuntu 23.04 выполните следующую команду:
+NextCloud требует работающую LAMP-среду, которая включает в себя Apache, MySQL и PHP (Потребуется около 274Мб). Для установки LAMP на Ubuntu 23.04 выполните следующую команду (выполнение команды может занять длительное время на ВМ, которой выделено мало ресурсов):
 ```
 sudo apt install apache2 mysql-server php libapache2-mod-php php-mysql php-gd php-curl php-zip php-mbstring php-intl php-xml php-json
 ```
