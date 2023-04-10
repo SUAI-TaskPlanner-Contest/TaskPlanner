@@ -6,6 +6,7 @@ https://portal.nextcloud.com/categories/Scalability/Deployment-recommendations
 
 ![image](https://user-images.githubusercontent.com/78814540/230606501-6a30be6f-75fd-46c9-b9b3-500635ca3788.png)
 
+Ссылка для скачивания образа Ubuntu 22.04.2 LTS (Jammy Jellyfish): https://releases.ubuntu.com/jammy/
 ### 1.2. Архитектура процессора и ОС. Память
 Для нормальной работы Nextcloud требуется 64-битный процессор, ОС и PHP.
 
