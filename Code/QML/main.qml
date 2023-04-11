@@ -8,7 +8,7 @@ ApplicationWindow {
     width: 640
     height: 480
     visible: true
-    title: ("Переключение между окнами")
+    title: ["Переключение между окнами"]
 
     Rectangle{
         anchors.fill: parent
@@ -48,7 +48,8 @@ ApplicationWindow {
                 Button{
                     text:qsTr("2 окнo")
                     anchors.fill: parent
-
+                    width: 300
+                    height: 50
 
                     onClicked: {
                         secondWindow.show()
@@ -60,7 +61,7 @@ ApplicationWindow {
         }
     AnotherWindow{
         id: firstWindow
-        title: qsTr("1 окнo")
+//        title: qsTr("1 окнo")
         onSignalExit: {
             firstWindow.close()
             mainWindow.show()
@@ -68,13 +69,10 @@ ApplicationWindow {
     }
     AnotherWindow{
         id: secondWindow
-        title: qsTr("2 окнo")
+//        title: qsTr("2 окнo")
         onSignalExit: {
             secondWindow.close()
             mainWindow.show()
         }
     }
-
-
 }
-
