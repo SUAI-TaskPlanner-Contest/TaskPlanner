@@ -1,0 +1,8 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+/vcs.xml
+/inspectionProfiles/Project_Default.xml
+/inspectionProfiles/profiles_settings.xml
+/misc.xml
+.gitignore
