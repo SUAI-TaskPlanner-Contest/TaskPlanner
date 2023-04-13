@@ -84,6 +84,7 @@ ApplicationWindow {
 
                     onClicked: {
                         firstWindow.show()
+                        instructionWindow.show()
                         authWindow.hide()
                     }
                 }
@@ -97,5 +98,9 @@ ApplicationWindow {
                 firstWindow.close()
                 authWindow.show()
         }
+    }
+    InstructionWindow{
+    id: instructionWindow
+
     }
 }

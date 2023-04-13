@@ -98,7 +98,9 @@ Window {
 //                           height:100
 //                        anchors.centerIn: parent
                             onClicked: {
-                            mainWindow.signalExit() //вызываем сигнал
+                            settingsWindow.show()
+
+
                             }
                         }
                     }
@@ -140,5 +142,9 @@ Window {
                 }
             }
         }
+    }
+    SettingsWindow{
+    id: settingsWindow
+
     }
 }
