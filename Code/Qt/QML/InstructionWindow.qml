@@ -11,11 +11,7 @@ Window {
     title: ("Инструкция")
 
     Rectangle{
-    width: parent.width
-    height: parent.height
-
-
-
-
+        width: parent.width
+        height: parent.height
     }
 }
