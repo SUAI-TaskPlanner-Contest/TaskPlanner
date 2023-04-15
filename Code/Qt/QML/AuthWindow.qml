@@ -3,87 +3,71 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 
-ApplicationWindow {
-    id: authWindow
-    width: screen.width
-    height: screen.height
-    visible: true
+ApplicationWindow { // окно
+    id: authWindow;
+    width: screen.width; height: screen.height
+    visible: true // отображение
     title: ("Окно авторизации")
 
-    Rectangle{
-            width: 500
-            height: 300
-            anchors.centerIn:parent
+    Rectangle{ // область для авторизации
+            width: 500; height: 300
+            anchors.centerIn:parent // позиционирование
             color:  "grey"
 
-        GridLayout{
+        GridLayout{ // разбиваем на сетку
             id: grid
-            anchors.fill: parent
-
-            x:screen.width/2 - width
-            y:screen.height/2 -height
-
-            anchors.margins:30
-            rows: 3
-            columns: 1
+            anchors.fill: parent // заполняем сетку во весь объект указанного выше
+            anchors.margins:30 //смещения объекта с 4 сторон
+            rows: 3; columns: 1
 
             //Login
             Rectangle{
-                Layout.column: 1
-                Layout.row: 1
-                width:parent.width
-                height:25
+                Layout.column: 1; Layout.row: 1
+                width:parent.width; height:25
 
                 TextInput{
                     id: loginId
                     text: "Login"
-                    cursorVisible: false
                 }
             }
 
             //Password
             Rectangle{
-                Layout.column: 1
-                Layout.row: 2
-                width:parent.width
-                height:25
-                anchors.margins:10
+                Layout.column: 1; Layout.row: 2
+                width:parent.width; height:25
 
                 TextInput{
                     id: passwordId
                     text: "Password"
-                    cursorVisible: false
                 }
             }
+            //кнопка входа
             Rectangle {
-                Layout.column: 1
-                Layout.row: 3
+                Layout.column: 1; Layout.row: 3
 
-                width:parent.width
-                height:40
-                anchors.margins:10
+                width:parent.width; height:40
+
                 Button{
                     text:("Вход")
-                    width: parent.width
-                    height: parent.height
+                    width: parent.width; height: parent.height
 
-                    onClicked: {
-                        firstWindow.show()
+                    onClicked: { //действия при нажатии кнопки
+                        mainWindow.show()
                         instructionWindow.show()
-                        authWindow.hide()
+                        authWindow.hide() //окно авторизации сворачиваем
                     }
                 }
             }
         }
     }
-    MainWindow{
-        id: firstWindow
+    MainWindow{ //окно список задач
+        id: mainWindow
         onSignalExit: {
-            firstWindow.close()
+            mainWindow.close()
             authWindow.show()
         }
     }
-    InstructionWindow{
+    InstructionWindow{ //окно инструкции
         id: instructionWindow
     }
 }

@@ -10,15 +10,4 @@ Window {
     height: 400 // высота окна
     title: ("Настройки")
 
-    Rectangle{
-        width: parent.width
-        height: parent.height
-
-        GridLayout{
-            id: gridSetting
-            width: parent.width
-            height: parent.height
-            columns: 4
-        }
-    }//Rectangle
 }//Window
