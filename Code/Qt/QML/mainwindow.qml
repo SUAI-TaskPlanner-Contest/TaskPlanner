@@ -14,27 +14,22 @@ Window {
     height: parent.height
         GridLayout{
             id: grid
-            width: parent.width
-            height: parent.height
+            width: parent.width; height: parent.height
             columns: 2
             Rectangle{
-                width: screen.width/2 - 500
-                height: screen.height
+                width: screen.width/2 - 500; height: screen.height
                 color:"red"
                 Layout.column: 2
                 GridLayout{
-                    width: parent.width
-                    height: parent.height
+                    width: parent.width; height: parent.height
                     rows:5
                     Rectangle{
                         Layout.row: 1
-                        width: parent.width
-                        height:100
+                        width: parent.width; height:100
                         Button {
                             id: button1
                             text: ("Диаграмма Ганта")
-                            width: parent.width
-                            height: parent.height
+                            width: parent.width; height: parent.height
 
                             onClicked: {
                                 mainWindow.signalExit() //вызываем сигнал
@@ -43,13 +38,11 @@ Window {
                     }
                     Rectangle{
                         Layout.row: 2
-                        width: parent.width
-                        height:100
+                        width: parent.width; height:100
                         Button {
                             id: button2
                             text: ("Синхронизация с сервером")
-                            width: parent.width
-                            height: parent.height
+                            width: parent.width; height: parent.height
 
                             onClicked: {
                                 mainWindow.signalExit() //вызываем сигнал
@@ -58,14 +51,12 @@ Window {
                     }
                     Rectangle{
                         Layout.row: 3
-                        width: parent.width
-                        height:100
+                        width: parent.width; height:100
 
                         Button {
                             id: button3
                             text: ("Смена темы")
-                            width: parent.width
-                            height: parent.height
+                            width: parent.width; height: parent.height
 
                             onClicked: {
                                 mainWindow.signalExit() //вызываем сигнал
@@ -74,14 +65,12 @@ Window {
                     }
                     Rectangle{
                         Layout.row: 4
-                        width:parent.width
-                        height:100
+                        width:parent.width; height:100
 
                         Button {
                             id: button4
                             text: ("Настройки")
-                            width: parent.width
-                            height: parent.height
+                            width: parent.width; height: parent.height
 
                             onClicked: {
                                 settingsWindow.show()
@@ -90,14 +79,12 @@ Window {
                     }
                     Rectangle{
                         Layout.row: 5
-                        width:parent.width
-                        height:100
+                        width:parent.width; height:100
 
                         Button {
                             id: button5
                             text: ("Выход")
-                            width: parent.width
-                            height: parent.height
+                            width: parent.width; height: parent.height
 
                             onClicked: {
                                 mainWindow.signalExit() //вызываем сигнал
@@ -113,8 +100,7 @@ Window {
 
                 Button {
                     text: ("Правый")
-                    width: parent.width
-                    height: parent.height
+                    width: parent.width; height: parent.height
                     anchors.centerIn: parent
 
                     onClicked: {
