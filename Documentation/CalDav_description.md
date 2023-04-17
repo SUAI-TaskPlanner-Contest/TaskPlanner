@@ -8,34 +8,34 @@
 # Основные функции CalDav для работы с календарём
 
 Настройка клиентского объекта *caldav* и *principal* объекта:
-```bash
+```python
 with caldav.DAVClient(url=url, username=username, password=password) as client:
     my_principal = client.principal()
     ...
 ```
 Извлечение календарей:
-```bash
+```python
 calendars = my_principal.calendars()
 ```
 Создание календаря:
-```bash
+```python
 my_new_calendar = my_principal.make_calendar(name="Test calendar")
 ```
 Можно извлечь календарь с известным URL-адресом, не проходя через *principal*:
-```bash
+```python
 the_same_calendar = client.calendar(url=my_new_calendar.url)
 ```
 Удаление календаря (или, в принципе, любого объекта):
-```bash
+```python
 my_new_calendar.delete()
 ```
 Создание списка задач:
-```bash
+```python
 my_new_tasklist = my_principal.make_calendar(
             name="Test tasklist", supported_calendar_component_set=['VTODO'])
 ```
 Добавление задачи в список задач:
-```bash
+```python
 my_new_tasklist.save_todo(
     ics = "RRULE:FREQ=YEARLY",
     summary="Поход по магазинам",
@@ -45,611 +45,501 @@ my_new_tasklist.save_todo(
     status='NEEDS-ACTION')
 ```
 Извлечение задач:
-```bash
+```python
 todos = my_new_tasklist.todos()
 ```
 Поиск по задачам:
-```bash
+```python
 todos = my_new_calendar.search(
     start=datetime(2023, 1, 1), end=datetime(2024, 1, 1),
     compfilter='VTODO',event=True, expand=True)
 ```
 Отметка о выполнении задачи:
-```bash
+```python
 todos[0].complete()
 ```
 
 # Описание классов и функций CalDav
 
 ## Класс DAV client
-```bash
+```python
 class caldav.davclient.DAVClient(url, proxy=None, username=None, 
 password=None, auth=None, timeout=None, 
 ssl_verify_cert=True, ssl_cert=None, headers={}, huge_tree=False)
 ```
-Basic client for webdav, uses the requests lib; gives access to low-level operations towards the caldav server.
+Базовый клиент для webdav, использует библиотеку запросов; предоставляет доступ к низкоуровневым операциям с сервером caldav.
 ### Функции DAV client
-```bash
+```python
 calendar(**kwargs)
 ```
-Returns a calendar object.
+Возвращает объект calendar.
 
-```bash
+```python
 close()
 ```
-Closes the DAVClient’s session object
+Закрывает сессию объекта DAVClient.
 
-```bash
+```python
 delete(url)
 ```
-Send a delete request.
+Отправьте запрос на удаление.
 
-```bash
+```python
 post(url, body, headers={})
 ```
-Send a POST request.
+Отправляет запрос на публикацию.
 
-```bash
+```python
 principal(*largs, **kwargs)
 ```
-Convenience method, it gives a bit more object-oriented feel to write client.principal() than Principal(client).
-This method returns a caldav.Principal object, with higher-level methods for dealing with the principals calendars.
+Этот метод возвращает объект caldav.Principal с методами более высокого уровня для работы с календарями участников.
 
-```bash
+```python
 propfind(url=None, props=”, depth=0)
 ```
-Send a propfind request.
+Отправляет запрос на propfind.
 
-• url: url for the root of the propfind.
+• url: url для корня propfind.
 
-• props = (xml request), properties we want
+• props = (xml запрос), нужные нам свойства
 
-• depth: maximum recursion depth
+• depth: максимальная глубина рекурсии
 
-```bash
+```python
 proppatch(url, body, dummy=None)
 ```
-Send a proppatch request.
+Отправляет запрос на proppatch.
 
-• url: url for the root of the propfind.
+• url: url для корня propfind.
 
-• body: XML propertyupdate request
+• body: XML propertyupdate запрос
 
-• dummy: compatibility parameter
+• dummy: параметр совместимости
 
-```bash
+```python
 put(url, body, headers={})
 ```
-Send a put request.
+Отправляет запрос на put.
 
-```bash
+```python
 report(url, query=”, depth=0)
 ```
-Send a report request.
+Отправляет запрос на report.
 
-• url: url for the root of the propfind.
+• url: url для корня propfind.
 
-• query: XML request
+• query: XML запрос
 
-• depth: maximum recursion depth
+• depth: максимальная глубина рекурсии
 
-```bash
+```python
 request(url, method=’GET’, body=”, headers={})
 ```
-Actually sends the request, and does the authentication
+Фактически отправляет запрос и выполняет аутентификацию.
 
 
 ## Класс DAV response
 
-```bash
+```python
 class caldav.davclient.DAVResponse(response, davclient=None)
 ```
-This class is a response from a DAV request. It is instantiated from the DAVClient class. End users of the library
-should not need to know anything about this class. Since we often get XML responses, it tries to parse it into
-self.tree
+Этот класс является ответом на запрос DAV. Он создается из клиентского класса DAV. 
+Поскольку мы получаем XML-ответы, он пытается разобрать их в self.tree
 
 ### Функции DAV response
 
-```bash
+```python
 expand_simple_props(props=[], multi_value_props=[], xpath=None)
 ```
-The find_objects_and_props() will stop at the xml element below the prop tag. This method will expand
-those props into text.
+Функция find_objects_and_props() остановится на xml-элементе под тегом prop. Этот метод превратит эти реквизиты в текст.
 
-Executes find_objects_and_props if not run already, then modifies and returns self.objects
-```bash
+Выполняет find_objects_and_props, если он еще не запущен, затем изменяет и возвращает self.objects
+
+```python
 find_objects_and_props()
 ```
-Check the response from the server, check that it is on an expected format, find hrefs and props from it and
-check statuses delivered.
+Проверяет ответ сервера, проверяет, ожидаемый ли формат имеет ответ сервера, находит hrefs and props из него и проверяет статус доставки.
 
-The parsed data will be put into self.objects, a dict {href: {proptag: prop_element}}. Further parsing of
-the prop_element has to be done by the caller.
+Проанализированные данные будут помещены в self.objects, dict {href: {proptag: prop_element}}.
 
-self.sync_token will be populated if found, self.objects will be populated.
-```bash
+self.sync_token будет заполнен, если найден, self.objects будет заполнен.
+
+```python
 validate_status(status)
 ```
-status is a string like “HTTP/1.1 404 Not Found”. 200, 207 and 404 are considered good statuses. The
-SOGo caldav server even returns “201 created” when doing a sync-report, to indicate that a resource was
-created after the last sync-token. This makes sense to me, but I’ve only seen it from SOGo, and it’s not in
-accordance with the examples in rfc6578.
+Статус - это строка типа: “HTTP/1.1 404 Not Found”. 200, 207 и 404 считаются хорошими статусами.
 
 ## Класс Objects
-A “DAV object” is anything we get from the caldav server or push into the caldav server, notably principal, calendars
-and calendar events.
+“Объект DAV” - это все, что мы получаем с сервера caldav или загружаем на сервер caldav, в частности, основные элементы, календари и события календаря.
 
-```bash
+```python
 class caldav.objects.Calendar(client=None, url=None, 
 parent=None, name=None, id=None, props=None, **extra)
 ```
-The Calendar object is used to represent a calendar collection.
+Объект Calendar используется для представления коллекции календарей.
 
 ### Функции Calendar
 
-```bash
+```python
 add_todo(ical=None, no_overwrite=False, no_create=False, **ical_data)
 ```
-Add a new task to the calendar, with the given ical.
+Добавит новую задачу в календарь с заданным ical.
 
-• ical - ical object (text)
+• ical - ical объект.
 
-```bash
-build_date_search_query(start, end=None, compfilter=’VEVENT’, expand=’maybe’)
-```
-
-```bash
+```python
 build_search_xml_query(comp_class=None, todo=None, ignore_completed1=None, 
 ignore_completed2=None, ignore_completed3=None, event=None,
 filters=None, expand=None, start=None, end=None, **kwargs)
 ```
-This method will produce a caldav search query as an etree object.
+Этот метод создаст поисковый запрос caldav в виде объекта etree.
 
-It is primarily to be used from the search method. See the documentation for the search method for more
-information
-
-```bash
+```python
 freebusy_request(start, end)
 ```
-Search the calendar, but return only the free/busy information.
+Выполняет поиск по календарю, но возвращает только информацию о free/busy (занят или нет).
 
 • start = datetime.today().
 
-• end = same as above.
+• end = такой же формат, как в start.
 
-```bash
+```python
 get_supported_components()
 ```
-returns a list of component types supported by the calendar, in string format (typically [‘VJOURNAL’,
-‘VTODO’, ‘VEVENT’])
+Возвращает список типов компонентов, поддерживаемых календарем, в строковом формате (typically [‘VJOURNAL’, ‘VTODO’, ‘VEVENT’])
 
-```bash
+```python
 objects(sync_token=None, load_objects=False)
 ```
-Do a sync-collection report, ref RFC 6578 and https://github.com/python-caldav/caldav/issues/87
+Этот метод вернет все объекты в календаре, если sync_token не передан или если sync_token неизвестен серверу. Если передан synctoken, известный серверу, он вернет объекты, которые были добавлены, удалены или изменены с момента последней установки токена синхронизации.
 
-This method will return all objects in the calendar if no sync_token is passed (the method should then be
-referred to as “objects”), or if the sync_token is unknown to the server. If a sync-token known by the server
-is passed, it will return objects that are added, deleted or modified since last time the sync-token was set.
+Если для параметра load_objects установлено значение True, объекты будут загружены - в противном случае будут возвращены пустые объекты CalendarObjectResource.
 
-If load_objects is set to True, the objects will be loaded - otherwise empty CalendarObjectResource objects
-will be returned.
-
-This method will return a SynchronizableCalendarObjectCollection object, which is an iterable.
-
-```bash
+```python
 objects_by_sync_token(sync_token=None, load_objects=False)
 ```
 То же, что и objects
-```bash
+
+```python
 save()
 ```
-The save method for a calendar is only used to create it, for now. We know we have to create it when we
-don’t have a url.
+Метод сохранения календаря пока используется только для его создания.
 
-```bash
+```python
 save_todo(ical=None, no_overwrite=False, no_create=False, **ical_data)
 ```
-Add a new task to the calendar, with the given ical.
+Добавляет новую задачу в календарь с заданным ical.
 
 • ical - ical object (text)
 
-```bash
+```python
 save_with_invites(ical, attendees, **attendeeoptions)
 ```
-sends a schedule request to the server. Equivalent with save_event, save_todo, etc, but the attendees will
-be added to the ical object before sending it to the server.
+Отправляет запрос schedule на сервер. Эквивалентно save_event, save_to do и т.д., Но участники будут добавлены в объект ical перед отправкой его на сервер.
 
-```bash
+```python
 search(xml=None, comp_class=None, todo=None, include_completed=False, 
 sort_keys=(), split_expanded=True, **kwargs)
 ```
-Creates an XML query, does a REPORT request towards the server and returns objects found, eventually
-sorting them before delivery.
+Создает XML-запрос, отправляет запрос REPORT на сервер и возвращает найденные объекты, в конечном итоге сортируя их перед доставкой.
 
-This method contains some special logics to ensure that it can consistently return a list of pending tasks on
-any server implementation. In the future it may also include workarounds and client side filtering to make
-sure other search results are consistent on different server implementations.
+Этот метод содержит некоторую специальную логику, гарантирующую, что он может последовательно возвращать список ожидающих выполнения задач в любой серверной реализации. В будущем это может также включать обходные пути и фильтрацию на стороне клиента, чтобы убедиться в согласованности других результатов поиска в разных серверных реализациях.
 
-Parameters supported:
+Параметры:
 
-• xml - use this search query, and ignore other filter parameters
+• xml - если используем этот поисковый запрос, игнорируем другие параметры фильтра
 
-• comp_class - set to event, todo or journal to restrict search to this resource type. Some server implementations require this to be set.
+• comp_class - можно установить на event, todo или journal, чтобы ограничить поиск этим типом ресурса.
 
-• todo - sets comp_class to Todo, and restricts search to pending tasks, unless the next parameter is set . . .
+• todo - устанавливает comp_class в значение todo и ограничивает поиск ожидающими задачами
 
-• include_completed - include completed tasks
+• include_completed - включает в поиск выполненные задачи
 
-• event - sets comp_class to event
+• event - устанавливает comp_class в значение event
 
-• text attribute search parameters: category, uid, summary, omment, description, location, status
+• text attribute search parameters: поиск по параметрам формата ical: category, uid, summary, сomment, description, location, status
 
-• no-category, no-summary, etc . . . search for objects that does not have those attributes.
+• no-category, no-summary, etc . . . поиск объектов, у которых нет этих атрибутов.
 
 • expand - do server side expanding of recurring events/tasks
 
-• start, end: do a time range search
+• start, end: поиск по заданному промежутку времени
 
-• filters - other kind of filters (in lxml tree format)
+• filters - другие типы фильтров (в формате xml-дерева)
 
-• sort_keys - list of attributes to use when sorting
+• sort_keys - список атрибутов, используемых при сортировке
 
-```bash
+```python
 todos(sort_keys=(’due’, ’priority’), include_completed=False)
 ```
-fetches a list of todo events
+Извлекает список событий todo
 
-• sort_keys: use this field in the VTODO for sorting (iterable of lower case string, i.e. (‘priority’,’due’)).
+• sort_keys: используйте это поле в VTODO для сортировки (повторяемая строка в нижнем регистре, т.е. (‘priority’,’due’)).
 
-• include_completed: boolean - by default, only pending tasks are listed
+• include_completed: логическое значение (True или False)- по умолчанию отображаются только отложенные задачи.
 
 
 ## Класс Calendar Object Resource
 
-```bash
+```python
 class caldav.objects.CalendarObjectResource(client=None, url=None, 
 data=None, parent=None, id=None, props=None)
 ```
-Ref RFC 4791, section 4.1, a “Calendar Object Resource” can be an event, a todo-item, a journal entry, or a
-free/busy entry
+Согласно RFC 4791, раздел 4.1, “Ресурсом объекта календаря” может быть событие, элемент задач, запись в журнале или запись "свободен/занят".
 
 ### Функции Calendar Object Resource
 
-```bash
+```python
 add_attendee(attendee, no_default_parameters=False, **parameters)
 ```
-For the current (event/todo/journal), add an attendee.
+Для текущего (события/задачи/журнала) добавляет участника.
 
-The attendee can be any of the following: * A principal * An email address prepended with “mailto:” * An
-email address without the “mailto:”-prefix * A two-item tuple containing a common name and an email
-address * (not supported, but planned: an ical text line starting with the word “ATTENDEE”)
+Участником может быть любой из следующих: 
+* *A principal * Адрес электронной почты с добавлением “mailto:” (Mailto – это префикс в адресе ссылки, благодаря которому можно автоматически открывать почтовый клиент с заполненными данными. Пример: mailto:bernard@example.com)
+* *Адрес электронной почты без префикса “mailto:” * Кортеж из двух элементов, содержащий общее имя и адрес электронной почты
 
-Any number of attendee parameters can be given, those will be used as defaults unless
-no_default_parameters is set to True:
+Может быть задано любое количество параметров участника, они будут использоваться по умолчанию, если для параметра no_default_parameters не установлено значение True:
 
-partstat=NEEDS-ACTION cutype=UNKNOWN (unless a principal object is given) rsvp=TRUE
-role=REQ-PARTICIPANT schedule-agent is not set
+* partstat=NEEDS-ACTION (статус объекта. Также существуют ACCEPTED - задача принята, DECLINED - задача отклонена, TENTATIVE - ???, DELEGATED - задача поручена, COMPLETED - задача выполнена, IN-PROCESS - в процессе выполнения)
+* cutype=UNKNOWN (Calenar user type - Тип пользователя календаря. Существуют: INDIVIDUAL - индивидуальный, GROUP - группа отдельных лиц, RESOURCE - физический ресурс, ROOM - Ресурс комнаты, UNKNOWN - неизвестен)
+* rsvp=TRUE (Параметр определяет ожидание ответа от пользователя календаря, указанного значением свойства. Этот параметр используется "Организатором" для запроса ответа о статусе участия от "Участника" группового запланированного мероприятия или текущих дел.)
+* role=REQ-PARTICIPANT (роль участника)
+* schedule-agent (агент планирования. Принимает значения SERVER, CLIENT, NONE. Указывает агента, который, как ожидается, будет доставлять сообщения о расписании соответствующему "Организатору" или "Участнику".)
 
-```bash
-add_organizer()
-```
-goes via self.client, finds the principal, figures out the right attendee-format and adds an organizer line to
-the event
-
-```bash
+```python
 copy(keep_uid=False, new_parent=None)
 ```
-Events, todos etc can be copied within the same calendar, to another calendar or even to another caldav
-server
+События, задачи и т.д. могут быть скопированы в пределах того же календаря, в другой календарь или даже на другой сервер caldav
 
-```bash
+```python
 data
 ```
-vCal representation of the object as normal string
+vCal представление объекта в виде обычной строки
 
-```bash
-expand_rrule(start, end)
-```
-This method will transform the calendar content of the event and expand the calendar data from a “master
-copy” with RRULE set and into a “recurrence set” with RECURRENCE-ID set and no RRULE set. The
-main usage is for client-side expansion in case the calendar server does not support server-side expansion.
-It should be safe to save back to the server, the server should recognize it as recurrences and should not
-edit the “master copy”. If doing a self.load, the calendar content will be replaced with the “master copy”.
-However, as of 2022-10 there is no test code verifying this.
-
-• event – Event
-
-• start – datetime.datetime
-
-• end – datetime.datetime
-
-```bash
+```python
 get_duration()
 ```
-According to the RFC, either DURATION or DUE should be set for a task, but never both - implicitly meaning that DURATION is the difference between DTSTART and DUE (personally I believe that’s
-stupid. If a task takes five minutes to complete - say, fill in some simple form that should be delivered before midnight at new years eve, then it feels natural for me to define “duration” as five minutes, DTSTART
-to “some days before new years eve” and DUE to 20xx-01-01 00:00:00 - but I digress.
+Этот метод вернет длительность, если она установлена, в противном случае разница между DUE и DTSTART (если оба
+из них установлены).
 
-This method will return DURATION if set, otherwise the difference between DUE and DTSTART (if both
-of them are set).
-
-TODO: should be fixed for Event class as well (only difference is that DTEND is used rather than DUE)
-and possibly also for Journal.
-
-WARNING: this method is likely to be deprecated and moved to the icalendar library. If you decide to use
-it, please put caldav<2.0 in the requirements.
-
-```bash
-icalendar_component
-```
-icalendar component - should not be used with recurrence sets
-
-```bash
-icalendar_instance
-```
-icalendar instance of the object
-
-```bash
-instance
-```
-vobject instance of the object
-
-```bash
+```python
 load(only_if_unloaded=False)
 ```
-(Re)load the object from the caldav server.
+Загружает объект с сервера caldav.
 
-```bash
+```python
 save(no_overwrite=False, no_create=False, obj_type=None, 
 increase_seqno=True, if_schedule_tag_match=False)
 ```
-Save the object, can be used for creation and update.
+Сохранение объекта; можно использовать для создания и обновления.
 
-no_overwrite and no_create will check if the object exists. Those two are mutually exclusive. Some servers
-don’t support searching for an object uid without explicitly specifying what kind of object it should be,
-hence obj_type can be passed. obj_type is only used in conjunction with no_overwrite and no_create.
+no_overwrite и no_create проверят, существует ли объект. Эти два понятия взаимоисключают друг друга. Некоторые серверы не поддерживают поиск uid объекта без явного указания того, каким типом объекта он должен быть, следовательно, obj_type может быть передан. obj_type используется только в сочетании с no_over_write и no_create.
 
-```bash
+```python
 set_relation(other, reltype=None, set_reverse=True)
 ```
-Sets a relation between this object and another object (given by uid or object).
+Устанавливает связь между этим объектом и другим объектом (заданным uid или object).
 
-```bash
+```python
 vobject_instance
 ```
-vobject instance of the object
+vobject пример объекта.
 
-```bash
+```python
 wire_data
 ```
-vCal representation of the object in wire format (UTF-8, CRLN)
+vCal представление объекта в формате wire (UTF-8, CRLN)
 
 ## Класс Calendar Set
 
-```bash
+```python
 class caldav.objects.CalendarSet(client=None, url=None, parent=None, 
 name=None, id=None, props=None, **extra)
 ```
-A CalendarSet is a set of calendars.
+CalendarSet это набор календарей.
 
 ### Функции Calendar Set
 
-```bash
+```python
 calendar(name=None, cal_id=None)
 ```
-The calendar method will return a calendar object. If it gets a cal_id but no name, it will not initiate any
-communication with the server
+Метод calendar вернет объект calendar. Если он получит cal_id, но без имени, он не будет инициировать никакой связи с сервером
 
-• name: return the calendar with this display name
+• name: возвращает календарь с заданным именем.
 
-• cal_id: return the calendar with this calendar id or URL
+• cal_id: возвращает календарь с заданным идентификатором календаря или URL-адресом.
 
-```bash
+```python
 calendars()
 ```
-List all calendar collections in this set.
+Перечисление всей коллекции календарей в этом наборе.
 
-```bash
-make_calendar(name=None, cal_id=None, supported_calendar_component_set=None)
+```python
+make_calendar(name=None, cal_id=None, 
+supported_calendar_component_set=None)
 ```
-Utility method for creating a new calendar.
+Метод для создания нового календаря.
 
-• name: the display name of the new calendar
+• name: отображаемое имя нового календаря.
 
-• cal_id: the uuid of the new calendar
+• cal_id: uuid нового календаря.
 
-• supported_calendar_component_set: what kind of objects (EVENT, VTODO, VFREEBUSY,
-VJOURNAL) the calendar should handle. Should be set to [‘VTODO’] when creating a task
-list in Zimbra - in most other cases the default will be OK.
-
+• supported_calendar_component_set: какой тип объекта должен поддерживать календарь (EVENT, VTODO, VFREEBUSY, VJOURNAL).
 
 ## Класс DAVObject
 
-```bash
+```python
 class caldav.objects.DAVObject(client=None, url=None, parent=None, 
 name=None, id=None, props=None, **extra)
 ```
-Base class for all DAV objects. Can be instantiated by a client and an absolute or relative URL, or from the
-parent object.
+Базовый класс для всех объектов DAV. Может быть создан с помощью клиента и абсолютного или относительного URL-адреса, а также из родительского объекта.
 
 ### Функции DAVObject
 
-```bash
+```python
 children(type=None)
 ```
-List children, using a propfind (resourcetype) on the parent object, at depth = 1.
+Перечисляет потомков объекта, используя propfind (тип ресурса) для родительского объекта, с глубиной = 1.
 
-TODO: This is old code, it’s querying for DisplayName and ResourceTypes prop and returning a tuple of
-those. Those two are relatively arbitrary. I think it’s mostly only calendars having DisplayName, but it
-may make sense to ask for the children of a calendar also as an alternative way to get all events? It should
-be redone into a more generic method, and it should probably return a dict rather than a tuple. We should
-also look over to see if there is any code duplication.
-
-```bash
+```python
 delete()
 ```
-Delete the object.
+Удаление объекта.
 
-```bash
+```python
 get_display_name()
 ```
-Get calendar display name
+Получение имени календаря.
 
-```bash
+```python
 get_properties(props=None, depth=0, parse_response_xml=True, parse_props=True)
 ```
-Get properties (PROPFIND) for this object.
+Получение свойств (PROPFIND) объекта.
 
-With parse_response_xml and parse_props set to True a best-attempt will be done on decoding the
-XML we get from the server - but this works only for properties that don’t have complex types. With
-parse_response_xml set to False, a DAVResponse object will be returned, and it’s up to the caller to decode. With parse_props set to false but parse_response_xml set to true, xml elements will be returned
-rather than values.
+С parse_response_xml и parse_props, установленными в True, будет предпринята наилучшая попытка декодирования XML, который мы получаем с сервера, но это работает только для свойств, которые не имеют сложных типов. Если для parse_response_xml установлено значение False, будет возвращен объект DAVResponse, и декодирование зависит от вызывающей стороны. Если для parse_props установлено значение false, а для parse_response_xml - значение true, будут возвращены xml-элементы, а не значения.
 
 • props = [dav.ResourceType(), dav.DisplayName(), . . . ]
 
-```bash
+```python
 save()
 ```
-Save the object. This is an abstract method, that all classes derived from DAVObject implement.
+Сохранение объекта. Это абстрактный метод, который реализуют все классы, производные от DAV Object.
 
-```bash
+```python
 set_properties(props=None)
 ```
-Set properties (PROPPATCH) for this object.
+Установление свойств (PROPPATCH) для объекта.
 
 • props = [dav.DisplayName(‘name’), . . . ]
 
 
 ## Класс Free Busy
 
-```bash
+```python
 class caldav.objects.FreeBusy(parent, data, url=None, id=None)
 ```
-The FreeBusy object is used to represent a freebusy response from the server. __init__ is overridden, as a
-FreeBusy response has no URL or ID. The inheritated methods .save and .load is moot and will probably throw
-errors (perhaps the class hierarchy should be rethought, to prevent the FreeBusy from inheritating moot methods)
-
-Update: With RFC6638 a freebusy object can have an URL and an ID.
-
+Объект FreeBusy используется для представления freebusyresponse с сервера.
 
 ## Класс Principal
 
-```bash
+```python
 class caldav.objects.Principal(client=None, url=None)
 ```
-This class represents a DAV Principal. It doesn’t do much, except keep track of the URLs for the calendarhome-set, etc.
-
-A principal MUST have a non-empty DAV:displayname property (defined in Section 13.2 of [RFC2518]), and a
-DAV:resourcetype property (defined in Section 13.9 of [RFC2518]). Additionally, a principal MUST report the
-DAV:principal XML element in the value of the DAV:resourcetype property.
-
-(TODO: the resourcetype is actually never checked, and the DisplayName is not stored anywhere)
+Этот класс представляет DAV "Организатора". Он мало что делает, кроме отслеживания URL-адресов для набора calendarhome и т.д.
 
 ### Функции Principal
 
-```bash
+```python
 calendar(name=None, cal_id=None, cal_url=None)
 ```
-The calendar method will return a calendar object. It will not initiate any communication with the server.
+Метод calendar вернет объект calendar. Он не будет инициировать никакой связи с сервером.
 
-```bash
+```python
 calendar_user_address_set()
 ```
-defined in RFC6638
+описан в RFC6638. (ссылка: https://datatracker.ietf.org/doc/html/rfc6638)
 
-```bash
+```python
 calendars()
 ```
-Return the principials calendars
+Возвращает principials календари.
 
-```bash
+```python
 get_vcal_address()
 ```
-Returns the principal, as an icalendar.vCalAddress object
+Возвращает principal как объект icalendar.vCalAddress
 
-```bash
+```python
 make_calendar(name=None, cal_id=None, supported_calendar_component_set=None)
 ```
-Convenience method, bypasses the self.calendar_home_set object. See CalendarSet.make_calendar for
-details.
-
+Удобный метод, обходит объект self.calendar_home_set.
 
 ## Класс Todo
 
-```bash
+```python
 class caldav.objects.Todo(client=None, url=None, data=None, parent=None, 
 id=None, props=None)
 ```
-The Todo object is used to represent a todo item (VTODO). A Todo-object can be completed. Extra logic for
-different ways to complete one recurrence of a recurrent todo. Extra logic to handle due vs duration.
+Объект Todo используется для представления элемента todo (TODO-задача). Todo-объект может быть завершен.
 
 ### Функции Todo
 
-```bash
+```python
 complete(completion_timestamp=None, handle_rrule=False, rrule_mode=’safe’)
 ```
-Marks the task as completed.
+Помечает задачу как выполненную.
 
-• completion_timestamp - datetime object. Defaults to datetime.now().
+• completion_timestamp - объект datetime. По умолчанию используется datetime.now().
 
-• handle_rrule - if set to True, the library will try to be smart if the task is recurring. The default is
-False, for backward compatibility. I may consider making this one mandatory.
+• handle_rrule - Значение по умолчанию False для обеспечения обратной совместимости.
 
-• rrule_mode - The RFC leaves a lot of room for intepretation on how to handle recurring tasks,
-and what works on one server may break at another. The following modes are accepted:
+• rrule_mode - RFC оставляет много возможностей для интерпретации того, как обрабатывать повторяющиеся задачи, и то, что работает на одном сервере, может сломаться на другом. Принимаются следующие режимы:
 
-– this_and_future
+* this_and_future
+* safe
 
-– safe
-
-```bash
+```python
 get_due()
 ```
-A VTODO may have due or duration set. Return or calculate due.
+У VTODO может быть установлен срок выполнения или продолжительность выполнения. Возвращает или рассчитывает продолжительность выполнения.
 
-```bash
+```python
 set_due(due, move_dtstart=False, check_dependent=False)
 ```
-The RFC specifies that a VTODO cannot have both due and duration, so when setting due, the duration
-field must be evicted
+RFC указывает, что VTODO не может иметь как due, так и duration, поэтому при установке due поле duration должно быть удалено. 
 
-check_dependent=True will raise some error if there exists a parent calendar component (through
-RELATED-TO), and the parents due or dtend is before the new dtend).
+check_dependent=True вызовет некоторую ошибку, если существует родительский компонент календаря (через RELATED-TO), а родительский due или dtend находится перед новым dtend).
 
-```bash
+```python
 set_duration(duration, movable_attr=’DTSTART’)
 ```
-If DTSTART and DUE/DTEND is already set, one of them should be moved. Which one? I believe that
-for EVENTS, the DTSTART should remain constant and DTEND should be moved, but for a task, I think
-the due date may be a hard deadline, hence by default we’ll move DTSTART.
+Метод, обратный предыдущему.
 
-```bash
+```python
 uncomplete()
 ```
-Undo completion - marks a completed task as not completed
+Помечает выполненную задачу как незавершенную.
 
 
 ## Класс Synchronizable Calendar Object Collection
 
-```bash
+```python
 class caldav.objects.SynchronizableCalendarObjectCollection(calendar, 
 objects, sync_token)
 ```
-This class may hold a cached snapshot of a calendar, and changes in the calendar can easily be copied over
-through the sync method.
+Этот класс может содержать кэшированный snapshot(возможно, снимок) календаря, и изменения в календаре можно легко скопировать с помощью метода синхронизации.
 
-To create a SynchronizableCalendarObjectCollection object, use calendar.objects(load_objects=True)
+Чтобы создать объект SynchronizableCalendarObjectCollection, используйте calendar.objects(load_objects=True)
 
 ### Функции Synchronizable Calendar Object Collection
 
-```bash
+```python
 objects_by_url()
 ```
-returns a dict of the contents of the SynchronizableCalendarObjectCollection, URLs -> objects
+Возвращает dict содержимого SynchronizableCalendarObjectCollection, URLs -> objects
 
-```bash
+```python
 sync()
 ```
-This method will contact the caldav server, request all changes from it, and sync up the collection
+Этот метод свяжется с сервером caldav, запросит у него все изменения и синхронизирует коллекцию.
 
