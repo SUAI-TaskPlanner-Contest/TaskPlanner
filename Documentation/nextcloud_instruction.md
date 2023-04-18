@@ -6,7 +6,6 @@ https://portal.nextcloud.com/categories/Scalability/Deployment-recommendations
 
 ![image](https://user-images.githubusercontent.com/78814540/230606501-6a30be6f-75fd-46c9-b9b3-500635ca3788.png)
 
-Ссылка для скачивания образа Ubuntu 22.04.2 LTS (Jammy Jellyfish): https://releases.ubuntu.com/jammy/
 ### 1.2. Рекомендации для корректной работы Nextcloud
 Nextcloud требуется минимум 128 МБ ОЗУ на процесс, разработчики рекомендуют минимум 512 МБ ОЗУ на процесс.
 Для нормальной работы Nextcloud требуется 64-битный процессор, ОС и PHP.
@@ -74,7 +73,7 @@ CREATE DATABASE nextcloud;
 ```
 CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin';
 ```
-3. Следующая команда предоставляет пользователю "admin" все права на все таблицы в базе данных "nextcloud". '.*' указывает, что должны быть предоставлены все права на все таблицы базы данных "nextcloud":
+3. Следующая команда предоставляет пользователю "admin" все права на все таблицы в базе данных "nextcloud":
 ```
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'admin'@'localhost';
 ```
@@ -103,7 +102,7 @@ wget https://download.nextcloud.com/server/releases/latest.tar.bz2
 ```
 sudo tar -xjf latest.tar.bz2 -C /var/www/html/
 ```
-Измените владельца и группу для всех файлов и директорий в директории /var/www/html/nextcloud/ на пользователя www-data и группу www-data. Когда команда выполнена, пользователь и группа для всех файлов и поддиректорий в /var/www/html/nextcloud/ будут изменены на www-data:www-data. Это может быть полезно, чтобы обеспечить корректную работу веб-приложений, которые работают с файлами и директориями в этой директории, таких как Nextcloud:
+Измените владельца и группу в директории /var/www/html/nextcloud/ на пользователя www-data и группу www-data, чтобы обеспечить корректную работу nextcloud:
 ```
 sudo chown -R www-data:www-data /var/www/html/nextcloud/
 ```
