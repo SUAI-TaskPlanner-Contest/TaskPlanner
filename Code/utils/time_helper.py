@@ -24,3 +24,7 @@ def utc0_to_local(dt: datetime):
             dt (datetime): an awaired datetime object with local timezone
     """
     return dt.astimezone(tzlocal())
+
+
+def utc_now():
+    return datetime.now(tz=timezone.utc)
