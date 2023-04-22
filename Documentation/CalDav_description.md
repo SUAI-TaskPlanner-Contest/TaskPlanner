@@ -34,6 +34,10 @@ my_new_calendar.delete()
 my_new_tasklist = my_principal.make_calendar(
             name="Test tasklist", supported_calendar_component_set=['VTODO'])
 ```
+name - название списка объектов
+
+supported_calendar_component_set - поддерживаемые объекты списка. Могут быть VEVENT - событие, VTODO - задача, VJOURNAL - заметка
+
 Добавление задачи в список задач:
 ```python
 my_new_tasklist.save_todo(
@@ -44,16 +48,36 @@ my_new_tasklist.save_todo(
     categories=['family', 'finance'],
     status='NEEDS-ACTION')
 ```
+RRULE - правило повторения. Можно указать частоту повторения (FREQ), интервал повторения (INTERVAL), счётчик (COUNT) и другие параметры (больше примеров и информации: https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html).
+
+Пример RRULE:  "RRULE:FREQ=DAILY;INTERVAL=2;COUNT=3". При заданных параметрах, задача будет повторяться каждые два дня, пока счётчик повторений не достигнет отметки 3. Например, если время начала задачи задано на 02.04.2023, то задача повторится 04.04.2023 и 06.04.2023.
+
+summary: в спецификации сказано, что это краткое описание задачи или её заголовок.
+
+dtstart - дата начала задачи. Обычно передаётся в формате: 20220223T230000, что означает 23 фев. 2022 года, 23 часа. Можно преобразовывать дату к нужному формату в самой функции, с помощью date().
+
+due - дата окончания задачи. Передаётся в том же формате, что и dtstart.
+
+categories - категории задачи.
+
+status - статус задачи. Определены следующие статусы задач: NEEDS-ACTION - задача нуждается в действии, COMPLETED - задача выполнена, IN-PROCESS - задача в процессе выполнения, CANCELLED - задача была отменена.
+
 Извлечение задач:
 ```python
 todos = my_new_tasklist.todos()
 ```
-Поиск по задачам:
+Поиск задач в заданном временном интервале:
 ```python
 todos = my_new_calendar.search(
     start=datetime(2023, 1, 1), end=datetime(2024, 1, 1),
     compfilter='VTODO',event=True, expand=True)
 ```
+
+* start - левая граница поиска;
+* end - правая граница поиска;
+* compfilter - VTODO или VEVENT;
+* event - True или False.
+
 Отметка о выполнении задачи:
 ```python
 todos[0].complete()
@@ -68,11 +92,22 @@ password=None, auth=None, timeout=None,
 ssl_verify_cert=True, ssl_cert=None, headers={}, huge_tree=False)
 ```
 Базовый клиент для webdav, использует библиотеку запросов; предоставляет доступ к низкоуровневым операциям с сервером caldav.
+
+* proxy - Строка, определяющая прокси-сервер: "hostname:port" ("имя хоста:порт");
+* username и password - должны быть переданы в качестве аргументов или в URL-адресе;
+* auth, timeout и ssl_verify_cert - передаются в requests.request.
+* ssl_verify_cert - может быть путем к CA-bundle или False. (CA-bundle - файл, который содержит корневые и промежуточные сертификаты в определенном порядке.)
+* huge_tree - логическое значение (т.е. True или False). Позволяет XMLParser huge_tree обрабатывать большие события.
+
 ### Функции DAV client
 ```python
 calendar(**kwargs)
 ```
 Возвращает объект calendar.
+
+Как правило, в качестве именованного параметра (это и есть **kwargs) должен быть указан  URL-адрес (url=)
+
+Если URL-адрес календаря не известен, вместо этого следует использовать client.principal().calendar(...) или client.principal().calendars()
 
 ```python
 close()
@@ -82,12 +117,15 @@ close()
 ```python
 delete(url)
 ```
-Отправьте запрос на удаление.
+Отправляет запрос на удаление.
 
 ```python
 post(url, body, headers={})
 ```
 Отправляет запрос на публикацию.
+
+* body - тело запроса;
+* headers - заголовки как в HTTP протоколе.
 
 ```python
 principal(*largs, **kwargs)
@@ -97,22 +135,22 @@ principal(*largs, **kwargs)
 ```python
 propfind(url=None, props=”, depth=0)
 ```
-Отправляет запрос на propfind.
+Отправляет запрос на propfind. propfind - получение свойств файла или каталога.
 
-• url: url для корня propfind.
+• url: url для корня propfind;
 
-• props = (xml запрос), нужные нам свойства
+• props = (xml запрос), нужные нам свойства. Примеры xml-запросов тут (начиная с пункта №14): http://www.webdav.org/specs/rfc4918.html#xml.element.definitions;
 
-• depth: максимальная глубина рекурсии
+• depth: максимальная глубина рекурсии.
 
 ```python
 proppatch(url, body, dummy=None)
 ```
-Отправляет запрос на proppatch.
+Отправляет запрос на proppatch. proppatch - изменение свойств файла или каталога.
 
 • url: url для корня propfind.
 
-• body: XML propertyupdate запрос
+• body: XML propertyupdate запрос. Для примеров перейти по ссылке, указанной в функции propfind;
 
 • dummy: параметр совместимости
 
@@ -230,7 +268,7 @@ save_todo(ical=None, no_overwrite=False, no_create=False, **ical_data)
 ```
 Добавляет новую задачу в календарь с заданным ical.
 
-• ical - ical object (text)
+• ical - ical object
 
 ```python
 save_with_invites(ical, attendees, **attendeeoptions)
