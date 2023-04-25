@@ -72,13 +72,13 @@ def search_calendar_demo(calendar):
     ## Этот метод извлечёт все объекты календаря:
     all_objects = calendar.objects()
 
-    ## Этот метод извлечёт _________ календаря:
+    ## Этот метод извлечёт объекты календаря по sync_token:
     updated_objects = calendar.objects_by_sync_token(some_sync_token)
 
-    ## Этот метод извлечёт __________ календаря:
+    ## Этот метод извлечёт объекты календаря по uid:
     some_object = calendar.object_by_uid(some_uid)
 
-    ## Этот метод __________ календаря:
+    ## Этот метод извлечёт потомков календаря:
     children = calendar.children()
 
     ## Этот метод извлечёт все задачи календаря:
