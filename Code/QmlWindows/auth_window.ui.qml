@@ -17,7 +17,7 @@ Rectangle {
         width: 250
         height: 41
         visible: true
-        text: qsTr("Логин")
+        text: qsTr("Nextcloud логин")
         font.pixelSize: 16
         horizontalAlignment: Text.AlignLeft
         color: "#757575"
@@ -47,7 +47,7 @@ Rectangle {
         width: 250
         height: 41
         visible: true
-        text: qsTr("Пароль")
+        text: qsTr("Nextcloud пароль")
         font.pixelSize: 16
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
