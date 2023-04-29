@@ -9,5 +9,6 @@ Window {
     width: 300 // ширина окна
     height: 300 // высота окна
     title: ("Инструкция")
+    modality: (1)
 
 }

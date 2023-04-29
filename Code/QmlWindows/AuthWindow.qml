@@ -2,9 +2,11 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+//import QtQuick.Dialogs
 
 ApplicationWindow { // окно
     id: authWindow;
+
     width: screen.width; height: screen.height
     visible: true // отображение
     title: ("Окно авторизации")
@@ -59,15 +61,22 @@ ApplicationWindow { // окно
                 }
             }
         }
+
     }
     MainWindow{ //окно список задач
         id: mainWindow
+     //   activeFocusOnTab: True
         onSignalExit: {
             mainWindow.close()
             authWindow.show()
         }
+
     }
     InstructionWindow{ //окно инструкции
         id: instructionWindow
+        MouseArea { //блокирует все кнопки
+            anchors.fill: parent
+        }
     }
+
 }

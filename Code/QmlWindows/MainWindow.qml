@@ -2,10 +2,12 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 //Автоматизация через функции !
 Window {
     id: mainWindow // идентификатор
     signal signalExit // задаем сигнал
+
     width: screen.width // ширина окна
     height: screen.height // высота окна
     title: ("Список задач")
@@ -100,18 +102,36 @@ Window {
                 Layout.column: 1
 
                 Button {
+                    id: btn
                     text: ("Правый")
                     width: parent.width; height: parent.height
                     anchors.centerIn: parent
 
                     onClicked: {
-                        mainWindow.signalExit() //вызываем сигнал
+                        messageDialog.open() //вызываем сигнал
                     }
+                MessageDialog {
+                    id: messageDialog
+                    title: "Ошибка"
+                    text: "Неправильно указан логин и/или пароль"
+
+                    onAccepted: {
+                        //console.log("And of course you could only agree.")
+                        //btn.close() - не закроет окно
+                         Qt.quit() //mainWindow. - не закроет окно
+
+
+                    }
+                    Component.onCompleted: visible = false
+                }
                 }
             }
         }
     }
+
     SettingsWindow{
     id: settingsWindow
+
     }
+
 }
