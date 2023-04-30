@@ -3,6 +3,7 @@ from entities.server import Server
 
 class TaskValidate(BaseModel):
     server: Server
+    parent: Task = None
     dtstamp: datetime
     dtstart: datetime
     due: datetime
