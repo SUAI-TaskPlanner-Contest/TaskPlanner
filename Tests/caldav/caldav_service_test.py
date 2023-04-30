@@ -3,7 +3,7 @@ from unittest import TestCase
 from caldav import DAVClient, Calendar
 from Code.services.caldav_service import CalDavService
 from caldav.lib.error import NotFoundError
-from Tests.CalDav.test_helpers import *
+from Tests.caldav.test_helpers import *
 
 
 class CaldavTests(TestCase):
