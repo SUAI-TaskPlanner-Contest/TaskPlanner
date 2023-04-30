@@ -30,7 +30,7 @@
 3. size_id [Size] - поле может быть пустым
 4. type_id [Type] - поле может быть пустым
 
-## Таблицы Priority, Status, Size, Type, Technical_status
+## Таблицы Priority, Status, Size, Type
 1. {table_name}_id [int] - поле не должно быть пустым
 2. server_id [Server] - поле не должно быть пустым
 3. name [str] - поле не должно быть пустым
