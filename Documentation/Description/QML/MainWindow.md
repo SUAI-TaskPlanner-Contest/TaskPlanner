@@ -25,6 +25,8 @@
             ├── Rectangle // правая кнопка (правая область)
                 ├── Button
                     ├── onClicked
+                        ├── MessageDialog //Ошибка
+                            ├── onAccepted
     ├── SettingsWindow //окно настроек
 ```
 
