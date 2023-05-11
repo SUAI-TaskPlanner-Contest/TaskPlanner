@@ -1,5 +1,5 @@
 from . import *
-from entities import Server
+from Code.entities.db_entities import Server
 
 class CategoryValidator(BaseModel):
     server: Server

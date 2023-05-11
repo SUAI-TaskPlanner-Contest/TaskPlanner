@@ -1,5 +1,5 @@
 from . import *
-from entities import Task, Priority, Status, Size, Type
+from Code.entities.db_entities import Task, Priority, Status, Size, Type
 
 class LabelValidate(BaseModel):
     task: Task

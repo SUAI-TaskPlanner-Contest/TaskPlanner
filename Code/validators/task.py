@@ -1,5 +1,5 @@
 from . import *
-from entities.server import Server
+from Code.entities.db_entities import Server
 
 class TaskValidate(BaseModel):
     server: Server
