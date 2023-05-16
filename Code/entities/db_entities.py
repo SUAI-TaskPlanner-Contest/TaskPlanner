@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, BLOB
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
@@ -15,8 +15,8 @@ class Server(Base):
     id = Column("server_id", Integer, primary_key=True, autoincrement=True)
 
     # other fields
-    user_email = Column(String)
-    user_password = Column(String)
+    user_email = Column(BLOB)
+    user_password = Column(BLOB)
 
     server_uri = Column(String)
     server_name = Column(String)
