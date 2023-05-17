@@ -10,6 +10,6 @@ class CategoryValidator(BaseModel):
         arbitrary_types_allowed = True
 
     @validator('name')
-    def name_check(cls, name):
-        assert len(name) > 0, 'Вы не ввели имя'
+    def name_check(cls, name: str):
+        assert len(name) > 0, "Вы не ввели название лейбла"
         return name

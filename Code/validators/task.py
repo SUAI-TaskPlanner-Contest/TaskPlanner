@@ -1,5 +1,5 @@
 from . import *
-from Code.entities.db_entities import Server
+from Code.entities.db_entities import Server, Task
 
 class TaskValidate(BaseModel):
     server: Server
@@ -17,6 +17,6 @@ class TaskValidate(BaseModel):
         arbitrary_types_allowed = True
 
     @validator('summary')
-    def str_check(cls, var):
-        assert len(var) > 0, 'Вы не ввели название задачи'
-        return var
+    def str_check(cls, summary: str):
+        assert len(summary) > 0, "Вы не ввели название задачи"
+        return summary
