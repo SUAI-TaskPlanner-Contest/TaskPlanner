@@ -4,7 +4,6 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
-//Автоматизация через функции !
 Window {
     id: mainWindow
     signal signalExit
@@ -48,8 +47,8 @@ Window {
                 font.family: localFont.name; font.weight: 400;
                 font.pointSize: 12
                 model: main_handler.model
-                currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
-                onCurrentIndexChanged: main_handler.item = model[currentIndex]
+                //currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
+                //onCurrentIndexChanged: main_handler.item = model[currentIndex]
                 textRole: 'server_name'
                 onActivated: {
                     main_handler.change_server(index)
@@ -163,67 +162,465 @@ Window {
             border.color: "lightgrey"
             border.width: 4
             radius: 20 // устанавливаем общий радиус для всех углов
-        }
-
-        Button {
-            id: but_setting_task
-            width: 50; height: 50
-            x:1000; y:120
-            visible: true
-            contentItem: Image{source: "Resources/dots.svg"}
-            hoverEnabled: false
-            background: Rectangle{color: "white"}
-            onClicked: {
-                settingsList.visible = !settingsList.visible
+            ListModel {
+                id: dataModel
+                    ListElement{color: "yellow"; text: "first"}
+                    ListElement{color: "red"; text: "second"}
             }
-            Popup {//открытия окна редактирования добавления и удаление задачи
-                id: settingsList
-                width: 135
-                height: 90
-                visible: false
-
-                Column {
-                    spacing: 1
-                    Button {
-                        id: but_add_subtask
-                        width: 125
-                        background: Rectangle{color: "white"}
-                        text: "Добавить подзадачу"
-                        font.family: localFont.name; font.weight: 500
-                        onClicked: {
-                            newtask.visible=!newtask.visible
-                            settingsList.visible=!settingsList.visible
-                            patentsearch_text.visible=true
-                            patentsearch_combobox.visible=true
-                            // Действия при нажатии кнопки "Добавить подзадачу"
-                            }
+            ListView {
+                id: view
+                //model: dataModel // id того, что я хочу отобразить в listView
+                model: tasks.model
+                anchors.margins: 10
+                anchors.fill: parent
+                spacing: 10
+                clip: true
+                //Подсветка выбранного элемента
+                //highlight: Rectangle {color: "green"}
+                //highlightFollowsCurrentItem: true
+                headerPositioning: ListView.OverlayHeader
+                header: Item {
+                    height: 40
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    Row {
+                        anchors.fill: parent
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Задачи")
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Тип")
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Дата начала")
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Срок выполнения")
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Статус")
+                        }
+                        Text {
+                            horizontalAlignment: Text.AlignHCenter
+                            width: parent.width / 7
+                            text: ("Дата изменения")
+                        }
                     }
-                    Button {
-                        id: but_edit_task
-                        width: 125
-                        text: "Редактировать"
-                        font.family: localFont.name; font.weight: 500
-                        background: Rectangle{color: "white"}
-                        onClicked: {
-                            newtask.visible=!newtask.visible
-                            settingsList.visible=!settingsList.visible
+                }
+                delegate: Rectangle {
+                    id: task_rect
+                    property int indexOfThisDelegate: index
+                    property var view: ListView.view
+                    property var isCurrent: ListView.isCurrentItem
+                    width: view.width
+                    height: 100
+                    color: "transparent"
+                    radius: 10
+                    border.width: 2
+                    border.color: "lightgrey"
 
-                            // Действия при нажатии кнопки "Редактировать"
+                    GridLayout{
+                        width: parent.width
+                        columns: 7
+                        TaskWindow{msg: model.modelData.summary; id: model_text}
+                        TaskWindow{Layout.column: 1; msg: model.modelData.type;id: model_charm}
+                        TaskWindow{Layout.column: 2; msg: model.modelData.dtstart;id: model_date_of_start}
+                        TaskWindow{Layout.column: 3; msg: model.modelData.dtstamp;id: model_dtstamp}
+                        TaskWindow{Layout.column: 4; msg: model.modelData.status; id: model_tech_status}
+                        TaskWindow{Layout.column: 5; msg: model.modelData.last_mod; id: model_last_mod}
+                        TaskWindow{
+                            Layout.column: 6
+                            Button{anchors.centerIn: parent; width:50; height:50; font.pixelSize: 15;
+                                contentItem: Image{source: "Resources/dots.svg"}
+                                background: Rectangle{color: "white"}
+                                hoverEnabled: false //не будет выделяться кнопка
+                                onClicked: popup.open()}
+                            Popup {
+                                id: popup
+                                y: 50; width: 150; height: 100; modal: true; focus: true; padding: 10;
+                                ColumnLayout {
+                                    anchors.fill: parent
+                                    Button {
+                                        text: ("Добавить подзадачу")
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        onClicked:{
+                                            popup.visible = !popup.visible
+                                            patentsearch_text.visible=true
+                                            patentsearch_combobox.visible=true
+                                            newtask.visible = !newtask.visible
+                                        }
+                                    }
+                                    Button {
+                                        text: ("Редактировать")
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        onClicked:{
+                                            popup.visible = !popup.visible
+                                            patentsearch_text.visible=true
+                                            patentsearch_combobox.visible=true
+                                            change_task_window.visible = !change_task_window.visible
+
+                                        }
+                                    }
+                                    Button {
+                                        text: ("Удалить")
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        onClicked: tasks.delete_item(index)
+                                    }
+                                }
                             }
-                    }
-                    Button {
-                        id: but_delete_task
-                        width: 125
-                        text: "Удалить"
-                        font.family: localFont.name; font.weight: 500
-                        background: Rectangle{color: "white"}
-                        onClicked: {
-                            // Действия при нажатии кнопки "Удалить"
-                            }
+                        }
                     }
                 }
             }
         }
+        //Окно добавления задачи
+        Rectangle{
+            id: newtask
+            width: 500; height: parent.height
+            anchors.right: parent.right
+            color: "white"
+            visible: false
+            border.width: 2
+            border.color: "lightgrey"
+            Button{//кнопка закрыть окно создания задачи
+                id: butclose
+                width: 45;  height: 45
+                y: 3;  x: 450
+                contentItem: Image{source: "Resources/close.svg"}
+                hoverEnabled: false
+                background: Rectangle{color: "white"}
+                onClicked:{newtask.visible=false}
+            }
+            //название задачи
+            TextField{
+                x: 10; y: 50
+                id: task_name
+                width:440
+                //maximumLength: 50
+                font.pointSize: 25
+                text: "Новая  задача"
+                font.family: localFont.name; font.weight: 500;color: "#232323"
+            }
+            //описание задачи
+            TextField{
+                id: task_description
+                x:10; y:100
+                width: 440; height: 150
+                wrapMode: TextInput.Wrap
+                //maximumLength: 200
+                font.pointSize: 17
+                font.family: localFont.name; font.weight: 500;color: "#232323"
+                text: "Введите описание задачи"
+            }
+
+            Rectangle{//делаем таблицу 6*2
+                x: 10; y: 260
+                width: 440; height: 500
+                GridLayout{ // разбиваем на сетку
+                    rows: 8; columns: 2
+                    Text{Layout.column: 2; Layout.row:1; text: "Дата начала:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 2; text: "Дата завершения:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{Layout.column: 2; Layout.row: 3; text: "Категория:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 4; text: "Статус:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 5; text: "Размер:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 6; text: "Приоритет:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ id: patentsearch_text
+                        visible: true
+                        Layout.column: 2; Layout.row: 7; text: "Родитель:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                    }
+                    TextField {
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        Layout.column: 1; Layout.row: 1
+                        id: task_data_start
+                        inputMask: " 99.99.9999"; text: "20.20.2020"
+                        font.pointSize: 14
+                    }
+                    TextField {
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        Layout.column: 1; Layout.row: 2
+                        id: task_data_end
+                        inputMask: " 99.99.9999"; text: "20.20.2020"
+                        font.pointSize: 14
+                    }
+                    ComboBox{
+                        id: task_category
+                        Layout.column: 1; Layout.row: 3
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Design", "UX", "UI", "Backend"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_status
+                        Layout.column: 1; Layout.row: 4
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_size
+                        Layout.column: 1; Layout.row: 5
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Легкая", "Средняя", "Тяжелая"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_priority
+                        Layout.column: 1; Layout.row: 6
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["1", "2", "3", "4"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: patentsearch_combobox
+                        Layout.column: 1; Layout.row: 7
+                        width: 200
+                        height: 45
+                        visible: true
+                        font.pointSize:14
+                        model: ["Не выбрано", "Одиночная задача", "Вторая", "Работа"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                }
+            }
+            Button{
+                id: but_add_newtask
+                text: "Добавить"
+                onClicked: {
+                    tasks.add_item(task_name.text, task_description.text, task_data_start.text, task_data_end.text, task_status.text, control.currentIndex,)
+                    newtask.visible=false
+                }
+                x:10; y:630
+                width: 200;height: 50
+                font.family: localFont.name; font.weight: 400;
+
+                background: Rectangle {
+                     color: "lightgreen"
+                     border.color: "green"
+                     radius: 5
+                }
+            }
+            Button{
+                id: but_cancel_newtask
+                text: "Отменить"
+                onClicked: {newtask.visible=false}
+                x:270; y:630
+                width: 200;height: 50
+                font.family: localFont.name; font.weight: 400;
+                background: Rectangle {
+                    color: "#F15A5A"; border.color: "#D64141"; radius: 5}
+            }
+       }
+       //Окно редактирования задачи
+       Rectangle{
+            id: change_task_window
+            width: 500; height: parent.height
+            anchors.right: parent.right
+            color: "white"
+            visible: false
+            border.width: 2
+            border.color: "lightgrey"
+            Button{//кнопка закрыть окно создания задачи
+                id: butclose_change
+                width: 45;  height: 45
+                y: 3;  x: 450
+                contentItem: Image{source: "Resources/close.svg"}
+                hoverEnabled: false
+                background: Rectangle{color: "white"}
+                onClicked:{newtask.visible=false}
+            }
+            //название задачи
+            TextField{
+                x: 10; y: 50
+                id: task_name_change
+                width:440
+                //maximumLength: 50
+                font.pointSize: 25
+                text: "Новая  задача"
+                font.family: localFont.name; font.weight: 500;color: "#232323"
+            }
+            //описание задачи
+            TextField{
+                id: task_description_change
+                x:10; y:100
+                width: 440; height: 150
+                wrapMode: TextInput.Wrap
+                //maximumLength: 200
+                font.pointSize: 17
+                font.family: localFont.name; font.weight: 500;color: "#232323"
+                text: "Введите описание задачи"
+            }
+
+          Rectangle{//делаем таблицу 6*2
+                x: 10; y: 260
+                width: 440; height: 500
+                GridLayout{ // разбиваем на сетку
+                    rows: 8; columns: 2
+                    Text{Layout.column: 2; Layout.row:1; text: "Дата начала:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 2; text: "Дата завершения:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{Layout.column: 2; Layout.row: 3; text: "Категория:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 4; text: "Статус:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 5; text: "Размер:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ Layout.column: 2; Layout.row: 6; text: "Приоритет:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        }
+                    Text{ id: patentsearch_text_change
+                        visible: true
+                        Layout.column: 2; Layout.row: 7; text: "Родитель:"
+                        font.pointSize: 14
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                    }
+                    TextField {
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        Layout.column: 1; Layout.row: 1
+                        id: task_data_start_change
+                        inputMask: " 99.99.9999"; text: "20.20.2020"
+                        font.pointSize: 14
+                    }
+                    TextField {
+                        font.family: localFont.name; font.weight: 400;color: "#232323"
+                        Layout.column: 1; Layout.row: 2
+                        id: task_data_end_change
+                        inputMask: " 99.99.9999"; text: "20.20.2020"
+                        font.pointSize: 14
+                    }
+                    ComboBox{
+                        id: task_category_change
+                        Layout.column: 1; Layout.row: 3
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Design", "UX", "UI", "Backend"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_status_change
+                        Layout.column: 1; Layout.row: 4
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_size_change
+                        Layout.column: 1; Layout.row: 5
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["Легкая", "Средняя", "Тяжелая"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: task_priority_change
+                        Layout.column: 1; Layout.row: 6
+                        width: 200
+                        height: 45
+                        font.pointSize:14
+                        model: ["1", "2", "3", "4"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                    ComboBox{
+                        id: patentsearch_combobox_change
+                        Layout.column: 1; Layout.row: 7
+                        width: 200
+                        height: 45
+                        visible: true
+                        font.pointSize:14
+                        model: ["Не выбрано", "Одиночная задача", "Вторая", "Работа"]
+                        onActivated: {}
+                        font.family: localFont.name; font.weight: 400;
+                    }
+                }
+          }
+          Button{
+            id: but_save_task
+            text: "Сохранить"
+            onClicked: {change_task_window.visible=false
+            tasks.edit(task_name.text, task_description.text, task_data_start.text, task_data_end.text, task_status.text, control.currentIndex,task_data_start.text)
+            }
+            x:10; y:630
+            width: 200;height: 50
+            font.family: localFont.name; font.weight: 400;
+
+            background: Rectangle {
+                color: "lightgreen"
+                border.color: "green"
+                radius: 5
+            }
+          }
+          Button{
+            id: but_cancel_change_task
+            text: "Отменить"
+            onClicked: {change_task_window.visible=false}
+            x:270; y:630
+            width: 200;height: 50
+            font.family: localFont.name; font.weight: 400;
+            background: Rectangle {color: "#F15A5A"; border.color: "#D64141"; radius: 5}
+          }
+       }
     }
     //ДОСКА ГАНТА
     Rectangle{
@@ -265,6 +662,11 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     font.pointSize: 20
                     anchors.horizontalCenter: parent.horizontalCenter; y:5
+                }
+                Text{
+                    id: ver_server_task_id
+                    text: 'task_id'
+                    visible: false
                 }
                 ScrollView {
                     y:50
@@ -393,6 +795,11 @@ Window {
                 font.family: localFont.name; font.weight: 400;color: "#232323"
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20; y:20
+            }
+            Text{
+                id: ver_intermediate_task_id
+                text: 'task_id'
+                visible: false
             }
             Rectangle{
                 width: parent.width-10; height: 550
@@ -565,6 +972,11 @@ Window {
                     font.pointSize: 20
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     anchors.horizontalCenter: parent.horizontalCenter; y:5
+                }
+                Text{
+                    id: ver_client_task_id
+                    text: 'task_id'
+                    visible: false
                 }
                 ScrollView {
                     y:50
@@ -858,6 +1270,11 @@ Window {
             text: "Новая  задача"
             font.family: localFont.name; font.weight: 500;color: "#232323"
         }
+        Text{
+            id: task_id
+            text: 'task_id'
+            visible: false
+        }
         //описание задачи
         TextField{
             id: task_description
@@ -998,7 +1415,7 @@ Window {
         }
     }
 
-    Connections {
+    /*Connections {
         target: main_handler
 
         onDetectedConflicts: {
@@ -1023,7 +1440,7 @@ Window {
         onCloseWindow: {
             auth_window.hide()
         }
-    }
+    }*/
 
     SettingsWindow{
         id: settingsWindow

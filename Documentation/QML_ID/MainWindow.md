@@ -90,6 +90,7 @@
     * but_delete_task - Кнопка удаление задачи
 ### 3 Окно мерджа
 ### 4.1 Версия сервера
+* ver_server_task_id - id задачи
 * ver_server_name - Название задачи версии сервера
 * ver_server_description - Описание задачи версии сервера
 * ver_server_data_start - Дата начала
@@ -102,6 +103,7 @@
 * but_ver_server - Кнопка Принять эту версию сервера
 
 ### 4.2 Промежуточная версия
+* ver_intermediate_task_id - id задачи
 * ver_intermediate_name - Название задачи версии сервера
 * ver_intermediate_description - Описание задачи версии сервера
 * ver_intermediate_data_start - Дата начала
@@ -114,6 +116,7 @@
 * but_ver_intermediate - Кнопка Принять эту версию сервера
 
 ### 4.3 Версия клиента
+* ver_client_task_id - id задачи
 * ver_client_name - Название задачи версии сервера
 * ver_client_description - Описание задачи версии сервера
 * ver_client_data_start - Дата начала
@@ -135,6 +138,7 @@
 * but_setting_window - кнопка вызова окна настроек
 
 ### 6. Окно создания/редактирования задачи
+* task_id - id задачи
 * butclose - закрытие окна
 * task_name - Ввод название задачи/редактирование
 * task_description - Ввод описания задачи/редактирование

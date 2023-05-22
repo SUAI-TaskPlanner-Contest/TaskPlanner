@@ -211,4 +211,3 @@ class Type(Base):
 # engine = create_engine('sqlite:///../database/taskplanner.db', echo=False)
 # Base.metadata.drop_all(bind=engine)
 # Base.metadata.create_all(engine)
-
