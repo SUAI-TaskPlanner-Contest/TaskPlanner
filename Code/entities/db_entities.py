@@ -1,9 +1,7 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, BLOB
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 
 Base = declarative_base()
 
@@ -15,8 +13,8 @@ class Server(Base):
     id = Column("server_id", Integer, primary_key=True, autoincrement=True)
 
     # other fields
-    user_email = Column(BLOB)
-    user_password = Column(BLOB)
+    user_email = Column(String)
+    user_password = Column(String)
 
     server_uri = Column(String)
     server_name = Column(String)
@@ -36,6 +34,20 @@ class Server(Base):
         self.server_name = server_name
         self.calendar_name = calendar_name
         self.server_uri = server_uri
+
+    def __eq__(self, other):
+        return \
+                self.id == other.id and \
+                self.user_email == other.user_email and \
+                self.user_password == other.user_password and \
+                self.server_name == other.server_name and \
+                self.calendar_name == other.calendar_name and \
+                self.server_uri == other.server_uri and \
+                self.tasks == other.tasks and \
+                self.priorities == other.priorities and \
+                self.sizes == other.sizes and \
+                self.types == other.types and \
+                self.statuses == other.statuses
 
 
 class Task(Base):
@@ -80,6 +92,23 @@ class Task(Base):
         self.tech_status = tech_status
         self.server = server
         self.parent = parent
+
+    def __eq__(self, other):
+        return \
+                self.id == other.id and \
+                self.server_id == other.server_id and \
+                self.parent_id == other.parent_id and \
+                self.parent == other.parent and \
+                self.dtstamp == other.dtstamp and \
+                self.dtstart == other.dtstart and \
+                self.due == other.due and \
+                self.last_mod == other.last_mod and \
+                self.summary == other.summary and \
+                self.description == other.description and \
+                self.tech_status == other.tech_status and \
+                self.server == other.server and \
+                self.label == other.label and \
+                self.children == other.children
 
 
 class Label(Base):
@@ -176,9 +205,7 @@ class Type(Base):
         self.name = name
 
 
-engine = create_engine('sqlite:///test.db', echo=False)
+# engine = create_engine('sqlite:///../database/taskplanner.db', echo=False)
+# Base.metadata.drop_all(bind=engine)
+# Base.metadata.create_all(engine)
 
-Base.metadata.drop_all(bind=engine)
-Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)

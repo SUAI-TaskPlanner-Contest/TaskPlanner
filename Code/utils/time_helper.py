@@ -1,5 +1,5 @@
-from datetime import datetime, timezone
 from dateutil.tz import tzlocal
+from datetime import datetime, timezone
 
 
 def local_to_utc0(dt: datetime):
