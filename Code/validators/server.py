@@ -12,17 +12,19 @@ class ServerValidate(BaseModel):
 
     @validator('user_email')
     def email_format_check(cls, email: str):
-        reg = r"[^@]+@[\w]+[.][\w]+"
-        assert len(re.findall(reg, email)) > 0, "Вы ввели email неправильного формата"
+        validate_email(
+            email,
+            check_deliverability=False
+        )
         return email
 
     @validator('server_name')
-    def name_check(cls, server_name: str):
+    def server_name_check(cls, server_name: str):
         assert len(server_name) > 0, "Вы не ввели имя сервера"
         return server_name
 
     @validator('calendar_name')
-    def name_check(cls, calendar_name: str):
+    def calendar_name_check(cls, calendar_name: str):
         assert len(calendar_name) > 0, "Вы не ввели имя календаря"
         return calendar_name
 
@@ -30,3 +32,8 @@ class ServerValidate(BaseModel):
     def password_check(cls, password: str):
         assert len(password) > 0, 'Вы не ввели пароль'
         return password
+
+    @validator('server_uri')
+    def server_uri_check(cls, server_uri: str):
+        assert urlparse(server_uri).netloc, 'Вы ввели некорректный uri-адрес сервера'
+        return server_uri

@@ -1,7 +1,8 @@
 from datetime import datetime
 from pydantic import StrictStr, StrictInt
 from pydantic import BaseModel, validator
-import re
+from email_validator import validate_email
+from urllib.parse import urlparse
 
 from .server import ServerValidate
 from .task import TaskValidate
