@@ -3,7 +3,7 @@ from unittest import TestCase
 from caldav import DAVClient, Calendar
 from Code.services.caldav_service import CalDavService
 from caldav.lib.error import NotFoundError
-from Tests.test_helpers import *
+from Tests.CalDav.test_helpers import *
 
 
 class CaldavTests(TestCase):
@@ -33,14 +33,14 @@ class CaldavTests(TestCase):
 
     def test_create_and_get(self) -> None:
         self.service.publish_task(self.task)
-        published = self.service.get_task_by_int_uid(self.task.task_id)
+        published = self.service.get_task_by_id(self.task.id)
         assert published is not None
 
     def test_delete(self) -> None:
         assert self.service.publish_task(self.task) is None
-        assert self.service.delete_task_by_int_id(self.task.task_id)
+        assert self.service.delete_task_by_int_id(self.task.id)
         with self.assertRaises(NotFoundError):
-            self.service.get_event_by_int_id(self.task.task_id)
+            self.service.get_task_by_id(self.task.id)
 
     def test_update(self) -> None:
         assert self.service.publish_task(self.task) is None
@@ -53,8 +53,8 @@ class CaldavTests(TestCase):
         self.task.server_id = '2'
         self.task.parent_id = '2'
         self.task.label = generate_labels(self.server, self.task)
-        assert self.service.update_task(self.task) is None
-        updated = self.service.get_task_by_int_uid(self.task.task_id)
+        assert self.service.publish_task(self.task) is None
+        updated = self.service.get_task_by_id(self.task.id)
         assert updated is not None
         assert self.task.summary == updated.summary
         assert self.task.description == updated.description

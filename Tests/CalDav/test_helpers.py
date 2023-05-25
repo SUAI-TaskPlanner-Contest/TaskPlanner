@@ -1,5 +1,5 @@
 ﻿from Code.entities.db_entities import Task, Server, Label, Type, Size, Status, Priority
-from Code.utils.time_helper import local_to_utc0, utc_now
+from Code.utils.time_helper import utc_now
 
 current = 0
 
@@ -63,6 +63,6 @@ def generate_task(server: Server) -> Task:
         parent=None
     )
     task.label = generate_labels(server, task)
-    task.task_id = generate_id()
+    task.id = generate_id()
     task.sync_time = utc_now()
     return task
