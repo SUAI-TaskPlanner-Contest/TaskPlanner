@@ -11,7 +11,7 @@ ApplicationWindow {
     //color: "#ffffff"
     title: "Окно ошибки"
     color: "transparent"
-    flags: Qt.FramelessWindowHint 
+    flags: Qt.FramelessWindowHint
 
     minimumWidth: 600
     minimumHeight: 340
