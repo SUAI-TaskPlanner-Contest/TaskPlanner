@@ -1,8 +1,8 @@
 from typing import Tuple
-from caldav import DAVClient, Principal, Calendar, Event
-from caldav.lib.error import NotFoundError
-from Code.entities.db_entities import Task, Label, Server
 from Code.utils.time_helper import *
+from caldav.lib.error import NotFoundError
+from caldav import DAVClient, Principal, Calendar, Event
+from Code.entities.db_entities import Task, Label, Server
 
 
 class CalDavService:

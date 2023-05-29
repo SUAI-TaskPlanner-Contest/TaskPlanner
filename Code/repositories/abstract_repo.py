@@ -26,27 +26,22 @@ class AbstractRepository(Generic[T]):
         self.session.commit()
 
     @abstractmethod
-    def delete_by_id(self, item_id: int) -> None:
-        server_to_delete = self.session.query(T) \
-            .get(item_id)
-        self.session.delete(server_to_delete)
-        self.session.commit()
-
-    @abstractmethod
     def delete(self, item: T) -> None:
         self.session.delete(item)
         self.session.commit()
 
     @abstractmethod
-    def get_all(self) -> list[T]:
-        return self.session.query(T).all()
+    def delete_by_id(self, item_id: int) -> None:
+        return NotImplemented
 
     @abstractmethod
-    def get_by_id(self, item_id: int) -> T:
-        return self.session.query(T).get(item_id)
+    def get_all(self):
+        return NotImplemented
+
+    @abstractmethod
+    def get_by_id(self, item_id: int):
+        return NotImplemented
 
     @abstractmethod
     def get_many_by_ids(self, object_ids: list) -> list[T]:
-        return self.session.query(T) \
-            .filter(T.id.in_(object_ids)) \
-            .all()
+        return NotImplemented
