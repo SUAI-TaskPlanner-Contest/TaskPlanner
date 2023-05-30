@@ -1,6 +1,6 @@
-import QtQuick 2.12
-import QtQuick.Controls 2.12
-import QtQuick.Layouts 1.12
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 // Основное окно
 ApplicationWindow {
@@ -49,7 +49,7 @@ ApplicationWindow {
 
     // Логин
     TextField {
-        id: textInput3
+        id: textInputLogin
         x: 75
         y: 107
         width: 250
@@ -69,19 +69,19 @@ ApplicationWindow {
         background: Rectangle {
             x: 120
             y: 107
-            width: textInput3.width
-            height: textInput3.height
+            width: textInputLogin.width
+            height: textInputLogin.height
             color: "#00979699"
             border.color: "#848484"
             border.width: 1
-            anchors.fill: textInput3
+            anchors.fill: textInputLogin
             radius: 15
         }
     }
 
     // Password
     TextField {
-        id: textInput1
+        id: textInputPassword
         x: 75
         y: 171
         width: 250
@@ -103,26 +103,26 @@ ApplicationWindow {
         background: Rectangle {
             x: 120
             y: 107
-            width: textInput1.width
-            height: textInput1.height
+            width: textInputPassword.width
+            height: textInputPassword.height
             color: "#00ffffff"
             border.color: "#848484"
             border.width: 1
-            anchors.fill: textInput1
+            anchors.fill: textInputPassword
             radius: 15
         }
     }
 
     // Адрес календаря
     TextField {
-        id: textInput2
+        id: textInputCalendarName
         x: 75
         y: 235
         width: 250
         height: 41
         visible: true
         color: "#000000"
-        placeholderText: qsTr("Адрес календаря")
+        placeholderText: qsTr("Название календаря")
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
         clip: false
@@ -134,19 +134,19 @@ ApplicationWindow {
         background: Rectangle {
             x: 120
             y: 107
-            width: textInput2.width
-            height: textInput2.height
+            width: textInputCalendarName.width
+            height: textInputCalendarName.height
             color: "#00fbf9ff"
             border.color: "#848484"
             border.width: 1
-            anchors.fill: textInput2
+            anchors.fill: textInputCalendarName
             radius: 15
         }
     }
 
     // Ссылка на сервер
     TextField {
-        id: textInput4
+        id: textInputServerUri
         x: 75
         y: 299
         width: 250
@@ -165,12 +165,12 @@ ApplicationWindow {
         background: Rectangle {
             x: 120
             y: 107
-            width: textInput4.width
-            height: textInput4.height
+            width: textInputServerUri.width
+            height: textInputServerUri.height
             color: "#00fbf9ff"
             border.color: "#848484"
             border.width: 1
-            anchors.fill: textInput4
+            anchors.fill: textInputServerUri
             radius: 15
         }
     }
@@ -189,8 +189,6 @@ ApplicationWindow {
         font.pixelSize: 20
         font.bold: false
         font.family: localFont1.name
-
-        signal loginClicked(string login, string password, string calendarAddress, string serverLink)
 
         background: Rectangle {
             id: button_1_bg
@@ -214,7 +212,13 @@ ApplicationWindow {
             }
             onReleased: {
                 button_1_bg.color = "#F0F0F0"; // Исходный цвет кнопки
-                buttonHandler.loginClicked(textInput3.text, textInput1.text, textInput2.text, textInput4.text)
+
+                auth_handler.authorize_nextcloud_server(textInputLogin.text,
+                                                        textInputPassword.text,
+                                                        textInputServerUri.text,
+                                                        textInputCalendarName.text)
+
+
             }
         }
         
@@ -255,7 +259,7 @@ ApplicationWindow {
             }
             onReleased: {
                 text1.color = "#000000"; // Исходный цвет кнопки
-                buttonHandler.localareaClicked();
+                // buttonHandler.localareaClicked();
             }
         }
     }
@@ -272,5 +276,13 @@ ApplicationWindow {
         verticalAlignment: Text.AlignVCenter
         font.bold: false
         font.family: localFont1.name
+    }
+
+    Connections {
+        target: auth_handler
+
+        onErrorMessage: {
+            text_for_errors.text = message
+        }
     }
 }

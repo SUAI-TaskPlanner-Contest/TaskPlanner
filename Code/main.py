@@ -2,6 +2,7 @@ import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from entities.db_entities import Base
+from Code.handlers.auth_window_handler import AuthWindowHandler
 
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtQml import QQmlApplicationEngine
@@ -16,5 +17,7 @@ if __name__ == '__main__':
 
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
+    auth_handler = AuthWindowHandler()
+    engine.rootContext().setContextProperty("auth_handler", auth_handler)
     engine.load('QmlWindows/AuthWindow.qml')  # файл с кодом QML основного окна
     sys.exit(app.exec())  # запустить цикл события

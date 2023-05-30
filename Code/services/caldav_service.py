@@ -45,7 +45,7 @@ class CalDavService:
             tasks.append(task)
         return tasks
 
-    def publish_task(self, task: Task) -> Tuple[Task, Task] | None:
+    def publish_task(self, task: Task):
         """
             Publish task
 
@@ -128,7 +128,7 @@ class CalDavService:
             returns:
                 task entity
         """
-        def get_value_or_none(e: Event, value: str) -> str | None:
+        def get_value_or_none(e: Event, value: str):
             try:
                 return str(e.icalendar_component[value])
             except Exception:
