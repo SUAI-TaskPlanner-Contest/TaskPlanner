@@ -11,13 +11,28 @@ ApplicationWindow {
     //color: "#ffffff"
     title: "Окно ошибки"
     color: "transparent"
-    flags: Qt.FramelessWindowHint
+    flags: Qt.FramelessWindowHint 
 
     minimumWidth: 600
     minimumHeight: 340
     maximumWidth: 600
     maximumHeight: 340
 
+    
+    // название ошибки
+    Text {
+        id: textEdit1
+        color: "#000000"
+        text: errorInfo.name
+        onTextChanged: errorInfo.name = text
+        font.pixelSize: 36
+        horizontalAlignment: Text.AlignHCenter
+        x: 210
+        y: 60
+        //anchors.horizontalCenter: parent.horizontalCenter
+        //anchors.verticalCenter: parent.verticalCenter * 1.5
+        font.family: localFont1.name
+    }
 
     background: Rectangle {
         visible: true
@@ -37,7 +52,7 @@ ApplicationWindow {
             width: parent.width
             height: parent.height * 0.6
             spacing: 0
-
+            
         Rectangle {
             id: rectangle1
             width: rectangle.width
@@ -46,24 +61,11 @@ ApplicationWindow {
             color: "transparent"
         }
 
-        // название ошибки
-        Text {
-            id: textEdit1
-            color: "#000000"
-            text: errorInfo.name
-            onTextChanged: errorInfo.name = text
-            font.pixelSize: 36
-            horizontalAlignment: Text.AlignHCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.verticalCenter: parent.verticalCenter * 1.7
-            font.family: localFont1.name
-        }
-
         // текст ошибки
         Text {
             id: textEdit
 
-            width: parent.width
+            width: parent.width 
             height: parent.height * 0.5
 
             text: errorInfo.text
@@ -89,13 +91,12 @@ ApplicationWindow {
                 anchors.fill: Text
 
             }
-
         }
         }
         // левая кнопка
         Button {
-            id: button_1
-            text: errorInfo.button1
+            id: button_ok
+            text: errorInfo.button_ok
             font.capitalization: Font.MixedCase
             font.bold: false
             font.family: localFont1.name
@@ -105,6 +106,8 @@ ApplicationWindow {
             display: AbstractButton.TextOnly
             Layout.preferredWidth: 150 // Установка ширины кнопки
             Layout.preferredHeight: 45 // Установка высоты кнопки
+            
+            hoverEnabled: false
 
             palette.buttonText: "black"
             x: 100
@@ -136,27 +139,27 @@ ApplicationWindow {
                 }
                 onReleased: {
                     button_1_bg.color = "#F0F0F0"; // Исходный цвет кнопки
-                    buttonHandler.button1Clicked();
+                    buttonHandler.button_ok_clicked();
                 }
             }
         }
 
         // правая кнопка
         Button {
-            id: button_2
-            text: errorInfo.button2
+            id: button_cancel
+            text: errorInfo.button_cancel
             font.capitalization: Font.MixedCase
             font.pointSize: 14
             checkable: true
             flat: false
-
+            
             Layout.preferredWidth: 150 // Установка ширины кнопки
             Layout.preferredHeight: 45 // Установка высоты кнопки
 
             font.bold: false
             font.family: localFont1.name
             display: AbstractButton.TextOnly
-
+            hoverEnabled: false
             palette.buttonText: "black"
 
             x: 350
@@ -165,7 +168,7 @@ ApplicationWindow {
             leftPadding: 30
             topPadding: 10
             bottomPadding: 10
-
+            
             background: Rectangle {
                 id: button_2_bg
                 color: "#F0F0F0"
@@ -173,6 +176,7 @@ ApplicationWindow {
                 border.color: "#848484"
             }
 
+            
             MouseArea {
                 id: buttonArea2
                 anchors.fill: parent
@@ -188,11 +192,9 @@ ApplicationWindow {
                 }
                 onReleased: {
                     button_2_bg.color = "#F0F0F0"; // Исходный цвет кнопки
-                    buttonHandler.button2Clicked();
+                    buttonHandler.button_cancel_clicked();
                 }
             }
-
         }
     }
-
 }
