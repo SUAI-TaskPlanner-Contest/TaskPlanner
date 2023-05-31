@@ -1,5 +1,5 @@
+from TaskPlanner.Code.handlers.warning_window_handler import WarningWindowHandler
 from typing import Tuple
-from Code.handlers.warning_window_handler import WarningWindowHandler
 
 
 class CustomException(Exception):
