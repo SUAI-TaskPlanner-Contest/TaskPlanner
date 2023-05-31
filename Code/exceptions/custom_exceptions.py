@@ -1,4 +1,4 @@
-from TaskPlanner.Code.handlers.warning_window_handler import WarningWindowHandler
+from Code.handlers.warning_window_handler import WarningWindowHandler
 from typing import Tuple
 
 
