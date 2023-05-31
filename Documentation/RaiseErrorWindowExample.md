@@ -7,9 +7,9 @@ from PyQt6.QtCore import QUrl
 from PyQt6.QtWidgets import QApplication
 from PyQt6.QtQml import QQmlApplicationEngine
 
-from TaskPlanner.Code.errors_dict.errors import errors
-from TaskPlanner.Code.exceptions.custom_exceptions import CustomException
-from TaskPlanner.Code.handlers.warning_window_handler import WarningWindowHandler, WarningButtonHandler
+from Code.errors_dict.errors import errors
+from Code.exceptions.custom_exceptions import CustomException
+from Code.handlers.warning_window_handler import WarningWindowHandler, WarningButtonHandler
 
 if __name__ == "__main__":
     try:
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         error_info.setProperty("button_ok", e.error_info.button_ok)
         error_info.setProperty("button_cancel", e.error_info.button_cancel)
 
-        current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+        current_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         qml_file_path = os.path.join(current_dir, "Code\QmlWindows", "WarningWindow.qml")
         engine.load(QUrl.fromLocalFile(qml_file_path))
 
