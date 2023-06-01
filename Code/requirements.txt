@@ -18,3 +18,5 @@ tzlocal==4.3
 urllib3==1.26.15
 vobject==0.9.6.1
 x-wr-timezone==0.0.5
+cryptocode==0.1
+pydantic==1.10.7
