@@ -12,6 +12,10 @@ class AuthWindowHandler(QObject):
         QObject.__init__(self)
 
     errorMessage = pyqtSignal(str, arguments=['message'])
+    
+    @pyqtSlot()
+    def localareaClicked(self):
+        pass
 
     @pyqtSlot(str, str, str, str)
     def authorize_nextcloud_server(self, user_email, user_password, server_uri, calendar_name):
@@ -34,4 +38,5 @@ class AuthWindowHandler(QObject):
             self.errorMessage.emit("Неверный путь")
         except Exception as e:
             self.errorMessage.emit(e.args[0])
+       
 
