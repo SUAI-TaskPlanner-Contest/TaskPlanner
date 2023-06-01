@@ -6,5 +6,7 @@
 ## Источники
 Быстрая [ссылка](https://www.figma.com/file/92KUEQOpS91HsI76KbFSFb/main?node-id=0-1&t=WgtRnXTVNMBK59lu-0) для доступа к актуальной версии макета
 ## Изображения
+<img width="500" alt="Снимок экрана 2023-06-01 в 15 25 53" src="https://github.com/SUAI-TaskPlanner-Contest/TaskPlanner/assets/69295692/77a84527-cb6b-4fc0-935c-461b6a6a33aa">
+<img width="500" alt="Снимок экрана 2023-06-01 в 15 26 05" src="https://github.com/SUAI-TaskPlanner-Contest/TaskPlanner/assets/69295692/83dc25e7-ab7d-4315-9ead-770819578b10">
 
 
