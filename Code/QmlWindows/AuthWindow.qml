@@ -260,7 +260,7 @@ ApplicationWindow {
             }
             onReleased: {
                 text1.color = "#000000"; // Исходный цвет кнопки
-                auth_handler.localareaClicked();
+                // auth_handler.localareaClicked();
             }
         }
     }
