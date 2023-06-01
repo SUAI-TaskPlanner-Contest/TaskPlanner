@@ -182,7 +182,8 @@ ApplicationWindow {
         width: 250
         height: 39
         text: qsTr("Войти")
-       
+        
+        hoverEnabled: false
         checkable: true
         palette.buttonText: "black"
 
