@@ -73,52 +73,52 @@ Window {
             model: backend.model
             focus: true
             delegate: Item {
-                width: parent.width; height: 40
-                Rectangle {
-                    id:serverNameRec
-                    width: (parent.width / 3)
-                    height: parent.height
-                    anchors.left: severListview.left
-            
-                    // Устанавливаем текстовое поле для размещения индекса кнопки
-                    Text {
-                        id: textServername
-                        anchors.fill: parent
-                        text: '<b>Сервер:</b> ' + model.modelData.text_value
-                        font.family: localFont.name
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+                    property int indexOfThisDelegate: index
+                    width: parent.width; height: 40
+                    Rectangle {
+                        id:serverNameRec
+                        width: (parent.width / 3)
+                        height: parent.height
+                        anchors.left: severListview.left
+
+                        // Устанавливаем текстовое поле для размещения индекса кнопки
+                        Text {
+                            id: textServername
+                            anchors.fill: parent
+                            text: '<b>Сервер:</b> ' + model.modelData.text_value
+                            font.family: localFont.name
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
                     }
-                }
-                Rectangle {
-                    id:serverLoginRec
-                    anchors.left: serverNameRec.right
-                    width: (parent.width / 3)
-                    height: parent.height
-            
-                    // Устанавливаем текстовое поле для размещения индекса кнопки
-                    Text {
-                        id: textSeverlogin
-                        anchors.fill: parent
-                        text: '<b>Логин:</b> ' + model.modelData.text_value2
-                        font.family: localFont.name
-                        verticalAlignment: Text.AlignVCenter
-                        horizontalAlignment: Text.AlignHCenter
+                    Rectangle {
+                        id:serverLoginRec
+                        anchors.left: serverNameRec.right
+                        width: (parent.width / 3)
+                        height: parent.height
+
+                        // Устанавливаем текстовое поле для размещения индекса кнопки
+                        Text {
+                            id: textSeverlogin
+                            anchors.fill: parent
+                            text: '<b>Логин:</b> ' + model.modelData.text_value2
+                            font.family: localFont.name
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
                     }
-                }
-                Button {
-                    id: delitserver
-                    anchors.right: parent.right
-                    text: "Удалить сервер"
-                    font.family: localFont1.name
-                    width: (parent.width / 3)
-                    height: parent.height
-            
-                    onClicked: {
-                        // console.log(serverModel.user_email)
-                        console.log(model.modelData.text_value)
+                    Button {
+                        id: delitserver
+                        anchors.right: parent.right
+                        text: "Удалить сервер"
+                        font.family: localFont1.name
+                        width: (parent.width / 3)
+                        height: parent.height
+
+                        onClicked: {
+                            backend.delete(index)
+                        }
                     }
-                }
             }
         }
     }

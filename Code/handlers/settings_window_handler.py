@@ -30,6 +30,10 @@ class ListModel(QObject):
     def add_item(self, server_name, user_email):
         self.list_of_items.append(ItemModel(server_name, user_email))
 
+    def delete_item(self, index):
+        self.list_of_items.pop(index)
+
+
     @pyqtProperty(list, constant=True)
     def model(self):
         return self.list_of_items
@@ -84,10 +88,17 @@ class SettingsWindow(QObject):
             self.updateListView.emit(self._model.list_of_items)
 
 
+
         except Invalid as e:  # дефолтная ошибка с сервиса
             print(e.args[0])
         except Exception as e:
             print(e.args[0])
+
+    @pyqtSlot(int)
+    def delete(self, index):
+        self.server_service.delete_by_id(index)
+        self._model.delete_item(index)
+
 
     @pyqtProperty(list, constant=True, notify=updateListView)
     def model(self):
