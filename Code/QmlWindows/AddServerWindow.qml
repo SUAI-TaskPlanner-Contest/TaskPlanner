@@ -4,7 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 ApplicationWindow {
-    id: addserverWindow // идентификатор
+    id: addServerWindow // идентификатор
     signal signalExit // задаем сигнал
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
@@ -28,12 +28,12 @@ ApplicationWindow {
 
         onMouseXChanged: {
             var dx = mouseX - previousX
-            addserverWindow.setX(addserverWindow.x + dx)
+            addServerWindow.setX(addServerWindow.x + dx)
         }
 
         onMouseYChanged: {
             var dy = mouseY - previousY
-            addserverWindow.setY(addserverWindow.y + dy)
+            addServerWindow.setY(addServerWindow.y + dy)
         }
     }
     Rectangle{
@@ -263,9 +263,9 @@ ApplicationWindow {
             font.family: localFont1.name
 
             onClicked: { //действия при нажатии кнопки
-                addserverWindow.close()
+                addServerWindow.close()
                 settingsWindow.show()
-                settings.save_server (user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
+                backend.save_server(user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
 
             }
         }
@@ -285,10 +285,9 @@ ApplicationWindow {
             height: parent.height
 
             onClicked: {
-                addserverWindow.close()
+                addServerWindow.close()
                 settingsWindow.show()
             }
         }
     }
-
 }

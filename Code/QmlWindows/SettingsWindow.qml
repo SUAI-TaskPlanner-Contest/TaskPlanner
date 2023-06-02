@@ -36,15 +36,14 @@ Window {
             settingsWindow.setY(settingsWindow.y + dy)
         }
     }
-    Rectangle{
-
+    Rectangle {
         width: parent.width; height: parent.height
         anchors.bottom:parent.bottom // позиционирование
         border.width: 2
         border.color: "lightgrey"
         //radius: 60
 
-        Rectangle{
+        Rectangle {
             id: servertxt
             width: parent.width-40; height: 50
 
@@ -62,77 +61,64 @@ Window {
                 font.weight: 150
             }
         }
-        Rectangle {
+        
+        ListView {
             id: severListview
             anchors.top: servertxt.bottom
             anchors.left: parent.left
+            anchors.fill: parent
             anchors.right: parent.right
-            height: 40*serverModel.count
+            height: 40*backend.count
             anchors.margins: 5
-
-
-
-            Component {
-                id: serverDelegate
-                Item {
-                    width: parent.width; height: 40
-
-                        Rectangle {
-                            id:serverNameRec
-                            width: (parent.width / 3)
-                            height: parent.height
-                            anchors.left: severListview.left
-
-                            // Устанавливаем текстовое поле для размещения индекса кнопки
-                            Text {
-                                id: textServername
-                                anchors.fill: parent
-                                text: '<b>Сервер:</b> ' + model.modelData.server_name
-                                font.family: localFont.name
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                        Rectangle {
-                            id:serverLoginRec
-                            anchors.left: serverNameRec.right
-                            width: (parent.width / 3)
-                            height: parent.height
-
-                            // Устанавливаем текстовое поле для размещения индекса кнопки
-                            Text {
-                                id: textSeverlogin
-                                anchors.fill: parent
-                                text: '<b>Логин:</b> ' + model.modelData.server_login
-                                font.family: localFont.name
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                        }
-                        Button {
-                            id: delitserver
-                            anchors.right: parent.right
-                            text: "Удалить сервер"
-                            font.family: localFont1.name
-                            width: (parent.width / 3)
-                            height: parent.height
-
-                            onClicked: {
-                            if(serverModel.get(index).servername!="Nextcloud")
-                                {
-//                                    serverModel.remove(index)
-                                }
-                            }
-                        }
-
+            model: backend.model
+            focus: true
+            delegate: Item {
+                width: parent.width; height: 40
+                Rectangle {
+                    id:serverNameRec
+                    width: (parent.width / 3)
+                    height: parent.height
+                    anchors.left: severListview.left
+            
+                    // Устанавливаем текстовое поле для размещения индекса кнопки
+                    Text {
+                        id: textServername
+                        anchors.fill: parent
+                        text: '<b>Сервер:</b> ' + model.modelData.text_value
+                        font.family: localFont.name
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                    }
                 }
-            }
-
-            ListView {
-                anchors.fill: parent
-                model: settings.model
-                delegate: serverDelegate
-                focus: true
+                Rectangle {
+                    id:serverLoginRec
+                    anchors.left: serverNameRec.right
+                    width: (parent.width / 3)
+                    height: parent.height
+            
+                    // Устанавливаем текстовое поле для размещения индекса кнопки
+                    Text {
+                        id: textSeverlogin
+                        anchors.fill: parent
+                        text: '<b>Логин:</b> ' + model.modelData.text_value2
+                        font.family: localFont.name
+                        verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                    }
+                }
+                Button {
+                    id: delitserver
+                    anchors.right: parent.right
+                    text: "Удалить сервер"
+                    font.family: localFont1.name
+                    width: (parent.width / 3)
+                    height: parent.height
+            
+                    onClicked: {
+                        // console.log(serverModel.user_email)
+                        console.log(model.modelData.text_value)
+                    }
+                }
             }
         }
     }
@@ -150,9 +136,7 @@ Window {
             height: parent.height
 
             onClicked: {
-                onClicked: {
-                    settingsWindow.close()
-                }
+                settingsWindow.close()
             }
         }
     }
@@ -170,10 +154,8 @@ Window {
             height: parent.height
 
             onClicked: {
-                onClicked: {
-                    pincodeWindow.show()
-                    settingsWindow.hide()
-                }
+                pincodeWindow.show()
+                settingsWindow.hide()
             }
         }
     }
@@ -193,17 +175,28 @@ Window {
 
             onClicked: {
                 onClicked: {
-                    addserverWindow.show()
+                    addServerWindow.show()
                     settingsWindow.hide()
                 }
             }
         }
     }
 
-    PincodeWindow{
+    ChangePincodeWindow{
         id: pincodeWindow
     }
-    AddserverWindow{
-        id: addserverWindow
+
+    AddServerWindow{
+        id: addServerWindow
+    }
+
+
+    Connections {
+        target: backend
+
+        onUpdateListView: {
+            model.modelData = new_model
+            console.log(new_model)
+        }
     }
 }//Window
