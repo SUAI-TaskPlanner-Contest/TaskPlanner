@@ -41,7 +41,7 @@ Window {
         anchors.bottom:parent.bottom // позиционирование
         border.width: 2
         border.color: "lightgrey"
-        radius: 60
+        //radius: 60
 
         Rectangle {
             id: servertxt
@@ -63,12 +63,20 @@ Window {
             }
         }
         Rectangle {
+            id: emptyRectangle
+            width: parent.width; height: 40
+            anchors.top:servertxt.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+            color: "transparent"
+
+        }
+        Rectangle {
             id: textServernametitle
             width: parent.width/3; height: 10
             anchors.left: parent.left
 
             anchors.margins: 5
-            anchors.top:servertxt.bottom
+            anchors.top:emptyRectangle.bottom
             color: "transparent"
 
             Text {
@@ -88,7 +96,7 @@ Window {
             anchors.left: textServernametitle.right
 
             anchors.margins: 5
-            anchors.top:servertxt.bottom
+            anchors.top:emptyRectangle.bottom
             color: "transparent"
 
             Text {
@@ -118,11 +126,12 @@ Window {
                 focus: true
                 delegate: Item {
                         property int indexOfThisDelegate: index
-                        width: parent.width; height: 40
+                        width: parent.width; height: 60
                         Rectangle {
                             id:serverNameRec
+                            anchors.verticalCenter: parent.verticalCenter
                             width: (parent.width / 3)
-                            height: parent.height
+                            height: parent.height-10
                             anchors.left: severListview.left
 
                             // Устанавливаем текстовое поле для размещения индекса кнопки
@@ -138,8 +147,9 @@ Window {
                         Rectangle {
                             id:serverLoginRec
                             anchors.left: serverNameRec.right
+                            anchors.verticalCenter: parent.verticalCenter
                             width: (parent.width / 3) + 10
-                            height: parent.height
+                            height: parent.height-10
 
                             // Устанавливаем текстовое поле для размещения индекса кнопки
                             Text {
@@ -152,15 +162,37 @@ Window {
                             }
                         }
                         Button {
-                            id: delitserver
                             anchors.right: parent.right
                             text: "Удалить сервер"
                             font.family: localFont1.name
-                            width: (parent.width / 3) - 10
-                            height: parent.height
-
-                            onClicked: {
-                                settings.delete(index)
+                            anchors.verticalCenter: parent.verticalCenter
+                            width: (parent.width / 3) - 20
+                            height: parent.height-25
+                            hoverEnabled: false
+                            background: Rectangle {
+                                id: delitserver
+                                color: "#F0F0F0"
+                                border.color: "#848484"
+                                border.width: 1
+                                anchors.margins: 5
+                                radius: 8
+                            }
+                            MouseArea{
+                            anchors.fill: parent
+                            hoverEnabled: true
+                                    onEntered: {
+                                        delitserver.color = "#C2C2C2" // Цвет при наведении на кнопку
+                                    }
+                                    onExited: {
+                                        delitserver.color = "#F0F0F0" // Исходный цвет кнопки
+                                    }
+                                    onPressed: {
+                                        delitserver.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                                        settings.delete(index)
+                                    }
+                                    onReleased: {
+                                        delitserver.color = "#D3D3D3" // Исходный цвет кнопки
+                                    }
                             }
                         }
                 }
@@ -168,59 +200,125 @@ Window {
         }
     }
     Rectangle {
-        width:120; height:30
+        width:100; height:30
         anchors.bottom:parent.bottom
         anchors.right: parent.right
         anchors.margins: 20
         Button {
-            id: clousButton
             anchors.fill: parent
             text: "Закрыть"
+            font.pointSize: 7
+            font.weight: 150
             font.family: localFont1.name
             width: parent.width
             height: parent.height
-
-            onClicked: {
-                settingsWindow.close()
+            hoverEnabled: false
+            background: Rectangle {
+                id: clousButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+            anchors.fill: parent
+            hoverEnabled: true
+                    onEntered: {
+                        clousButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                    }
+                    onExited: {
+                        clousButton.color = "#F0F0F0" // Исходный цвет кнопки
+                    }
+                    onPressed: {
+                        clousButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                        settingsWindow.close()
+                    }
+                    onReleased: {
+                        clousButton.color = "#D3D3D3" // Исходный цвет кнопки
+                    }
             }
         }
     }
     Rectangle {
-        width:120; height:30
+        width:100; height:30
         anchors.bottom:parent.bottom
         anchors.left: parent.left
         anchors.margins: 20
         Button {
-            id: pincodeButton
             anchors.fill: parent
             text: "Изменить PIN-код"
+            font.pointSize: 7
+            font.weight: 150
             font.family: localFont1.name
             width: (parent.width / 3)
             height: parent.height
-
-            onClicked: {
-                pincodeWindow.show()
-                settingsWindow.hide()
+            hoverEnabled: false
+            background: Rectangle {
+                id: pincodeButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+            anchors.fill: parent
+            hoverEnabled: true
+                    onEntered: {
+                        pincodeButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                    }
+                    onExited: {
+                        pincodeButton.color = "#F0F0F0" // Исходный цвет кнопки
+                    }
+                    onPressed: {
+                        pincodeButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                        pincodeWindow.show()
+                        settingsWindow.hide()
+                    }
+                    onReleased: {
+                        pincodeButton.color = "#D3D3D3" // Исходный цвет кнопки
+                    }
             }
         }
     }
 
     Rectangle {
-        width:120; height:30
+        width:100; height:30
         anchors.bottom:parent.bottom
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.margins: 20
         Button {
-            id: addserverButton
             anchors.fill: parent
             text: "Добавить сервер"
+            font.pointSize: 7
+            font.weight: 150
             font.family: localFont1.name
             width: (parent.width / 3)
             height: parent.height
-
-            onClicked: {
-                addServerWindow.show()
-                settingsWindow.hide()
+            hoverEnabled: false
+            background: Rectangle {
+                id: addserverButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+            anchors.fill: parent
+            hoverEnabled: true
+                    onEntered: {
+                        addserverButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                    }
+                    onExited: {
+                        addserverButton.color = "#F0F0F0" // Исходный цвет кнопки
+                    }
+                    onPressed: {
+                        addserverButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                        addServerWindow.show()
+                        settingsWindow.hide()
+                    }
+                    onReleased: {
+                        addserverButton.color = "#D3D3D3" // Исходный цвет кнопки
+                    }
             }
         }
     }
