@@ -265,8 +265,7 @@ ApplicationWindow {
             onClicked: { //действия при нажатии кнопки
                 addServerWindow.close()
                 settingsWindow.show()
-                backend.save_server(user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
-
+                settings.save_server(user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
             }
         }
     }

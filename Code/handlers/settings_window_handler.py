@@ -8,39 +8,53 @@ from Code.chipher_module.chipher_module import encrypt, decrypt
 
 
 class ItemModel(QObject):
-    def __init__(self, server_name, user_email):
+    def __init__(self, server_id, server_name, user_email, calendar_name, server_uri):
         QObject.__init__(self)
-        self._text_value = server_name
-        self._text_value2 = user_email
+        self._server_id = server_id
+        self._server_name = server_name
+        self._user_email = user_email
+        self._calendar_name = calendar_name
+        self._server_uri = server_uri
+
+    @pyqtProperty(int)
+    def server_id(self):
+        return self._server_id
 
     @pyqtProperty(str)
-    def text_value(self):
-        return self._text_value
+    def server_name(self):
+        return self._server_name
 
     @pyqtProperty(str)
-    def text_value2(self):
-        return self._text_value2
+    def user_email(self):
+        return self._user_email
+
+    @pyqtProperty(str)
+    def calendar_name(self):
+        return self._calendar_name
+
+    @pyqtProperty(str)
+    def server_uri(self):
+        return self._server_uri
 
 
 class ListModel(QObject):
     def __init__(self, servers_list):
         QObject.__init__(self)
-        self.list_of_items = servers_list
+        self.servers = servers_list
 
-    def add_item(self, server_name, user_email):
-        self.list_of_items.append(ItemModel(server_name, user_email))
+    def add_item(self, server_id, server_name, user_email, calendar_name, server_uri):
+        self.servers.append(ItemModel(server_id, server_name, user_email, calendar_name, server_uri))
 
     def delete_item(self, index):
-        self.list_of_items.pop(index)
+        self.servers.pop(index)
 
-
-    @pyqtProperty(list, constant=True)
+    @pyqtProperty(list)
     def model(self):
-        return self.list_of_items
+        return self.servers
 
 
 class SettingsWindow(QObject):
-    updateListView = pyqtSignal(list, arguments=['new_model'])
+    updateListView = pyqtSignal(ListModel, arguments=['new_model'])
 
     def __init__(self, server_service):
         QObject.__init__(self)
@@ -49,7 +63,11 @@ class SettingsWindow(QObject):
         servers_list = self.server_service.get_all()
 
         for server in servers_list:
-            servers_list_items.append(ItemModel(server.server_name, server.user_email))
+            servers_list_items.append(ItemModel(server.id,
+                                                server.server_name,
+                                                server.user_email,
+                                                server.calendar_name,
+                                                server.server_uri))
 
         self._model = ListModel(servers_list_items)
 
@@ -65,29 +83,16 @@ class SettingsWindow(QObject):
     @pyqtSlot(str, str, str, str, str)
     def save_server(self, user_email, user_password, server_name, calendar_name, server_uri):
         try:
-            pincode = "djgf"  # заглушка, считать откуда-то текущий пин
+            s = Server(user_email=user_email,
+                       user_password=user_password,
+                       server_name=server_name,
+                       server_uri=server_uri,
+                       calendar_name=calendar_name)
 
-            # s = Server(user_email=user_email,
-            #            user_password=user_password,
-            #            server_name=server_name,
-            #            server_uri=server_uri,
-            #            calendar_name=calendar_name)
-
-            s = Server(user_email="astronik00@gmail.com",
-                       user_password="qwerty",
-                       server_name="google",
-                       server_uri="http://localhost:8080/dav",
-                       calendar_name="test")
-
-            print(s)
-
-            # caldav_service = CalDavService(s)  # check if auth is successful
             self.server_service.add(s)
-            self._model.add_item(s.server_name, s.user_email)
+            self._model.add_item(s.id, s.server_name, s.user_email, s.calendar_name, s.server_uri)
 
-            self.updateListView.emit(self._model.list_of_items)
-
-
+            self.updateListView.emit(self._model)
 
         except Invalid as e:  # дефолтная ошибка с сервиса
             print(e.args[0])
@@ -96,10 +101,11 @@ class SettingsWindow(QObject):
 
     @pyqtSlot(int)
     def delete(self, index):
-        self.server_service.delete_by_id(index)
+        server_to_delete = self._model.servers[index]
+        self.server_service.delete_by_id(server_to_delete.server_id)
         self._model.delete_item(index)
+        self.updateListView.emit(self._model)
 
-
-    @pyqtProperty(list, constant=True, notify=updateListView)
+    @pyqtProperty(list, notify=updateListView)
     def model(self):
         return self._model.model

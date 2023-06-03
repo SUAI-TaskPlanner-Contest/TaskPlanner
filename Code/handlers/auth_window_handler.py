@@ -7,9 +7,10 @@ from caldav.lib.error import AuthorizationError
 from requests.exceptions import MissingSchema
 
 
-class AuthWindowHandler(QObject):
-    def __init__(self):
+class AuthWindow(QObject):
+    def __init__(self, server_service):
         QObject.__init__(self)
+        self.server_service = server_service
 
     errorMessage = pyqtSignal(str, arguments=['message'])
 
@@ -21,11 +22,10 @@ class AuthWindowHandler(QObject):
                        server_uri=server_uri,
                        server_name="nextcloud",
                        calendar_name=calendar_name)
-            print(s)
 
             # http://localhost:8080/remote.php/dav
             caldav_service = CalDavService(s)  # check if auth is successful
-            # call server service to add nextcloud server
+            self.server_service.add(s)
             # open MainWindow
 
         except AuthorizationError as e:

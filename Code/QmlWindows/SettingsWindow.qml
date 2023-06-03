@@ -68,9 +68,9 @@ Window {
             anchors.left: parent.left
             anchors.fill: parent
             anchors.right: parent.right
-            height: 40*backend.count
+            height: 40*settings.count
             anchors.margins: 5
-            model: backend.model
+            model: settings.model
             focus: true
             delegate: Item {
                     property int indexOfThisDelegate: index
@@ -85,7 +85,7 @@ Window {
                         Text {
                             id: textServername
                             anchors.fill: parent
-                            text: '<b>Сервер:</b> ' + model.modelData.text_value
+                            text: '<b>Сервер:</b> ' + model.modelData.server_name
                             font.family: localFont.name
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignHCenter
@@ -101,7 +101,7 @@ Window {
                         Text {
                             id: textSeverlogin
                             anchors.fill: parent
-                            text: '<b>Логин:</b> ' + model.modelData.text_value2
+                            text: '<b>Логин:</b> ' + model.modelData.user_email
                             font.family: localFont.name
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignHCenter
@@ -116,7 +116,7 @@ Window {
                         height: parent.height
 
                         onClicked: {
-                            backend.delete(index)
+                            settings.delete(index)
                         }
                     }
             }
@@ -174,10 +174,8 @@ Window {
             height: parent.height
 
             onClicked: {
-                onClicked: {
-                    addServerWindow.show()
-                    settingsWindow.hide()
-                }
+                addServerWindow.show()
+                settingsWindow.hide()
             }
         }
     }
@@ -188,15 +186,5 @@ Window {
 
     AddServerWindow{
         id: addServerWindow
-    }
-
-
-    Connections {
-        target: backend
-
-        onUpdateListView: {
-            model.modelData = new_model
-            console.log(new_model)
-        }
     }
 }//Window
