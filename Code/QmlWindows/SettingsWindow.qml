@@ -41,7 +41,7 @@ Window {
         anchors.bottom:parent.bottom // позиционирование
         border.width: 2
         border.color: "lightgrey"
-        //radius: 60
+        radius: 60
 
         Rectangle {
             id: servertxt
@@ -50,6 +50,7 @@ Window {
             anchors.margins: 20
             anchors.top:parent.top
             anchors.horizontalCenter: parent.horizontalCenter
+            color: "transparent"
 
             Text {
                 text: "Список серверов"
@@ -61,64 +62,108 @@ Window {
                 font.weight: 150
             }
         }
-        
-        ListView {
-            id: severListview
-            anchors.top: servertxt.bottom
+        Rectangle {
+            id: textServernametitle
+            width: parent.width/3; height: 10
             anchors.left: parent.left
-            anchors.fill: parent
-            anchors.right: parent.right
-            height: 40*settings.count
+
             anchors.margins: 5
-            model: settings.model
-            focus: true
-            delegate: Item {
-                    property int indexOfThisDelegate: index
-                    width: parent.width; height: 40
-                    Rectangle {
-                        id:serverNameRec
-                        width: (parent.width / 3)
-                        height: parent.height
-                        anchors.left: severListview.left
+            anchors.top:servertxt.bottom
+            color: "transparent"
 
-                        // Устанавливаем текстовое поле для размещения индекса кнопки
-                        Text {
-                            id: textServername
-                            anchors.fill: parent
-                            text: '<b>Сервер:</b> ' + model.modelData.server_name
-                            font.family: localFont.name
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                    }
-                    Rectangle {
-                        id:serverLoginRec
-                        anchors.left: serverNameRec.right
-                        width: (parent.width / 3)
-                        height: parent.height
+            Text {
+                text: "Сервер"
+                color: "#232323"
+                font.family: localFont1.name
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 10; font.bold: true
+                font.weight: 150
+            }
+        }
 
-                        // Устанавливаем текстовое поле для размещения индекса кнопки
-                        Text {
-                            id: textSeverlogin
-                            anchors.fill: parent
-                            text: '<b>Логин:</b> ' + model.modelData.user_email
-                            font.family: localFont.name
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: Text.AlignHCenter
-                        }
-                    }
-                    Button {
-                        id: delitserver
-                        anchors.right: parent.right
-                        text: "Удалить сервер"
-                        font.family: localFont1.name
-                        width: (parent.width / 3)
-                        height: parent.height
+        Rectangle {
+            id: textServerlogintitle
+            width: parent.width/3-10; height: 10
+            anchors.left: textServernametitle.right
 
-                        onClicked: {
-                            settings.delete(index)
+            anchors.margins: 5
+            anchors.top:servertxt.bottom
+            color: "transparent"
+
+            Text {
+                text: "Логин"
+                color: "#232323"
+                font.family: localFont1.name
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+                font.pointSize: 10; font.bold: true
+                font.weight: 150
+            }
+        }
+        Rectangle {
+            id: severListviewRectangle
+            anchors.top: textServernametitle.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            anchors.margins: 5
+            color: "transparent"
+
+            ListView {
+                id: severListview
+                anchors.fill: parent
+                anchors.margins: 5
+                model: settings.model
+                focus: true
+                delegate: Item {
+                        property int indexOfThisDelegate: index
+                        width: parent.width; height: 40
+                        Rectangle {
+                            id:serverNameRec
+                            width: (parent.width / 3)
+                            height: parent.height
+                            anchors.left: severListview.left
+
+                            // Устанавливаем текстовое поле для размещения индекса кнопки
+                            Text {
+                                id: textServername
+                                anchors.fill: parent
+                                text: model.modelData.server_name
+                                font.family: localFont.name
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                            }
                         }
-                    }
+                        Rectangle {
+                            id:serverLoginRec
+                            anchors.left: serverNameRec.right
+                            width: (parent.width / 3) + 10
+                            height: parent.height
+
+                            // Устанавливаем текстовое поле для размещения индекса кнопки
+                            Text {
+                                id: textSeverlogin
+                                anchors.fill: parent
+                                text: model.modelData.user_email
+                                font.family: localFont.name
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                        }
+                        Button {
+                            id: delitserver
+                            anchors.right: parent.right
+                            text: "Удалить сервер"
+                            font.family: localFont1.name
+                            width: (parent.width / 3) - 10
+                            height: parent.height
+
+                            onClicked: {
+                                settings.delete(index)
+                            }
+                        }
+                }
             }
         }
     }

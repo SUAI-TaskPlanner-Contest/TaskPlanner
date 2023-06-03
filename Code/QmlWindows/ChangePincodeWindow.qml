@@ -43,7 +43,7 @@ ApplicationWindow {
         anchors.right: parent.right
         border.width: 2
         border.color: "lightgrey"
-        //radius: 60
+        radius: 60
     }
         Rectangle{
             id: pinTxt
