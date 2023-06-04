@@ -5,25 +5,23 @@ import QtQuick.Layouts
 // Основное окно
 ApplicationWindow {
     visible: true
-    id: rectangle
+    id: auth_window
     width: 400
     height: 530
     color: "transparent"
     title: "Окно авторизации"
     
-    flags: Qt.FramelessWindowHint
-    
-    minimumWidth: rectangle.width
-    minimumHeight: rectangle.height
-    maximumWidth: rectangle.width
-    maximumHeight: rectangle.height
+    minimumWidth: auth_window.width
+    minimumHeight: auth_window.height
+    maximumWidth: auth_window.width
+    maximumHeight: auth_window.height
 
     FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
     FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
 
     background: Rectangle {
         visible: true
-        id: rectangle1
+        id: auth_window1
         width: parent.width
         height: parent.height
         border.color: "lightgrey"
@@ -218,8 +216,6 @@ ApplicationWindow {
                                                         textInputPassword.text,
                                                         textInputServerUri.text,
                                                         textInputCalendarName.text)
-
-
             }
         }
         
@@ -271,7 +267,6 @@ ApplicationWindow {
         y: 464
         width: 273
         height: 55
-        text: buttonHandler.errorText
         font.pixelSize: 14
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
@@ -284,6 +279,10 @@ ApplicationWindow {
 
         onErrorMessage: {
             text_for_errors.text = message
+        }
+        
+        onCloseWindow: {
+            auth_window.hide()
         }
     }
 }
