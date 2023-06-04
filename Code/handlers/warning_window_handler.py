@@ -1,7 +1,7 @@
 from PyQt6.QtCore import QObject, pyqtProperty, pyqtSignal, QVariant, pyqtSlot
 
 
-class WarningWindowHandler(QObject):
+class WarningWindow(QObject):
     nameChanged = pyqtSignal()
     textChanged = pyqtSignal()
     buttonOkChanged = pyqtSignal()

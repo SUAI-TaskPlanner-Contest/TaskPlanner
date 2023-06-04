@@ -1,23 +1,21 @@
+import os
 import sys
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from entities.db_entities import Base
-from Code.handlers.auth_window_handler import AuthWindowHandler
-
 from PyQt6.QtGui import QGuiApplication
 from PyQt6.QtQml import QQmlApplicationEngine
+from Code.container import container
+from Code.handlers.settings_window_handler import SettingsWindow
 
-# from pathlib import Path
 
 if __name__ == '__main__':
-    # create database
-    engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # path to .db
-    Base.metadata.create_all(engine)  # create tables
-    session = sessionmaker(bind=engine)()  # create transaction
-
+    settings = SettingsWindow(container.get('server_service'))
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
-    auth_handler = AuthWindowHandler()
-    engine.rootContext().setContextProperty("auth_handler", auth_handler)
-    engine.load('QmlWindows/AuthWindow.qml')  # файл с кодом QML основного окна
-    sys.exit(app.exec())  # запустить цикл события
+    engine.rootContext().setContextProperty("settings", settings)
+
+    cur_dir = os.path.dirname(__file__)
+    engine.load(os.path.join(cur_dir, "QmlWindows/SettingsWindow.qml"))
+
+    if not engine.rootObjects():
+        sys.exit(-1)
+
+    sys.exit(app.exec())
