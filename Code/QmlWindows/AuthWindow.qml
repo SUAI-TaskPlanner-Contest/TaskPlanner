@@ -182,7 +182,8 @@ ApplicationWindow {
         width: 250
         height: 39
         text: qsTr("Войти")
-       
+        
+        hoverEnabled: false
         checkable: true
         palette.buttonText: "black"
 
@@ -259,7 +260,7 @@ ApplicationWindow {
             }
             onReleased: {
                 text1.color = "#000000"; // Исходный цвет кнопки
-                // buttonHandler.localareaClicked();
+                // auth_handler.localareaClicked();
             }
         }
     }
