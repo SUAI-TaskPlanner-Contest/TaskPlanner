@@ -2,12 +2,24 @@ from . import *
 
 class TaskService():
 
-    def __init__(self, repo):
+    def __init__(self, repo, pincode):
         self.repo = repo
+        self.pincode = pincode
 
     @staticmethod
     def is_int(item_id: int) -> bool:
         return True if isinstance(item_id, int) else False
+
+    @staticmethod
+    def create_copy(item):
+        return deepcopy(item)
+
+    @staticmethod
+    def encrypt_data(item, pincode) -> Server:
+        item = TaskService.create_copy(item)
+        item.user_email = encrypt(item.user_email, pincode)
+        item.user_password = encrypt(item.user_password, pincode)
+        return item
 
     def is_none(self, item_id: int):
         item = self.repo.get_by_id(item_id)
@@ -16,13 +28,20 @@ class TaskService():
 
     def add(self, item: Task) -> None:
         TaskValidate.from_orm(item)
+        self.add_label(item)
+        item.server = TaskService.encrypt_data(item.server, self.pincode)
         self.repo.add(item)
 
     def add_all(self, items: list[Task]) -> None:
         if not isinstance(items, list):
             raise Invalid(f"Невозможно добавить задачи")
         _ = [TaskValidate.from_orm(item) for item in items]
-        self.repo.add_all(items)
+        new_items = []
+        for item in items:
+            self.add_label(item)
+            item.server = TaskService.encrypt_data(item.server, self.pincode)
+            new_items.append(item)
+        self.repo.add_all(new_items)
 
     def edit(self, item: Task) -> None:
         TaskValidate.from_orm(item)
@@ -70,3 +89,6 @@ class TaskService():
             raise Invalid(f"Невозможно открыть задачи")
         self.is_none(task_id)
         return self.repo.get_task_children_by_id(task_id)
+
+    def add_label(self, task: Task):
+        task.label = Label(task=task)
