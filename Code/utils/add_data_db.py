@@ -85,4 +85,5 @@ def add_data(session, pincode):
     ]
 
     session.add_all(servers)
+    session.add_all([example_task1, example_task2])
     session.commit()

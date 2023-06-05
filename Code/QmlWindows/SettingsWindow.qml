@@ -123,7 +123,7 @@ Window {
                 id: severListview
                 anchors.fill: parent
                 anchors.margins: 5
-                model: settings.model
+                model: settings_handler.model
                 focus: true
                 delegate: Item {
                         property int indexOfThisDelegate: index
@@ -193,7 +193,7 @@ Window {
                                         messageDialog.title = "Удаление сервера"
                                         messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
                                         messageDialog.open()
-                                        //settings.delete(index)
+                                        //settings_handler.delete(index)
                                     }
                                     onReleased: {
                                         delitserver.color = "#D3D3D3" // Исходный цвет кнопки
@@ -333,7 +333,7 @@ Window {
         modality: Qt.WindowModal
         buttons: MessageDialog.Ok | MessageDialog.Cancel
         onAccepted: {
-            settings.delete(severListview.currentIndex)
+            settings_handler.delete(severListview.currentIndex)
         }
         onRejected: messageDialog.close()
         Component.onCompleted: {

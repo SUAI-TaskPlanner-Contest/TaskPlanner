@@ -27,19 +27,13 @@ class Container:
         return f"Container(id={self.key}, {self.subkey})"
 
 
-# def init_container():
-#     global container
-#     container.set('server_service', ServerService(ServerRepository(session)))
-#     container.set('task_service', TaskService(TaskRepository(session)))
-
-
 engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # path to .db
 Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)  # create tables
 session = sessionmaker(bind=engine)()  # create transaction
 
-pincode = "fuck"
 
 container = Container
-container.set('server_service', ServerService(ServerRepository[Server](session), pincode))
-container.set('task_service', TaskService(TaskRepository[Task](session), pincode))
+container.set('server_service', '0000')
+container.set('server_service', ServerService(ServerRepository[Server](session)))
+container.set('task_service', TaskService(TaskRepository[Task](session)))

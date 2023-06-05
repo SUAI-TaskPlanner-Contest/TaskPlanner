@@ -10,23 +10,17 @@ from Code.handlers.main_window_handler import MainWindow
 from PyQt6.QtQml import QQmlApplicationEngine
 
 
-class AuthWindowHandler(QQmlApplicationEngine):
-    def __init__(self):
-        QQmlApplicationEngine.__init__(self)
-        self.rootContext().setContextProperty("auth_handler", self)
-        self.main_window = None
-        self.isAuthIsWorking = False
+class AuthWindow(QObject):
+    def __init__(self, server_service):
+        QObject.__init__(self)
+        self.server_service = server_service
 
     errorMessage = pyqtSignal(str, arguments=['message'])
-
-    closeWindow = pyqtSignal()
+    successAuth = pyqtSignal(int, arguments=['number'])
 
     @pyqtSlot(str, str, str, str)
     def authorize_nextcloud_server(self, user_email, user_password, server_uri, calendar_name):
-        if self.isAuthIsWorking:
-            return
         try:
-            self.isAuthIsWorking = True
             s = Server(user_email=user_email,
                        user_password=user_password,
                        server_uri=server_uri,
@@ -34,11 +28,10 @@ class AuthWindowHandler(QQmlApplicationEngine):
                        calendar_name=calendar_name)
 
             # http://localhost:8080/remote.php/dav
-            CalDavService(s)
+            caldav_service = CalDavService(s)
+            # caldav_service.__exit__()
 
-            self.main_window = MainWindow()
-            self.main_window.show()
-            self.close()
+            self.successAuth.emit(len(self.server_service.get_all()))
 
         except AuthorizationError as e:
             self.errorMessage.emit("Неверный логин или пароль")
@@ -46,9 +39,3 @@ class AuthWindowHandler(QQmlApplicationEngine):
             self.errorMessage.emit("Неверный путь")
         except Exception as e:
             self.errorMessage.emit(e.args[0])
-
-    def show(self):
-        super().load('QmlWindows/AuthWindow.qml')
-
-    def close(self):
-        self.closeWindow.emit()

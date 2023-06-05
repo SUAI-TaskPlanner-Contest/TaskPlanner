@@ -1,10 +1,11 @@
 from . import *
 
+
 class TaskService():
 
-    def __init__(self, repo, pincode):
+    def __init__(self, repo):
         self.repo = repo
-        self.pincode = pincode
+        self.pincode = '0000'
 
     @staticmethod
     def is_int(item_id: int) -> bool:
@@ -25,11 +26,12 @@ class TaskService():
 
     @staticmethod
     def convert_time_to_utc(item: Task):
-        item = TaskService.create_copy(item)
+        # item = TaskService.create_copy(item)
         item.dtstamp = local_to_utc0(item.dtstamp)
         item.dtstart = local_to_utc0(item.dtstart)
         item.due = local_to_utc0(item.due)
         item.last_mod = local_to_utc0(item.last_mod)
+        item.sync_time = local_to_utc0(item.sync_time)
         return item
 
     @staticmethod
@@ -77,11 +79,7 @@ class TaskService():
         self.repo.delete_by_id(item_id)
 
     def get_all(self) -> list[Task]:
-        items = self.repo.get_all()
-        items_local = []
-        for item in items:
-            items_local.append(TaskService.convert_time_to_local(item))
-        return items_local
+        return list(map(TaskService.convert_time_to_utc, self.repo.get_all()))
 
     def get_by_id(self, item_id: int) -> Task:
         if not TaskService.is_int(item_id):

@@ -1,10 +1,11 @@
 from . import *
 
+
 class ServerService():
 
-    def __init__(self, repo, pincode):
+    def __init__(self, repo):
         self.repo = repo
-        self.pincode = pincode
+        self.pincode = '0000'
 
     @staticmethod
     def create_copy(item):

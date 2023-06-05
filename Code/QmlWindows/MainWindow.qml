@@ -125,7 +125,7 @@ Window {
 
                 onClicked:{
                     console.log("I'm working!")
-                    main_window.sync_tasks()
+                    main_handler.sync_tasks()
                     // tab_merge_task.visible=!tab_merge_task.visible
                 }
             }
@@ -995,14 +995,19 @@ Window {
     }
 
     Connections {
-        target: main_window
+        target: main_handler
 
         onDetectedConflicts: {
-            let client_task = conficted_tasks[0]
-            let server_task = conficted_tasks[1]
+            console.log("DDDDDDDDDDD")
+            let client_task = conflicted_tasks[0]
+            let server_task = conflicted_tasks[1]
 
-            tab_merge_task.visible = !tab_merge_task.visible
+            addServerWindow.show()
+            mainWindow.hide()
 
+            //console.log(client_task.dtstart)
+            //console.log(server_task)
+            // tab_merge_task.visible = !tab_merge_task.visible
             // tab_merge_task.ver_server.Text
 
         }
@@ -1010,6 +1015,10 @@ Window {
         onCloseWindow: {
             auth_window.hide()
         }
+    }
+
+    AddServerWindow{
+        id: addServerWindow
     }
 
 }
