@@ -10,3 +10,5 @@ class PincodeWindow(QObject):
     @pyqtSlot(str)
     def set_pincode(self, pincode):
         container.set('pincode', pincode)
+        container.get('server_service').set_pincode(pincode)
+        container.get('task_service').set_pincode(pincode)

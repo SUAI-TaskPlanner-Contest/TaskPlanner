@@ -295,15 +295,14 @@ ApplicationWindow {
         onSuccessAuth: {
             let num = number
             console.log(num)
-            if (num > 0) {
-                pincodeWindow.show()
-                authWindow.close()
+
+            if (num > 1) {
+                mainWindow.show()
+                authWindow.hide()
             }
 
-            mainWindow.show()
-            pincodeWindow.close()
-            authWindow.close()
-
+            pincodeWindow.show()
+            authWindow.hide()
         }
         
         onCloseWindow: {

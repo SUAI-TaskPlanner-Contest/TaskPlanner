@@ -29,7 +29,9 @@ class AuthWindow(QObject):
 
             # http://localhost:8080/remote.php/dav
             caldav_service = CalDavService(s)
-            # caldav_service.__exit__()
+            caldav_service.__exit__(None, None, None)
+
+            self.server_service.add(s)
 
             self.successAuth.emit(len(self.server_service.get_all()))
 

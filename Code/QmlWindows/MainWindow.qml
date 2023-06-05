@@ -820,7 +820,7 @@ Window {
                 hoverEnabled: false
                 background: Rectangle{color: "lightgrey"}
                 onClicked: {
-                    //settingsWindow.show()//вызываем сигнал
+                    settingsWindow.show()//вызываем сигнал
                 }
             }
         }
@@ -1017,8 +1017,10 @@ Window {
         }
     }
 
-    AddServerWindow{
-        id: addServerWindow
+
+
+    SettingsWindow{
+        id: settingsWindow
     }
 
 }

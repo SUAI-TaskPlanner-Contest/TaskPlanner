@@ -108,14 +108,14 @@ class MainWindow(QObject):
         caldav_service = container.get('caldav_service')
 
         for task in tasks_list:
-            server_task = caldav_service.publish_task(task)[0]
-            client_task = caldav_service.publish_task(task)[1]
-            conflicted_tasks.append([TaskItem(client_task), TaskItem(server_task)])
+            server_task, client_task = caldav_service.publish_task(task)
+            if server_task and client_task is not None:
+                conflicted_tasks.append([TaskItem(client_task), TaskItem(server_task)])
 
         while len(conflicted_tasks) > 0:
             for i in range(len(conflicted_tasks)):
                 self.result_task = None
-                self.detectedConflicts.emit(conflicted_tasks[i])
+                self.detectedConflicts.emit(conflicted_tasks)
 
                 with self.condition:
                     while self.result_task is None:

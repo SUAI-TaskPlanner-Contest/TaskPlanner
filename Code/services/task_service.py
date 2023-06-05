@@ -41,6 +41,9 @@ class TaskService():
         item.user_password = encrypt(item.user_password, pincode)
         return item
 
+    def set_pincode(self, pincode):
+        self.pincode = pincode
+
     def is_none(self, item_id: int):
         item = self.repo.get_by_id(item_id)
         if item is None:

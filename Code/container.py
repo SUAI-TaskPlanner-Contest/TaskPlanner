@@ -9,7 +9,7 @@ from Code.services import ServerService, TaskService
 
 class Container:
     dict = {}
-    setters = ['server_service', 'task_service', 'caldav_service']
+    setters = ['server_service', 'task_service', 'caldav_service', 'pincode']
 
     def __init__(self, **kwargs):
         self.dict = kwargs
@@ -34,6 +34,6 @@ session = sessionmaker(bind=engine)()  # create transaction
 
 
 container = Container
-container.set('server_service', '0000')
+container.set('pincode', '0000')
 container.set('server_service', ServerService(ServerRepository[Server](session)))
 container.set('task_service', TaskService(TaskRepository[Task](session)))

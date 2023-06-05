@@ -251,11 +251,12 @@ ApplicationWindow { // окно
                             shake_timer.start()
                         }
                         else {
-                            pincode_save.set_pincode(pinInput0.text +
+                            pincode_handler.set_pincode(pinInput0.text +
                                                      pinInput1.text +
                                                      pinInput2.text +
                                                      pinInput3.text)
-                            pincode_window.close()
+                            mainWindow.show()
+                            pincode_window.hide()
                         }
                     }
                     onReleased: {
@@ -266,5 +267,9 @@ ApplicationWindow { // окно
         }
 
 
+    }
+
+    MainWindow {
+        id: mainWindow
     }
 }

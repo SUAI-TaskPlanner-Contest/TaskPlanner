@@ -10,12 +10,17 @@ class ServerValidate(BaseModel):
     class Config:
         orm_mode = True
 
+    # @validator('user_email')
+    # def email_format_check(cls, email: str):
+    #     validate_email(
+    #         email,
+    #         check_deliverability=False
+    #     )
+    #     return email
+
     @validator('user_email')
     def email_format_check(cls, email: str):
-        validate_email(
-            email,
-            check_deliverability=False
-        )
+        assert len(email) > 0, "Вы не ввели имя сервера"
         return email
 
     @validator('server_name')
