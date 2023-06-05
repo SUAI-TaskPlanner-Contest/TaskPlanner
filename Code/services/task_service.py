@@ -81,7 +81,7 @@ class TaskService():
         items_local = []
         for item in items:
             items_local.append(TaskService.convert_time_to_local(item))
-        return items
+        return items_local
 
     def get_by_id(self, item_id: int) -> Task:
         if not TaskService.is_int(item_id):
@@ -101,7 +101,7 @@ class TaskService():
         items_local = []
         for item in items:
             items_local.append(TaskService.convert_time_to_local(item))
-        return items
+        return items_local
 
     def get_all_by_server_id(self, server_id: int) -> list[Task]:
         if not TaskService.is_int(server_id):
@@ -110,7 +110,7 @@ class TaskService():
         items_local = []
         for item in items:
             items_local.append(TaskService.convert_time_to_local(item))
-        return items
+        return items_local
 
     def get_children_by_parent_id(self, parent_id: int) -> list[Task]:
         if not TaskService.is_int(parent_id):
@@ -119,7 +119,7 @@ class TaskService():
         items_local = []
         for item in items:
             items_local.append(TaskService.convert_time_to_local(item))
-        return items
+        return items_local
 
     def get_task_children_by_id(self, task_id: int) -> list[Task]:
         if not TaskService.is_int(task_id):
@@ -129,7 +129,7 @@ class TaskService():
         items_local = []
         for item in items:
             items_local.append(TaskService.convert_time_to_local(item))
-        return items
+        return items_local
 
     def add_label(self, task: Task):
         task.label = Label(task=task)
