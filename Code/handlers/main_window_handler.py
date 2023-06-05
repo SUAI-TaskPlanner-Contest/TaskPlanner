@@ -1,13 +1,9 @@
-﻿from datetime import datetime, timedelta
-
-from PyQt6.QtCore import QUrl, pyqtSlot, QObject, pyqtSignal, pyqtProperty
-from PyQt6.QtQml import QQmlApplicationEngine
-
-import threading
+from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
+from Code.entities.db_entities import Server
+from Code.container import get_server_service
 from Code.container import container
-from Code.entities.db_entities import Task
 from Code.services import CalDavService
-from Code.utils.time_helper import local_to_utc0, utc_now
+from Code.utils.time_helper import utc_now
 
 
 class TaskItem(QObject):
@@ -120,6 +116,37 @@ class ConflictedTasks(QObject):
         return self._server_task
 
 
+class ItemModel(QObject):
+    nameChanged = pyqtSignal()
+
+    def __init__(self, server: Server):
+        QObject.__init__(self)
+        self.server = server
+
+    @pyqtProperty("QString", notify=nameChanged)
+    def server_name(self):
+        return self.server.server_name
+
+
+class ListModel(QObject):
+    itemChanged = pyqtSignal()
+    itemsChanged = pyqtSignal()
+
+    def __init__(self, servers):
+        QObject.__init__(self)
+        self._servers = servers
+        self._item = servers[0]
+        container.set('caldav_service', CalDavService(self._item.server))
+
+    @pyqtProperty(ItemModel, notify=itemChanged)
+    def item(self):
+        return self._item
+
+    @pyqtProperty(list, notify=itemsChanged)
+    def model(self):
+        return self._servers
+
+
 class MainWindow(QObject):
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
 
@@ -129,13 +156,13 @@ class MainWindow(QObject):
         self.task_service = task_service
         self.server_service = server_service
         self.result_task = None
+        self._model = ListModel(list(map(lambda server: ItemModel(server), get_server_service().get_all())))
 
-    # @pyqtSlot(index)
-    # def set_caldav_service(self, index):
-        # считали из модели комбобокса по индексу
-        # server = ...
-        # container.set('caldav_service', CalDavService(server))
-        # pass
+    @pyqtSlot(int)
+    def change_server(self, index):
+        container.set('caldav_service', CalDavService(self._model.model[index].server))
+        # main window reload logic
+        pass
 
     @pyqtSlot(int, str, str)
     def update_result_task(self, id, summary, description):
@@ -159,16 +186,14 @@ class MainWindow(QObject):
         if len(self.conflicted_tasks) > 0:
             conflicted_task = self.conflicted_tasks[-1]
 
-            qml_conflicted_tasks = ConflictedTasks \
-                    (
-                    TaskItem(conflicted_task[0]),
-                    TaskItem(conflicted_task[1])
-                )
+            qml_conflicted_tasks = ConflictedTasks(
+                TaskItem(conflicted_task[0]),
+                TaskItem(conflicted_task[1])
+            )
 
             # print(qml_conflicted_tasks.client_task)
 
             self.detectedConflicts.emit(qml_conflicted_tasks)
-
 
     @pyqtSlot()
     def sync_tasks(self):
@@ -190,12 +215,19 @@ class MainWindow(QObject):
         if len(self.conflicted_tasks) > 0:
             conflicted_task = self.conflicted_tasks[-1]
 
-            qml_conflicted_tasks = ConflictedTasks \
-                    (
-                        TaskItem(conflicted_task[0]),
-                        TaskItem(conflicted_task[1])
-                    )
+            qml_conflicted_tasks = ConflictedTasks(
+                TaskItem(conflicted_task[0]),
+                TaskItem(conflicted_task[1])
+            )
 
             # print(qml_conflicted_tasks.client_task)
 
             self.detectedConflicts.emit(qml_conflicted_tasks)
+
+    @pyqtProperty(list)
+    def model(self):
+        return self._model.model
+
+    @pyqtProperty(ItemModel)
+    def item(self):
+        return self._model.item

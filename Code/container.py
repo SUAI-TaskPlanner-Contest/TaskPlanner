@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from Code.entities.db_entities import Base, Task, Server
 from Code.repositories.server_repo import ServerRepository
 from Code.repositories.task_repo import TaskRepository
-from Code.services import ServerService, TaskService
+from Code.services import ServerService, TaskService, CalDavService
 
 
 class Container:
@@ -37,3 +37,11 @@ container = Container
 container.set('pincode', '0000')
 container.set('server_service', ServerService(ServerRepository[Server](session)))
 container.set('task_service', TaskService(TaskRepository[Task](session)))
+
+
+def get_server_service() -> ServerService:
+    return container.get('server_service')
+
+
+def get_caldav_service() -> CalDavService:
+    return container.get('caldav_service')
