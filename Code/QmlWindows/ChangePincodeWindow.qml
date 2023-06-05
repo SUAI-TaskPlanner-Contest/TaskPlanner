@@ -8,8 +8,8 @@ ApplicationWindow {
     signal signalExit // задаем сигнал
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
-    FontLoader { id: localFont; source: "pics/Inter-Thin.ttf" }
-    FontLoader { id: localFont1; source: "pics/Inter-ExtraLight.ttf" }
+    FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
+    FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
     width: 400// ширина окна
     height: 700// высота окна
     flags: Qt.FramelessWindowHint

@@ -124,7 +124,8 @@ Window {
                 hoverEnabled: false //не будет выделяться кнопка
 
                 onClicked:{
-                    tab_merge_task.visible=!tab_merge_task.visible
+                    main_window.sync_tasks()
+                    // tab_merge_task.visible=!tab_merge_task.visible
                 }
             }
         }

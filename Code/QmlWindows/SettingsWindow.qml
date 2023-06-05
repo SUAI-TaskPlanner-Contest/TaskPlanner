@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Window {
     id: settingsWindow // идентификатор
@@ -188,7 +189,10 @@ Window {
                                     }
                                     onPressed: {
                                         delitserver.color = "#AAAAAA" // Цвет при нажатии кнопки\
-                                        warning.open()
+                                        severListview.currentIndex = index;
+                                        messageDialog.title = "Удаление сервера"
+                                        messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
+                                        messageDialog.open()
                                         //settings.delete(index)
                                     }
                                     onReleased: {
@@ -324,8 +328,18 @@ Window {
         }
     }
 
-    WarningWindow {
-        id: warning
+    MessageDialog {
+        id: messageDialog
+        modality: Qt.WindowModal
+        buttons: MessageDialog.Ok | MessageDialog.Cancel
+        onAccepted: {
+            settings.delete(severListview.currentIndex)
+        }
+        onRejected: messageDialog.close()
+        Component.onCompleted: {
+            messageDialog.standardButton(MessageDialog.Ok).text = "Продолжить"
+            // messageDialog.standardButton(MessageDialog.Ok).font
+        }
     }
 
     ChangePincodeWindow{

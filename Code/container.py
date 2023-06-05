@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from Code.entities.db_entities import Base
+from Code.entities.db_entities import Base, Task, Server
 from Code.repositories.server_repo import ServerRepository
 from Code.repositories.task_repo import TaskRepository
 from Code.services import ServerService, TaskService
@@ -37,6 +37,8 @@ engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # pat
 Base.metadata.create_all(engine)  # create tables
 session = sessionmaker(bind=engine)()  # create transaction
 
+pincode = "fuck"
+
 container = Container
-container.set('server_service', ServerService(ServerRepository(session)))
-container.set('task_service', TaskService(TaskRepository(session)))
+container.set('server_service', ServerService(ServerRepository[Server](session), pincode))
+container.set('task_service', TaskService(TaskRepository[Task](session), pincode))
