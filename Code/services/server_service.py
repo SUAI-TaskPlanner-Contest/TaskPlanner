@@ -18,6 +18,10 @@ class ServerService():
         item.user_password=encrypt(item.user_password, pincode)
         return item
 
+    def encrypt_data_all(self, items, pincode):
+        items = list(map(lambda item: ServerService.encrypt_data(item, pincode), items))
+        return items
+
     @staticmethod
     def decrypt_data(item, pincode) -> Server:
         item = ServerService.create_copy(item)
@@ -44,10 +48,7 @@ class ServerService():
         if not isinstance(items, list):
             raise Invalid(f"Невозможно добавить серверы")
         _ = [ServerValidate.from_orm(item) for item in items]
-        new_items = []
-        for item in items:
-            self.add_labels(item)
-            new_items.append(ServerService.encrypt_data(item, self.pincode))
+        new_items = self.encrypt_data_all(items, self.pincode)
         self.repo.add_all(new_items)
 
     def edit(self, old_item: Server) -> None:
