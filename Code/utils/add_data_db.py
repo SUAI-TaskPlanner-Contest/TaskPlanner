@@ -4,18 +4,18 @@ from Code.entities.db_entities import Server, Task, Label, Size, Priority, Type,
 from .time_helper import local_to_utc0
 from Code.chipher_module.chipher_module import encrypt
 
-def add_data(session):
+def add_data(session, pincode):
     """
         Add default data to database
     """
 
     servers = [
         Server(
-            user_email='local',
-            user_password='local',
-            server_uri='http://local',
-            server_name='локальный',
-            calendar_name='local'
+            user_email=encrypt('user', pincode),
+            user_password=encrypt('user', pincode),
+            server_uri='http://localhost:8080/remote.php/dav',
+            server_name='nextcloud',
+            calendar_name='test'
         )
     ]
 

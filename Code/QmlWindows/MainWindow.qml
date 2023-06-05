@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 Window {
     id: mainWindow
     signal signalExit
-    // visible: true
+    visible: true
 
     width: 1400; height: 700
     title: ("Task Planner")
@@ -69,7 +69,7 @@ Window {
                     highlighted: control.highlightedIndex === index
                 }
 
-                indicator: Canvas { 
+                indicator: Canvas {
                     id: canvas
                     x: control.width - width - control.rightPadding
                     y: control.topPadding + (control.availableHeight - height) / 2
@@ -158,6 +158,9 @@ Window {
                     patentsearch_text.visible=false
                     patentsearch_combobox.visible=false
                     newtask.visible=!newtask.visible
+
+                    task_parent_id.text = -1
+                    task_id.text = -1
                 }
             }
 
@@ -265,20 +268,11 @@ Window {
                                             newtask.visible = !newtask.visible
 
                                             // TODO: check if next code works
-                                            task_parent_id.text = model.modelData.id
+                                            task_parent_id.text = model.modelData.parent_id
+                                            task_id.text = -1
 
-                                            // TODO : add combobox indexes
-                                            main_handler.add_task(model.modelData.server_id,
-                                                                  model.modelData.id,
-                                                                  0,
-                                                                  0,
-                                                                  0,
-                                                                  0,
-                                                                  task_name.text,
-                                                                  task_description.text,
-                                                                  task_data_start.text,
-                                                                  task_data_end.text,
-                                                                  task_parent_id.text)
+                                            console.log(task_parent_id.text)
+                                            console.log(task_id.text)
                                         }
                                     }
                                     Button {
@@ -286,24 +280,22 @@ Window {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         onClicked:{
                                             popup.visible = !popup.visible
-                                            patentsearch_text.visible=true
-                                            patentsearch_combobox.visible=true
-                                            change_task_window.visible = !change_task_window.visible
+                                            // patentsearch_text.visible=true
+                                            // patentsearch_combobox.visible=true
+                                            newtask.visible = !newtask.visible
+
+                                            task_parent_id.text = view.model.modelData.parent_id
+                                            task_id.text = view.model.modelData.id
+
+                                            console.log(task_parent_id.text)
+                                            console.log(task_id.text)
 
                                             // TODO: check if next code works
-                                            task_id.text = model.modelData.id
+                                            // task_id.text = model.modelData.id
                                             task_name.text = model.modelData.summary
                                             task_description.text = model.modelData.description
                                             task_data_start.text = model.modelData.dtstart
                                             task_data_end.text = model.modelData.due
-
-                                            // TODO : add combobox indexes
-                                            main_handler.edit_task(task_id.text,
-                                                                   task_name.text,
-                                                                   task_description.text,
-                                                                   task_data_start.text,
-                                                                   task_data_end.text,
-                                                                   task_parent_id.text)
                                         }
                                     }
                                     Button {
@@ -565,12 +557,10 @@ Window {
                             id: ver_intermediate_data_start
                             Layout.column: 1; Layout.row: 1
                             text: "2023.06.09 14:00"; font.pointSize: 12
-                            inputMask: "Y.m.d H:M";
                             font.family: localFont.name; font.weight: 400;
                         }
                         TextField {
                             id: ver_intermediate_data_end
-                            inputMask: "Y.m.d H:M";
                             Layout.column: 1; Layout.row: 2
                             text: "2023.06.09 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;
@@ -735,13 +725,13 @@ Window {
                         Text{
                             id:ver_client_data_start
                             Layout.column: 1; Layout.row: 1
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.07 19:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
                             id: ver_client_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.07 19:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
@@ -1034,7 +1024,7 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     }
                 Text{ id: patentsearch_text
-                    visible: true
+                    visible: false
                     Layout.column: 2; Layout.row: 7; text: "Родитель:"
                     font.pointSize: 14
                     font.family: localFont.name; font.weight: 400;color: "#232323"
@@ -1043,54 +1033,146 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 1
                     id: task_data_start
-                    inputMask: "Y.m.d H:M"; text: "2023.06.09 14:00"
+                    text: "2023.06.09 14:00"
                     font.pointSize: 14
                 }
                 TextField {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 2
                     id: task_data_end
-                    inputMask: "Y.m.d H:M"; text: "2023.06.09 14:00"
+                    text: "2023.06.09 14:00"
                     font.pointSize: 14
                 }
                 ComboBox{
                     id: task_category
                     Layout.column: 1; Layout.row: 3
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Design", "UX", "UI", "Backend"]
-                    onActivated: {}
+                    model: main_handler.type_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.type_model, main_handler.type_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.type_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_category.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_status
                     Layout.column: 1; Layout.row: 4
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
-                    onActivated: {}
+                    model: main_handler.status_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.status_model, main_handler.status_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.status_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_status.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_size
                     Layout.column: 1; Layout.row: 5
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Легкая", "Средняя", "Тяжелая"]
-                    onActivated: {}
+                    model: main_handler.size_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.size_model, main_handler.size_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.size_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_size.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_priority
                     Layout.column: 1; Layout.row: 6
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["1", "2", "3", "4"]
-                    onActivated: {}
+                    model: main_handler.priority_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.priority_model, main_handler.priority_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.priority_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_priority.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
@@ -1113,11 +1195,12 @@ Window {
                 // int, int, int, int, int, int, str, str, str, str
                 // TODO : check if this code works
                 main_handler.add_task(control.currentIndex,
-                                      -1,
-                                      0,
-                                      0,
-                                      0,
-                                      0,
+                                      task_id.text,
+                                      task_parent_id.text,
+                                      task_category.currentIndex,
+                                      task_size.currentIndex,
+                                      task_priority.currentIndex,
+                                      task_status.currentIndex,
                                       task_name.text,
                                       task_description.text,
                                       task_data_start.text,
