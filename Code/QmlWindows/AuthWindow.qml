@@ -5,16 +5,17 @@ import QtQuick.Layouts
 // Основное окно
 ApplicationWindow {
     visible: true
-    id: auth_window
+    id: authWindow
     width: 400
     height: 530
     color: "transparent"
     title: "Окно авторизации"
+    modality: Qt.Modal
     
-    minimumWidth: auth_window.width
-    minimumHeight: auth_window.height
-    maximumWidth: auth_window.width
-    maximumHeight: auth_window.height
+    minimumWidth: authWindow.width
+    minimumHeight: authWindow.height
+    maximumWidth: authWindow.width
+    maximumHeight: authWindow.height
 
     FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
     FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
@@ -274,15 +275,38 @@ ApplicationWindow {
         font.family: localFont1.name
     }
 
+    MainWindow {
+        id: mainWindow
+        visible: false
+    }
+
+    PincodeWindow {
+        id: pincodeWindow
+        visible: false
+    }
+
     Connections {
         target: auth_handler
 
         onErrorMessage: {
             text_for_errors.text = message
         }
+
+        onSuccessAuth: {
+            let num = number
+            console.log(num)
+
+            if (num > 1) {
+                mainWindow.show()
+                authWindow.hide()
+            }
+
+            pincodeWindow.show()
+            authWindow.hide()
+        }
         
         onCloseWindow: {
-            auth_window.hide()
+            authWindow.close()
         }
     }
 }

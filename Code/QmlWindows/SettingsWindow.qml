@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 Window {
     id: settingsWindow // идентификатор
@@ -122,7 +123,7 @@ Window {
                 id: severListview
                 anchors.fill: parent
                 anchors.margins: 5
-                model: settings.model
+                model: settings_handler.model
                 focus: true
                 delegate: Item {
                         property int indexOfThisDelegate: index
@@ -188,8 +189,11 @@ Window {
                                     }
                                     onPressed: {
                                         delitserver.color = "#AAAAAA" // Цвет при нажатии кнопки\
-                                        warning.open()
-                                        //settings.delete(index)
+                                        severListview.currentIndex = index;
+                                        messageDialog.title = "Удаление сервера"
+                                        messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
+                                        messageDialog.open()
+                                        //settings_handler.delete(index)
                                     }
                                     onReleased: {
                                         delitserver.color = "#D3D3D3" // Исходный цвет кнопки
@@ -324,8 +328,18 @@ Window {
         }
     }
 
-    WarningWindow {
-        id: warning
+    MessageDialog {
+        id: messageDialog
+        modality: Qt.WindowModal
+        buttons: MessageDialog.Ok | MessageDialog.Cancel
+        onAccepted: {
+            settings_handler.delete(severListview.currentIndex)
+        }
+        onRejected: messageDialog.close()
+        Component.onCompleted: {
+            messageDialog.standardButton(MessageDialog.Ok).text = "Продолжить"
+            // messageDialog.standardButton(MessageDialog.Ok).font
+        }
     }
 
     ChangePincodeWindow{

@@ -124,7 +124,9 @@ Window {
                 hoverEnabled: false //не будет выделяться кнопка
 
                 onClicked:{
-                    tab_merge_task.visible=!tab_merge_task.visible
+                    console.log("I'm working!")
+                    main_handler.sync_tasks()
+                    // tab_merge_task.visible=!tab_merge_task.visible
                 }
             }
         }
@@ -818,7 +820,7 @@ Window {
                 hoverEnabled: false
                 background: Rectangle{color: "lightgrey"}
                 onClicked: {
-                    //settingsWindow.show()//вызываем сигнал
+                    settingsWindow.show()//вызываем сигнал
                 }
             }
         }
@@ -990,6 +992,35 @@ Window {
             background: Rectangle {
                 color: "#F15A5A"; border.color: "#D64141"; radius: 5}
         }
+    }
+
+    Connections {
+        target: main_handler
+
+        onDetectedConflicts: {
+            console.log("DDDDDDDDDDD")
+            let client_task = conflicted_tasks[0]
+            let server_task = conflicted_tasks[1]
+
+            addServerWindow.show()
+            mainWindow.hide()
+
+            //console.log(client_task.dtstart)
+            //console.log(server_task)
+            // tab_merge_task.visible = !tab_merge_task.visible
+            // tab_merge_task.ver_server.Text
+
+        }
+
+        onCloseWindow: {
+            auth_window.hide()
+        }
+    }
+
+
+
+    SettingsWindow{
+        id: settingsWindow
     }
 
 }

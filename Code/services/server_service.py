@@ -1,10 +1,11 @@
 from . import *
 
+
 class ServerService():
 
-    def __init__(self, repo, pincode):
+    def __init__(self, repo):
         self.repo = repo
-        self.pincode = pincode
+        self.pincode = '0000'
 
     @staticmethod
     def create_copy(item):
@@ -28,6 +29,16 @@ class ServerService():
     def is_int(item_id: int) -> bool:
         return True if isinstance(item_id, int) else False
 
+    def encrypt_data_all(self, items):
+        items = list(map(lambda item: ServerService.encrypt_data(item, self.pincode), items))
+        return items
+
+    def set_pincode(self, pincode):
+        servers = self.get_all()
+        self.pincode = pincode
+        for server in servers:
+            self.edit(server)
+
     def is_none(self, item_id: int):
         item = self.repo.get_by_id(item_id)
         if item is None:
@@ -43,10 +54,7 @@ class ServerService():
         if not isinstance(items, list):
             raise Invalid(f"Невозможно добавить серверы")
         _ = [ServerValidate.from_orm(item) for item in items]
-        new_items = []
-        for item in items:
-            self.add_labels(item)
-            new_items.append(ServerService.encrypt_data(item, self.pincode))
+        new_items = self.encrypt_data_all(items)
         self.repo.add_all(new_items)
 
     def edit(self, old_item: Server) -> None:
@@ -66,7 +74,10 @@ class ServerService():
 
     def get_all(self) -> list[Server]:
         items = self.repo.get_all()
-        return items
+        items_decrypt = []
+        for item in items:
+            items_decrypt.append(ServerService.decrypt_data(item, self.pincode))
+        return items_decrypt
 
     def get_by_id(self, item_id: int) -> Server:
         if not ServerService.is_int(item_id):

@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from Code.entities.db_entities import Base
+from Code.entities.db_entities import Base, Task, Server
 from Code.repositories.server_repo import ServerRepository
 from Code.repositories.task_repo import TaskRepository
 from Code.services import ServerService, TaskService
@@ -9,7 +9,7 @@ from Code.services import ServerService, TaskService
 
 class Container:
     dict = {}
-    setters = ['server_service', 'task_service', 'caldav_service']
+    setters = ['server_service', 'task_service', 'caldav_service', 'pincode']
 
     def __init__(self, **kwargs):
         self.dict = kwargs
@@ -27,16 +27,13 @@ class Container:
         return f"Container(id={self.key}, {self.subkey})"
 
 
-# def init_container():
-#     global container
-#     container.set('server_service', ServerService(ServerRepository(session)))
-#     container.set('task_service', TaskService(TaskRepository(session)))
-
-
 engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # path to .db
+Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)  # create tables
 session = sessionmaker(bind=engine)()  # create transaction
 
+
 container = Container
-container.set('server_service', ServerService(ServerRepository(session)))
-container.set('task_service', TaskService(TaskRepository(session)))
+container.set('pincode', '0000')
+container.set('server_service', ServerService(ServerRepository[Server](session)))
+container.set('task_service', TaskService(TaskRepository[Task](session)))

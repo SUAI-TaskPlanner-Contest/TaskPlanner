@@ -60,18 +60,19 @@ class Task(Base):
     parent_id = Column(Integer, ForeignKey("task.task_id", ondelete='CASCADE'))
 
     # M:1
-    server = relationship("Server", back_populates="tasks")
+    server = relationship("Server", back_populates="tasks", lazy="subquery")
 
     # 1:1
-    label = relationship("Label", cascade="all,delete", uselist=False, back_populates="task")
+    label = relationship("Label", cascade="all,delete", uselist=False, back_populates="task", lazy="subquery")
 
     # 1:M
-    children = relationship("Task", cascade="all", backref=backref("parent", remote_side="Task.id"))
+    children = relationship("Task", cascade="all", backref=backref("parent", remote_side="Task.id"), lazy="subquery")
 
     # other fields
     # caldav fields
     dtstamp = Column(DateTime)
     dtstart = Column(DateTime)
+    sync_time = Column(DateTime)
     due = Column(DateTime)
     last_mod = Column(DateTime)
 
@@ -93,6 +94,7 @@ class Task(Base):
         self.tech_status = tech_status
         self.server = server
         self.parent = parent
+        self.sync_time = dtstamp
 
     def __eq__(self, other):
         return \
