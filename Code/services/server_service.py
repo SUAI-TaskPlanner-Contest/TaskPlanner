@@ -66,7 +66,10 @@ class ServerService():
 
     def get_all(self) -> list[Server]:
         items = self.repo.get_all()
-        return items
+        items_decrypt = []
+        for item in items:
+            items_decrypt.append(ServerService.decrypt_data(item, self.pincode))
+        return items_decrypt
 
     def get_by_id(self, item_id: int) -> Server:
         if not ServerService.is_int(item_id):

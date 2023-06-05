@@ -124,6 +124,7 @@ Window {
                 hoverEnabled: false //не будет выделяться кнопка
 
                 onClicked:{
+                    console.log("I'm working!")
                     main_window.sync_tasks()
                     // tab_merge_task.visible=!tab_merge_task.visible
                 }
@@ -990,6 +991,24 @@ Window {
             font.family: localFont.name; font.weight: 400;
             background: Rectangle {
                 color: "#F15A5A"; border.color: "#D64141"; radius: 5}
+        }
+    }
+
+    Connections {
+        target: main_window
+
+        onDetectedConflicts: {
+            let client_task = conficted_tasks[0]
+            let server_task = conficted_tasks[1]
+
+            tab_merge_task.visible = !tab_merge_task.visible
+
+            // tab_merge_task.ver_server.Text
+
+        }
+
+        onCloseWindow: {
+            auth_window.hide()
         }
     }
 

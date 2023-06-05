@@ -11,11 +11,11 @@ def add_data(session, pincode):
 
     servers = [
         Server(
-            user_email=encrypt('local@host.ru', pincode),
-            user_password=encrypt('123', pincode),
-            server_uri='http://localhost:8000',
-            server_name='local server',
-            calendar_name='local calendar'
+            user_email=encrypt('user', pincode),
+            user_password=encrypt('user', pincode),
+            server_uri='http://localhost:8080/remote.php/dav',
+            server_name='nextcloud',
+            calendar_name='test'
         )
     ]
 

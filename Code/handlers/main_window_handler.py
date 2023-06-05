@@ -17,7 +17,7 @@ class MainWindow(QObject):
         tasks_list = self.task_service.get_all()
 
     @pyqtSlot()
-    async def sync_tasks(self):
+    def sync_tasks(self):
         # tasks_list = self._model.tasks
         tasks_list = self.task_service.get_all()
         conficted_tasks = []
@@ -28,7 +28,8 @@ class MainWindow(QObject):
         caldav_service = container.get('caldav_service')
 
         for task in tasks_list:
-            conficted_tasks.append(caldav_service.publish_tasks(task))
+            conficted_tasks.append(caldav_service.publish_task(task))
+
         while len(conficted_tasks) > 0:
             for i in range(len(conficted_tasks)):
 
@@ -39,7 +40,7 @@ class MainWindow(QObject):
                 # по этому сигналу нужно открыть окно Merge
                 # слева все значения заполнить conficted_tasks[0], справа conficted_tasks[1], в центре вывести conficted_tasks[0]
                 # result_task (на основании нажатой кнопки решения конфликта)
-                result_task = await self.detectedConflicts.emit(conficted_tasks)
-                if caldav_service.publish_tasks(result_task) == None:
-                    conficted_tasks.pop(i)
+                result_task = self.detectedConflicts.emit(conficted_tasks)
 
+                if caldav_service.publish_task(result_task) == None:
+                    conficted_tasks.pop(i)
