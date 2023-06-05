@@ -101,6 +101,8 @@ class SettingsWindow(QObject):
 
     @pyqtSlot(int)
     def delete(self, index):
+        # нужно вызвать окно предупреждения с ServerDeleteError
+        # придумать способ обработки кнопок "ок" и "отмена"
         server_to_delete = self._model.servers[index]
         self.server_service.delete_by_id(server_to_delete.server_id)
         self._model.delete_item(index)

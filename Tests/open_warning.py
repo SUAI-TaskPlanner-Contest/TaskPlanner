@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import QApplication
 from PyQt6.QtQml import QQmlApplicationEngine
 from Code.errors_dict.errors import errors
 from Code.exceptions.custom_exceptions import CustomException
-from Code.handlers.warning_window_handler import WarningWindowHandler, WarningButtonHandler
+from Code.handlers.warning_window_handler import WarningWindow, WarningButtonHandler
 
 if __name__ == "__main__":
     try:
@@ -17,7 +17,7 @@ if __name__ == "__main__":
         engine = QQmlApplicationEngine()
         buttonHandler = WarningButtonHandler()
         engine.rootContext().setContextProperty("buttonHandler", buttonHandler)
-        error_info = WarningWindowHandler("", "", "", "")
+        error_info = WarningWindow("", "", "", "")
         context = engine.rootContext()
         context.setContextProperty("errorInfo", error_info)
         error_info.setProperty("name", e.error_info.name)

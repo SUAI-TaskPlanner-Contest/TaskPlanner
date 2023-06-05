@@ -7,8 +7,8 @@ Window {
     id: settingsWindow // идентификатор
     signal signalExit // задаем сигнал
     visible: true // отображение
-    FontLoader { id: localFont; source: "pics/Inter-Thin.ttf" }
-    FontLoader { id: localFont1; source: "pics/Inter-ExtraLight.ttf" }
+    FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
+    FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
     width: 400// ширина окна
@@ -188,7 +188,8 @@ Window {
                                     }
                                     onPressed: {
                                         delitserver.color = "#AAAAAA" // Цвет при нажатии кнопки\
-                                        settings.delete(index)
+                                        warning.open()
+                                        //settings.delete(index)
                                     }
                                     onReleased: {
                                         delitserver.color = "#D3D3D3" // Исходный цвет кнопки
@@ -321,6 +322,10 @@ Window {
                     }
             }
         }
+    }
+
+    WarningWindow {
+        id: warning
     }
 
     ChangePincodeWindow{
