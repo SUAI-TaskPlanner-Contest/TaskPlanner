@@ -36,7 +36,7 @@ class TaskService():
 
     @staticmethod
     def encrypt_data(item, pincode) -> Server:
-        item = TaskService.create_copy(item)
+        # item = TaskService.create_copy(item)
         item.user_email = encrypt(item.user_email, pincode)
         item.user_password = encrypt(item.user_password, pincode)
         return item
