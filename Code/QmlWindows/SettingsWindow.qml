@@ -7,7 +7,6 @@ import QtQuick.Dialogs
 Window {
     id: settingsWindow // идентификатор
     signal signalExit // задаем сигнал
-    // visible: true // отображение
     FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
     FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
     x: Screen.width / 2 - width / 2
