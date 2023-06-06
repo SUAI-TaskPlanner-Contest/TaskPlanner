@@ -42,22 +42,23 @@ Window {
         Rectangle{
             width: 170; height: 45
             x: 420; y: 30
-            // combobox выбор сервера
             ComboBox {
                 anchors.verticalCenter: parent.verticalCenter
                 id: control
                 font.family: localFont.name; font.weight: 400;
                 font.pointSize: 12
-                model: ["NextCloud", "Second", "Third"]
+                model: main_handler.model
+                currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
+                onCurrentIndexChanged: main_handler.item = model[currentIndex]
+                textRole: 'server_name'
                 onActivated: {
-                    // обработки выбора элемента здесь
-                    console.log("Выбран элемент:", model[index]);//вывод только в консоль qml
+                    main_handler.change_server(index)
                 }
                 delegate: ItemDelegate {
+                    property int indexOfThisDelegate: index
                     width: control.width
                     contentItem: Text {
-                        text: control.textRole
-                            ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole]) : modelData
+                        text: model.modelData.server_name
                         color: "black"
                         font: control.font
                         elide: Text.ElideRight
@@ -66,7 +67,8 @@ Window {
                     highlighted: control.highlightedIndex === index
                 }
 
-                indicator: Canvas { //треуг справа
+                indicator: Canvas { 
+                    id: canvas
                     x: control.width - width - control.rightPadding
                     y: control.topPadding + (control.availableHeight - height) / 2
                     width: 12;  height: 8
@@ -86,7 +88,6 @@ Window {
 
                 contentItem: Text { //текст в строке
                     leftPadding: 0; rightPadding: control.indicator.width + control.spacing
-
                     text: control.displayText
                     font: control.font;  color: control.pressed ? "black" : "black"
                     verticalAlignment: Text.AlignVCenter

@@ -1,4 +1,3 @@
-from typing import Tuple
 from Code.utils.time_helper import *
 from caldav.lib.error import NotFoundError
 from caldav import DAVClient, Principal, Calendar, Event
@@ -18,6 +17,19 @@ class CalDavService:
             raise:
                 Exception: Unauthorized
         """
+        self.init(server)
+
+    def reinit(self, server: Server):
+        """
+            Reinit service with new auth data
+
+            raise:
+                Exception: Unauthorized
+        """
+        self.client.__exit__(None, None, None)
+        self.init(server)
+
+    def init(self, server: Server):
         self.server = server
         self.client = DAVClient(url=server.server_uri, username=server.user_email, password=server.user_password)
         self.principal = self.client.principal()
