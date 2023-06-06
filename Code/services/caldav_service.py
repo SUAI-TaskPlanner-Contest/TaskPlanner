@@ -75,6 +75,10 @@ class CalDavService:
             existing_task = self.get_task_by_id(task.id)
             assert existing_task.last_mod.tzinfo == timezone.utc
             assert task.sync_time.tzinfo == timezone.utc
+
+            print(existing_task.last_mod.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
+            print(task.sync_time.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
+
             if existing_task.last_mod > task.sync_time:
                 return existing_task, task
             if not self.delete_task_by_int_id(task.id):

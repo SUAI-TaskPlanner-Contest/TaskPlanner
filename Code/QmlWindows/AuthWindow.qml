@@ -275,16 +275,6 @@ ApplicationWindow {
         font.family: localFont1.name
     }
 
-    MainWindow {
-        id: mainWindow
-        visible: false
-    }
-
-    PincodeWindow {
-        id: pincodeWindow
-        visible: false
-    }
-
     Connections {
         target: auth_handler
 
@@ -293,20 +283,20 @@ ApplicationWindow {
         }
 
         onSuccessAuth: {
-            let num = number
-            console.log(num)
-
-            if (num > 1) {
-                mainWindow.show()
-                authWindow.hide()
-            }
-
             pincodeWindow.show()
             authWindow.hide()
         }
-        
+
         onCloseWindow: {
             authWindow.close()
         }
+    }
+
+    MainWindow {
+        id: mainWindow
+    }
+
+    PincodeWindow {
+        id: pincodeWindow
     }
 }
