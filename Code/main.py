@@ -17,7 +17,7 @@ if __name__ == '__main__':
     engine = QQmlApplicationEngine()
 
     # сохранить pincode с окна авторизаций
-    add_data(session, container.get('pincode'))
+    # add_data(session, container.get('pincode'))
 
     pincode_handler = PincodeWindow(container.get('server_service'))
     settings_windows = SettingsWindow(container.get('server_service'))
