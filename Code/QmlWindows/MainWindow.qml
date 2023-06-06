@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import QtQuick.Dialogs
 
+//Автоматизация через функции !
 Window {
     id: mainWindow
     signal signalExit
@@ -47,8 +48,8 @@ Window {
                 font.family: localFont.name; font.weight: 400;
                 font.pointSize: 12
                 model: main_handler.model
-                //currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
-                //onCurrentIndexChanged: main_handler.item = model[currentIndex]
+                currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
+                onCurrentIndexChanged: main_handler.item = model[currentIndex]
                 textRole: 'server_name'
                 onActivated: {
                     main_handler.change_server(index)
@@ -1415,7 +1416,7 @@ Window {
         }
     }
 
-    /*Connections {
+    Connections {
         target: main_handler
 
         onDetectedConflicts: {
@@ -1440,7 +1441,7 @@ Window {
         onCloseWindow: {
             auth_window.hide()
         }
-    }*/
+    }
 
     SettingsWindow{
         id: settingsWindow
