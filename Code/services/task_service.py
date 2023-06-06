@@ -52,7 +52,7 @@ class TaskService():
     def add(self, item: Task) -> None:
         TaskValidate.from_orm(item)
         self.add_label(item)
-        item.server = TaskService.encrypt_data(item.server, self.pincode)
+        # item.server = TaskService.encrypt_data(item.server, self.pincode)
         item = TaskService.convert_time_to_utc(item)
         self.repo.add(item)
 
@@ -63,7 +63,7 @@ class TaskService():
         new_items = []
         for item in items:
             self.add_label(item)
-            item.server = TaskService.encrypt_data(item.server, self.pincode)
+            # item.server = TaskService.encrypt_data(item.server, self.pincode)
             item = TaskService.convert_time_to_utc(item)
             new_items.append(item)
         self.repo.add_all(new_items)

@@ -12,3 +12,5 @@ class PincodeWindow(QObject):
         container.set('pincode', pincode)
         container.get('server_service').set_pincode(pincode)
         container.get('task_service').set_pincode(pincode)
+
+

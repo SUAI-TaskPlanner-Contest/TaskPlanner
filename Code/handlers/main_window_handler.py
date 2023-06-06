@@ -136,7 +136,7 @@ class ListModel(QObject):
         QObject.__init__(self)
         self._servers = servers
         self._item = servers[0]
-        container.set('caldav_service', CalDavService(self._item.server))
+        # container.set('caldav_service', CalDavService(self._item.server))
 
     @pyqtProperty(ItemModel, notify=itemChanged)
     def item(self):
@@ -160,9 +160,9 @@ class MainWindow(QObject):
 
     @pyqtSlot(int)
     def change_server(self, index):
-        container.set('caldav_service', CalDavService(self._model.model[index].server))
+        if index != 0:
+            container.set('caldav_service', CalDavService(self._model.model[index].server))
         # main window reload logic
-        pass
 
     @pyqtSlot(int, str, str)
     def update_result_task(self, id, summary, description):

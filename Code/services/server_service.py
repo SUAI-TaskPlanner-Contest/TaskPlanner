@@ -7,6 +7,15 @@ class ServerService():
         self.repo = repo
         self.pincode = '0000'
 
+        if len(self.get_all()) == 0:
+            self.add(Server (
+                user_email='local',
+                user_password='local',
+                server_uri='http://local',
+                server_name='локальный',
+                calendar_name='local'
+            ))
+
     @staticmethod
     def create_copy(item):
         return deepcopy(item)
@@ -31,6 +40,10 @@ class ServerService():
 
     def encrypt_data_all(self, items):
         items = list(map(lambda item: ServerService.encrypt_data(item, self.pincode), items))
+        return items
+
+    def decrypt_data_all(self, items):
+        items = list(map(lambda item: ServerService.decrypt_data(item, self.pincode), items))
         return items
 
     def set_pincode(self, pincode):

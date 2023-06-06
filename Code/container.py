@@ -28,13 +28,13 @@ class Container:
 
 
 engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # path to .db
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)  # create tables
 session = sessionmaker(bind=engine)()  # create transaction
 
 
 container = Container
-container.set('pincode', '0000')
+# container.set('pincode', '0000')
 container.set('server_service', ServerService(ServerRepository[Server](session)))
 container.set('task_service', TaskService(TaskRepository[Task](session)))
 

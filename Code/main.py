@@ -17,7 +17,8 @@ if __name__ == '__main__':
     engine = QQmlApplicationEngine()
 
     # сохранить pincode с окна авторизаций
-    add_data(session, container.get('pincode'))
+    # if len(container.get('server_service').get_all()) == 0:
+    #     add_data(session)
 
     pincode_handler = PincodeWindow(container.get('server_service'))
     settings_windows = SettingsWindow(container.get('server_service'))
@@ -31,7 +32,7 @@ if __name__ == '__main__':
 
     cur_dir = os.path.dirname(__file__)
 
-    if len(container.get('server_service').get_all()) > 0:
+    if len(container.get('server_service').get_all()) > 1:
         engine.load(os.path.join(cur_dir, "QmlWindows/ChekPincodeWindow.qml"))
     else:
         engine.load(os.path.join(cur_dir, "QmlWindows/AuthWindow.qml"))
