@@ -1,5 +1,5 @@
 from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
-from Code.entities.db_entities import Server
+from Code.entities.db_entities import Server, Priority, Status, Size, Type
 from Code.container import get_server_service
 from Code.container import container
 from Code.services import CalDavService
@@ -147,6 +147,41 @@ class ListModel(QObject):
         return self._servers
 
 
+class TaskLabelItemModel(QObject):
+    nameChanged = pyqtSignal()
+    idChanged = pyqtSignal()
+
+    def __init__(self, label: Priority | Status | Type | Size):
+        QObject.__init__(self)
+        self.label = label
+
+    @pyqtProperty("QString", notify=nameChanged)
+    def label_text(self):
+        return self.label.name
+
+    @pyqtProperty(int, notify=idChanged)
+    def label_id(self):
+        return self.label.id
+
+
+class TaskLabelListModel(QObject):
+    itemChanged = pyqtSignal()
+    itemsChanged = pyqtSignal()
+
+    def __init__(self, labels):
+        QObject.__init__(self)
+        self._labels = labels
+        self._item = labels[0]
+
+    @pyqtProperty(TaskLabelItemModel, notify=itemChanged)
+    def item(self):
+        return self._item
+
+    @pyqtProperty(list, notify=itemsChanged)
+    def model(self):
+        return self._labels
+
+
 class MainWindow(QObject):
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
 
@@ -157,6 +192,11 @@ class MainWindow(QObject):
         self.server_service = server_service
         self.result_task = None
         self._model = ListModel(list(map(lambda server: ItemModel(server), get_server_service().get_all())))
+        server_id = self._model.item.server.id
+        self._priority_model = TaskLabelListModel(list(map(lambda priority: TaskLabelItemModel(priority), get_server_service().get_priorities(server_id))))
+        self._status_model = TaskLabelListModel(list(map(lambda status: TaskLabelItemModel(status), get_server_service().get_statuses(server_id))))
+        self._type_model = TaskLabelListModel(list(map(lambda task_type: TaskLabelItemModel(task_type), get_server_service().get_types(server_id))))
+        self._size_model = TaskLabelListModel(list(map(lambda size: TaskLabelItemModel(size), get_server_service().get_sizes(server_id))))
 
     @pyqtSlot(int)
     def change_server(self, index):
@@ -231,3 +271,35 @@ class MainWindow(QObject):
     @pyqtProperty(ItemModel)
     def item(self):
         return self._model.item
+
+    @pyqtProperty(list)
+    def priority_model(self):
+        return self._priority_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def priority_item(self):
+        return self._priority_model.item
+
+    @pyqtProperty(list)
+    def status_model(self):
+        return self._status_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def status_item(self):
+        return self._status_model.item
+
+    @pyqtProperty(list)
+    def type_model(self):
+        return self._type_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def type_item(self):
+        return self._type_model.item
+
+    @pyqtProperty(list)
+    def size_model(self):
+        return self._size_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def size_item(self):
+        return self._size_model.item

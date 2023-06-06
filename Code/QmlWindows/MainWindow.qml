@@ -922,41 +922,133 @@ Window {
                 ComboBox{
                     id: task_category
                     Layout.column: 1; Layout.row: 3
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Design", "UX", "UI", "Backend"]
-                    onActivated: {}
+                    model: main_handler.type_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.type_model, main_handler.type_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.type_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_category.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_status
                     Layout.column: 1; Layout.row: 4
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
-                    onActivated: {}
+                    model: main_handler.status_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.status_model, main_handler.status_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.status_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_status.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_size
                     Layout.column: 1; Layout.row: 5
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Легкая", "Средняя", "Тяжелая"]
-                    onActivated: {}
+                    model: main_handler.size_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.size_model, main_handler.size_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.size_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_size.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_priority
                     Layout.column: 1; Layout.row: 6
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["1", "2", "3", "4"]
-                    onActivated: {}
+                    model: main_handler.priority_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.priority_model, main_handler.priority_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.priority_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_priority.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
