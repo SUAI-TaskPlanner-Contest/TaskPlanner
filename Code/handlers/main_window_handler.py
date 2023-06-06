@@ -5,10 +5,15 @@ from Code.container import get_server_service
 from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
 from Code.entities.db_entities import Server
 from Code.container import get_server_service
-from Code.container import container
+from Code.container import container, session
 from Code.services import CalDavService
 from Code.utils.time_helper import utc_now, local_to_utc0
 from Code.utils.time_helper import utc_now
+from Code.container import container
+from Code.services import TaskService, ServerService
+from Code.entities.db_entities import Task, Server
+from Code.repositories.server_repo import ServerRepository
+from Code.repositories.task_repo import TaskRepository
 
 
 class ItemModelTasks(QObject):
@@ -347,7 +352,7 @@ class TaskLabelListModel(QObject):
     def __init__(self, labels):
         QObject.__init__(self)
         self._labels = labels
-        self._item = labels[0]
+        self._item = None
 
     @pyqtProperty(TaskLabelItemModel, notify=itemChanged)
     def item(self):
@@ -365,7 +370,7 @@ class ComboBoxModel(QObject):
     def __init__(self, servers):
         QObject.__init__(self)
         self._servers = servers
-        self._server = servers[0]
+        self._server = None
 
     @pyqtProperty(ServerItem, notify=itemChanged)
     def server(self):
@@ -380,12 +385,25 @@ class MainWindow(QObject):
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
     updateListView = pyqtSignal(ListModelTasks, arguments=['tasks'])
 
-    def __init__(self, task_service, server_service):
+    def __init__(self):
         QObject.__init__(self)
+        self._servers_combobox_model = ComboBoxModel([])
+        self._priority_model = TaskLabelListModel([])
+        self._status_model = TaskLabelListModel([])
+        self._type_model = TaskLabelListModel([])
+        self._size_model = TaskLabelListModel([])
+        self._tasks_list_model = ListModelTasks([])
         self.conflicted_tasks = []
-        self.task_service = task_service
-        self.server_service = server_service
         self.result_task = None
+
+    @pyqtSlot()
+    def set_services(self):
+        self.conflicted_tasks = []
+        self.task_service = container.set('task_service', TaskService(TaskRepository[Task](session)))
+        self.server_service = container.set('server_service',
+                                            ServerService(ServerRepository[Server](session), container.get('pincode')))
+        self.result_task = None
+
         self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
                                                               ServerItem(server),
                                                               self.server_service.get_all())))
@@ -551,8 +569,6 @@ class MainWindow(QObject):
         if parent_id != -1 and task_id != -1:
             self.edit(server_index, task_id, parent_id, type_index, size_index, priority_index,
                       status_index, summary, description, dtstart, due)
-
-
 
     @pyqtSlot(int)
     def delete_task(self, index):

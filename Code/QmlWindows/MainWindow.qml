@@ -934,6 +934,7 @@ Window {
                 hoverEnabled: false
                 background: Rectangle{color: "lightgrey"}
                 onClicked: {
+                    settings_handler.set_server_service()
                     settingsWindow.show()//вызываем сигнал
                 }
             }

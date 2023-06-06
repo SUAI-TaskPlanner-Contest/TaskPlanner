@@ -8,12 +8,12 @@ from caldav.lib.error import AuthorizationError
 from requests.exceptions import MissingSchema
 from Code.handlers.main_window_handler import MainWindow
 from PyQt6.QtQml import QQmlApplicationEngine
+from Code.container import container
 
 
 class AuthWindow(QObject):
-    def __init__(self, server_service):
+    def __init__(self):
         QObject.__init__(self)
-        self.server_service = server_service
 
     errorMessage = pyqtSignal(str, arguments=['message'])
     successAuth = pyqtSignal(int, arguments=['number'])
@@ -28,9 +28,12 @@ class AuthWindow(QObject):
                        calendar_name=calendar_name)
 
             # http://localhost:8080/remote.php/dav
-            caldav_service = CalDavService(s)
-            caldav_service.__exit__(None, None, None)
+            # caldav_service = CalDavService(s)
+            # container.set('caldav_service', caldav_service)
+            #
+            # caldav_service.__exit__(None, None, None)
 
+            self.server_service = container.get('server_service')
             self.server_service.add(s)
 
             self.successAuth.emit(len(self.server_service.get_all()))

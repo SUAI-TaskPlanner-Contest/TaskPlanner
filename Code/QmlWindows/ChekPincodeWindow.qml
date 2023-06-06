@@ -251,13 +251,31 @@ ApplicationWindow { // окно
                             shake_timer.start()
                         }
                         else {
-                            pincode_handler.set_pincode(pinInput0.text +
-                                                     pinInput1.text +
-                                                     pinInput2.text +
-                                                     pinInput3.text)
+                            if (pincode_handler.novice) {
+                                pincode_handler.set_pincode(pinInput0.text +
+                                                         pinInput1.text +
+                                                         pinInput2.text +
+                                                         pinInput3.text)
+                                main_handler.set_services()
+                                mainWindow.show()
+                                pincode_window.hide()
+                            }
+                            else {
+                                pincode_handler.check_pincode(pinInput0.text +
+                                                         pinInput1.text +
+                                                         pinInput2.text +
+                                                         pinInput3.text)
+                                if (pincode_handler.verify_pin) {
+                                    main_handler.set_services()
+                                    mainWindow.show()
+                                    pincode_window.hide()
+                                }
+                                else {
+                                    shake_animation.start()
+                                    shake_timer.start()
+                                }
+                            }
 
-                            mainWindow.show()
-                            pincode_window.hide()
                         }
                     }
                     onReleased: {
