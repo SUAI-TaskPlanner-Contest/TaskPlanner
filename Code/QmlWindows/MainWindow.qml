@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 Window {
     id: mainWindow
     signal signalExit
-    // visible: true
+    visible: true
 
     width: 1400; height: 700
     title: ("Task Planner")
@@ -75,7 +75,11 @@ Window {
                     contextType: "2d"
 
                     Connections {
-                        target: control; function onPressedChanged() { canvas.requestPaint(); }
+                        target: control
+                        function onPressedChanged() {
+                            colsole.log("what am i?")
+                            canvas.requestPaint();
+                        }
                     }
 
                     onPaint: {
@@ -125,9 +129,10 @@ Window {
                 hoverEnabled: false //не будет выделяться кнопка
 
                 onClicked:{
-                    console.log("I'm working!")
-                    main_handler.sync_tasks()
-                    // tab_merge_task.visible=!tab_merge_task.visible
+                    console.log("combobox index: " + control.currentIndex)
+                    if (control.currentIndex > 0)
+                        main_handler.sync_tasks()
+                        // tab_merge_task.visible=!tab_merge_task.visible
                 }
             }
         }
@@ -781,7 +786,11 @@ Window {
                     }
                     onReleased: {
                         but_ver_server.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_server_name.text, ver_server_description.text)
+                        main_handler.update_result_task(ver_server_task_id.text,
+                                                        ver_server_data_start.text,
+                                                        ver_server_data_end.text,
+                                                        ver_server_name.text,
+                                                        ver_server_description.text)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -944,7 +953,11 @@ Window {
                     }
                     onReleased: {
                         but_ver_intermediate.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_intermediate_name.text, ver_intermediate_description.text)
+                        main_handler.update_result_task(ver_intermediate_task_id.text,
+                                                        ver_intermediate_data_start.text,
+                                                        ver_intermediate_data_end.text,
+                                                        ver_intermediate_name.text,
+                                                        ver_intermediate_description.text)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -1099,7 +1112,12 @@ Window {
                     }
                     onReleased: {
                         but_ver_client.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_client_name.text, ver_client_description.text)
+                        main_handler.update_result_task(ver_client_task_id.text,
+                                                        ver_client_data_start.text,
+                                                        ver_client_data_end.text,
+                                                        ver_client_name.text,
+                                                        ver_client_description.text
+                                                        )
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -1420,22 +1438,27 @@ Window {
         target: main_handler
 
         onDetectedConflicts: {
-            // console.log("DDDDDDDDDDD")
-
+            ver_server_task_id = conflicted_tasks.server_id
             ver_server_name.text = conflicted_tasks.server_summary
-
             ver_server_description.text = conflicted_tasks.server_description
             ver_server_data_start.text = conflicted_tasks.server_dtstart
             ver_server_data_end.text = conflicted_tasks.server_due
+            ver_server_category.text = conflicted_tasks.server_type
+            ver_server_status.text = conflicted_tasks.server_status
+            ver_server_size.text = conflicted_tasks.server_size
+            ver_server_priority.text = conflicted_tasks.server_priority
 
-
+            ver_client_task_id = conflicted_tasks.client_id
             ver_client_name.text = conflicted_tasks.client_summary
             ver_client_description.text = conflicted_tasks.client_description
             ver_client_data_start.text = conflicted_tasks.client_dtstart
             ver_client_data_end.text = conflicted_tasks.client_due
+            ver_client_category.text = conflicted_tasks.client_type
+            ver_client_status.text = conflicted_tasks.client_status
+            ver_client_size.text = conflicted_tasks.client_size
+            ver_clientpriority.text = conflicted_tasks.client_priority
 
             tab_merge_task.visible = !tab_merge_task.visible
-
         }
 
         onCloseWindow: {
