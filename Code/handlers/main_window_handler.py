@@ -1,9 +1,14 @@
 from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
 from Code.entities.db_entities import Server
 from Code.container import get_server_service
-from Code.container import container
+from Code.container import container, session
 from Code.services import CalDavService
 from Code.utils.time_helper import utc_now
+from Code.container import container
+from Code.services import TaskService, ServerService
+from Code.entities.db_entities import Task, Server
+from Code.repositories.server_repo import ServerRepository
+from Code.repositories.task_repo import TaskRepository
 
 
 class TaskItem(QObject):
@@ -135,7 +140,8 @@ class ListModel(QObject):
     def __init__(self, servers):
         QObject.__init__(self)
         self._servers = servers
-        self._item = servers[0]
+        # self._item = servers[0]
+        self._item = None
         # container.set('caldav_service', CalDavService(self._item.server))
 
     @pyqtProperty(ItemModel, notify=itemChanged)
@@ -150,11 +156,15 @@ class ListModel(QObject):
 class MainWindow(QObject):
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
 
-    def __init__(self, task_service, server_service):
+    def __init__(self):
         QObject.__init__(self)
+        self._model = ListModel([])
+
+    @pyqtSlot()
+    def set_services(self):
         self.conflicted_tasks = []
-        self.task_service = task_service
-        self.server_service = server_service
+        self.task_service = container.set('task_service', TaskService(TaskRepository[Task](session)))
+        self.server_service = container.set('server_service', ServerService(ServerRepository[Server](session), container.get('pincode')))
         self.result_task = None
         self._model = ListModel(list(map(lambda server: ItemModel(server), get_server_service().get_all())))
 

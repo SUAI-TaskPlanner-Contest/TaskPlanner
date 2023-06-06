@@ -3,18 +3,9 @@ from . import *
 
 class ServerService():
 
-    def __init__(self, repo):
+    def __init__(self, repo, pincode):
         self.repo = repo
-        self.pincode = '0000'
-
-        if len(self.get_all()) == 0:
-            self.add(Server (
-                user_email='local',
-                user_password='local',
-                server_uri='http://local',
-                server_name='локальный',
-                calendar_name='local'
-            ))
+        self.pincode = pincode
 
     @staticmethod
     def create_copy(item):

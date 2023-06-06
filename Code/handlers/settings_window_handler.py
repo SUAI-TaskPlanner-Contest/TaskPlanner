@@ -5,6 +5,11 @@ from PyQt6.QtCore import pyqtProperty, QObject, pyqtSlot, pyqtSignal
 from Code.services import Invalid
 from Code.entities.db_entities import Server
 from Code.chipher_module.chipher_module import encrypt, decrypt
+from Code.container import container, session
+from Code.services import TaskService, ServerService
+from Code.entities.db_entities import Task, Server
+from Code.repositories.server_repo import ServerRepository
+from Code.repositories.task_repo import TaskRepository
 
 
 class ItemModel(QObject):
@@ -56,9 +61,13 @@ class ListModel(QObject):
 class SettingsWindow(QObject):
     updateListView = pyqtSignal(ListModel, arguments=['new_model'])
 
-    def __init__(self, server_service):
+    def __init__(self):
         QObject.__init__(self)
-        self.server_service = server_service
+        self._model = ListModel([])
+
+    @pyqtSlot()
+    def set_server_service(self):
+        self.server_service = container.get('server_service')
         servers_list_items = []
         servers_list = self.server_service.get_all()
 
@@ -70,6 +79,7 @@ class SettingsWindow(QObject):
                                                 server.server_uri))
 
         self._model = ListModel(servers_list_items)
+        self.updateListView.emit(self._model)
 
     @pyqtSlot(str, str)
     def save_pincode(self, oldpin, newpin):
