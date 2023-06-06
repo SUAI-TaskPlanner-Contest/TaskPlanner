@@ -84,13 +84,15 @@ class TaskService():
     def get_all(self) -> list[Task]:
         return list(map(TaskService.convert_time_to_utc, self.repo.get_all()))
 
-    def get_by_id(self, item_id: int) -> Task:
+    def get_by_id(self, item_id: int) -> [Task | None]:
         if not TaskService.is_int(item_id):
             raise Invalid(f"Невозможно открыть задачу")
-        self.is_none(item_id)
+        # self.is_none(item_id)
         item = self.repo.get_by_id(item_id)
-        item = TaskService.convert_time_to_local(item)
-        return item
+        if item is not None:
+            item = TaskService.convert_time_to_utc(item)
+            return item
+        return None
 
     def get_many_by_ids(self, objects_ids: list[int]) -> list[Task]:
         if not isinstance(objects_ids, list):

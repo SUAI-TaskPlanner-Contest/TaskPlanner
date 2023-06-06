@@ -304,7 +304,7 @@ ApplicationWindow {
             pincodeWindow.show()
             authWindow.hide()
         }
-        
+
         onCloseWindow: {
             authWindow.close()
         }

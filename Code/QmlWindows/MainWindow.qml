@@ -377,6 +377,7 @@ Window {
                     }
                     onReleased: {
                         but_ver_server.color = "#D3D3D3" // Исходный цвет кнопки
+                        main_handler.update_result_task(1, ver_server_name.text, ver_server_description.text)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -534,6 +535,7 @@ Window {
                     }
                     onReleased: {
                         but_ver_intermediate.color = "#D3D3D3" // Исходный цвет кнопки
+                        main_handler.update_result_task(1, ver_intermediate_name.text, ver_intermediate_description.text)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -683,6 +685,7 @@ Window {
                     }
                     onReleased: {
                         but_ver_client.color = "#D3D3D3" // Исходный цвет кнопки
+                        main_handler.update_result_task(1, ver_client_name.text, ver_client_description.text)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -998,17 +1001,21 @@ Window {
         target: main_handler
 
         onDetectedConflicts: {
-            console.log("DDDDDDDDDDD")
-            let client_task = conflicted_tasks[0]
-            let server_task = conflicted_tasks[1]
+            // console.log("DDDDDDDDDDD")
 
-            addServerWindow.show()
-            mainWindow.hide()
+            ver_server_name.text = conflicted_tasks.server_summary
 
-            //console.log(client_task.dtstart)
-            //console.log(server_task)
-            // tab_merge_task.visible = !tab_merge_task.visible
-            // tab_merge_task.ver_server.Text
+            ver_server_description.text = conflicted_tasks.server_description
+            ver_server_data_start.text = conflicted_tasks.server_dtstart
+            ver_server_data_end.text = conflicted_tasks.server_due
+
+
+            ver_client_name.text = conflicted_tasks.client_summary
+            ver_client_description.text = conflicted_tasks.client_description
+            ver_client_data_start.text = conflicted_tasks.client_dtstart
+            ver_client_data_end.text = conflicted_tasks.client_due
+
+            tab_merge_task.visible = !tab_merge_task.visible
 
         }
 
@@ -1016,8 +1023,6 @@ Window {
             auth_window.hide()
         }
     }
-
-
 
     SettingsWindow{
         id: settingsWindow
