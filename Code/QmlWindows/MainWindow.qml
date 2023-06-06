@@ -957,7 +957,11 @@ Window {
                                                         ver_intermediate_data_start.text,
                                                         ver_intermediate_data_end.text,
                                                         ver_intermediate_name.text,
-                                                        ver_intermediate_description.text)
+                                                        ver_intermediate_description.text,
+                                                        ver_intermediate_status.currentIndex,
+                                                        ver_intermediate_type.curentIndex,
+                                                        ver_intermediate_size.currentIndex,
+                                                        ver_intermediate_priority.currentIndex)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -1116,7 +1120,11 @@ Window {
                                                         ver_client_data_start.text,
                                                         ver_client_data_end.text,
                                                         ver_client_name.text,
-                                                        ver_client_description.text
+                                                        ver_client_description.text,
+                                                        ver_server_priority.text,
+                                                        ver_server_priority .text,
+                                                        ver_server_priority .text
+                                                        ver_server_priority .text
                                                         )
                         tab_merge_task.visible=!tab_merge_task.visible
                     }

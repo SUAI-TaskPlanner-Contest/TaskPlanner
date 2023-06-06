@@ -389,9 +389,36 @@ class MainWindow(QObject):
         if index != 0:
             container.set('caldav_service', CalDavService(self._servers_combobox_model.servers[index].server))
 
+    def resolve_conflict(self, result_task):
+        caldav_service = container.get('caldav_service')
+
+        if caldav_service.publish_task(result_task) is None:
+            self.conflicted_tasks.pop(-1)
+            self.task_service.edit(result_task)
+
+        if len(self.conflicted_tasks) > 0:
+            conflicted_task = self.conflicted_tasks[-1]
+
+            self.detectedConflicts.emit(ConflictedTasks(
+                TaskItem(conflicted_task[0]),
+                TaskItem(conflicted_task[1])
+            ))
+
+    @pyqtSlot()
+    def accept_server(self):
+        self.resolve_conflict(self.conflicted_tasks[-1][1])
+
+    @pyqtSlot()
+    def accept_client(self):
+        self.conflicted_tasks[-1][1].last_mod = utc_now()
+        self.conflicted_tasks[-1][1].last_mod = utc_now()
+
+        self.resolve_conflict(self.conflicted_tasks[-1][1].last_mod)
+
     # потом еще надо будет послать 4 индекса для лейблов
     @pyqtSlot(int, str, str, str, str)
-    def update_result_task(self, id, dtstart, due, summary, description):
+    def merge_tasks(self, id, dtstart, due, summary, description,
+                    size_item, status_item, type_item, priority_item):
         caldav_service = container.get('caldav_service')
 
         # нашли задачу
@@ -400,6 +427,7 @@ class MainWindow(QObject):
         # обновили ее
         self.result_task.summary = summary
         self.result_task.description = description
+        # self.result_task.label
         self.result_task.last_mod = utc_now()
         self.result_task.sync_time = utc_now()
 
