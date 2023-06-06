@@ -8,7 +8,7 @@ ApplicationWindow { // окно
     id: pincode_window
     title: "Инструкция по работе в приложении"
     width: 720; height: 480
-    //visible: true // отображение
+    visible: true // отображение
     color: "transparent"
     flags: Qt.FramelessWindowHint // Отключаем обрамление окна
 
@@ -39,7 +39,7 @@ ApplicationWindow { // окно
         FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
 
         Text {
-            text: "Добро пожаловать! "
+            text: "Введите пинкод"
             font.family: localFont.name
             font.pointSize: 32
             font.weight: 500
@@ -53,7 +53,7 @@ ApplicationWindow { // окно
         }
 
         Text {
-            text: "Ваш pin будет являться ключом для шифрования и дешифрования данных. Не потеряйте его!"
+            text: "Введите пинкод"
             width: parent.width // задаем максимальную ширину текста
             wrapMode: Text.Wrap // включаем перенос текста на новую строку
             font.family: localFont1.name

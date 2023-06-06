@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 Window {
     id: mainWindow
     signal signalExit
-    visible: true
+    // visible: true
 
     width: 1400; height: 700
     title: ("Task Planner")
