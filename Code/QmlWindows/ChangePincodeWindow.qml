@@ -14,8 +14,8 @@ ApplicationWindow {
     height: 700// высота окна
     flags: Qt.FramelessWindowHint
     color: "transparent"
-    modality: (1)
 
+    property int empty_imput_score
     property int previousX
     property int previousY
 
@@ -44,14 +44,21 @@ ApplicationWindow {
         anchors.right: parent.right
         border.width: 2
         border.color: "lightgrey"
-        radius: 60
+        //radius: 60
     }
+        Rectangle {
+            id: emptyRectangle3
+            color: "transparent"
+            anchors.top:parent.top
+            width: 35; height: 30
+
+        }
         Rectangle{
             id: pinTxt
             width: parent.width-40; height: 40
 
             anchors.margins: 20
-            anchors.top:parent.top
+            anchors.top:emptyRectangle3.bottom
             anchors.horizontalCenter: parent.horizontalCenter
 
             Text {
@@ -65,13 +72,21 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: oldpinTxt
+            id: emptyRectangle1
+            color: "transparent"
             anchors.top:pinTxt.bottom
+            width: 35; height: 80
+
+        }
+        Rectangle {
+            id: oldpinTxtRectangle
+            anchors.top:emptyRectangle1.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 40
             anchors.margins: 20
             Text {
                 text: "Введите старый PIN-кода"
+                id: oldpinTxt
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
@@ -82,7 +97,7 @@ ApplicationWindow {
         }
         Rectangle {
             id: oldpinInputara
-            anchors.top:oldpinTxt.bottom
+            anchors.top:oldpinTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 40
             anchors.margins: 20
@@ -91,10 +106,6 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 160
                 height: parent.height
-                validator: IntValidator {
-                    bottom: 0
-                    top: 9999
-                }
                 horizontalAlignment: TextInput.AlignHCenter
                 verticalAlignment: TextInput.AlignVCenter
                 font.family: localFont1.name
@@ -102,15 +113,26 @@ ApplicationWindow {
                 font.pointSize: 18
                 color: "#000000"
                 font.pixelSize: 32
+                onPressed: {
+                    oldpinTxt.color = "#232323"
+                }
             }
         }
         Rectangle {
-            id: newpinTxt
+            id: emptyRectangle2
+            color: "transparent"
             anchors.top:oldpinInputara.bottom
+            width: 35; height: 40
+
+        }
+        Rectangle {
+            id: newpinTxtRectangle
+            anchors.top:emptyRectangle2.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 40
             anchors.margins: 20
             Text {
+                id: newpinTxt
                 text: "Введите новый PIN-кода"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
@@ -122,7 +144,7 @@ ApplicationWindow {
         }
         Rectangle {
             id: newpinInputara
-            anchors.top:newpinTxt.bottom
+            anchors.top:newpinTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 40
             anchors.margins: 20
@@ -131,10 +153,6 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 160
                 height: parent.height
-                validator: IntValidator {
-                    bottom: 0
-                    top: 9999
-                }
                 horizontalAlignment: TextInput.AlignHCenter
                 verticalAlignment: TextInput.AlignVCenter
                 font.family: localFont1.name
@@ -142,6 +160,9 @@ ApplicationWindow {
                 font.pointSize: 18
                 color: "#000000"
                 font.pixelSize: 32
+                onPressed: {
+                    newpinTxt.color = "#232323"
+                }
             }
         }
 
@@ -155,20 +176,40 @@ ApplicationWindow {
         anchors.margins: 20
 
         Button{
-            id: savepinButton
             text:("Сохранить PIN-код")
             width: parent.width; height: parent.height
             font.family: localFont1.name
-
-            onClicked: { //действия при нажатии кнопки
-                change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)
-                if (change_pincode_handler.verify_pin) {
-                    pincodeWindow.close()
-                    settingsWindow.show()
+            hoverEnabled: false
+            background: Rectangle {
+                id: savepinButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    savepinButton.color = "#C2C2C2" // Цвет при наведении на кнопку
                 }
-                else {
-                    shake_animation.start()
-                    shake_timer.start()
+                onExited: {
+                    savepinButton.color = "#F0F0F0" // Исходный цвет кнопки
+                }
+                onPressed: {
+                    savepinButton.color = "#AAAAAA" // Цвет при нажатии кнопки\addserverWindow.close()
+                    empty_imput_score = 0
+                    if(oldpin.text.length != 4){oldpinTxt.color = "red"; empty_imput_score++}
+                    if(newpin.text.length != 4){newpinTxt.color = "red"; empty_imput_score++}
+                    if(empty_imput_score==0){
+                        settings_handler.save_pincode(oldpin.text, newpin.text)
+                        pincodeWindow.close()
+                        settingsWindow.show()
+                    }
+
+                }
+                onReleased: {
+                    savepinButton.color = "#D3D3D3" // Исходный цвет кнопки
                 }
             }
         }
@@ -179,16 +220,39 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 20
         Button {
-            id: clousButton
             anchors.fill: parent
             text: "Закрыть"
             font.family: localFont1.name
             width: (parent.width / 3)
             height: parent.height
+            hoverEnabled: false
+            background: Rectangle {
+                id: closeButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    closeButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                }
+                onExited: {
+                    closeButton.color = "#F0F0F0" // Исходный цвет кнопки
+                }
+                onPressed: {
+                    closeButton.color = "#AAAAAA" // Цвет при нажатии кнопки\addserverWindow.close()
+                    pincodeWindow.close()
+                    settingsWindow.show()
+                    newpinTxt.color = "#232323"
+                    oldpinTxt.color = "#232323"
 
-            onClicked: {
-                pincodeWindow.close()
-                settingsWindow.show()
+                }
+                onReleased: {
+                    closeButton.color = "#D3D3D3" // Исходный цвет кнопки
+                }
             }
         }
     }
