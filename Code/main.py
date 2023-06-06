@@ -32,12 +32,12 @@ if __name__ == '__main__':
 
     cur_dir = os.path.dirname(__file__)
 
-    # if len(container.get('server_service').get_all()) > 1:
-    #     engine.load(os.path.join(cur_dir, "QmlWindows/ChekPincodeWindow.qml"))
-    # else:
-    #     engine.load(os.path.join(cur_dir, "QmlWindows/AuthWindow.qml"))
+    if len(container.get('server_service').get_all()) > 1:
+        engine.load(os.path.join(cur_dir, "QmlWindows/ChekPincodeWindow.qml"))
+    else:
+        engine.load(os.path.join(cur_dir, "QmlWindows/AuthWindow.qml"))
 
-    engine.load(os.path.join(cur_dir, "QmlWindows/MainWindow.qml"))
+    # engine.load(os.path.join(cur_dir, "QmlWindows/MainWindow.qml"))
 
     if not engine.rootObjects():
         sys.exit(-1)

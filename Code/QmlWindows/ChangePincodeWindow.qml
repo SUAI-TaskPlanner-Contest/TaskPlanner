@@ -14,6 +14,7 @@ ApplicationWindow {
     height: 700// высота окна
     flags: Qt.FramelessWindowHint
     color: "transparent"
+    modality: (1)
 
     property int previousX
     property int previousY

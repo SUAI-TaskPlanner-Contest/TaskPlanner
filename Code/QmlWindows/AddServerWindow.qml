@@ -14,7 +14,7 @@ ApplicationWindow {
     height: 700// высота окна
     // flags: Qt.FramelessWindowHint
     // color: "transparent"
-    modality: Qt.NonModal
+    modality: (1)
 
     property int previousX
     property int previousY
@@ -266,7 +266,7 @@ ApplicationWindow {
             onClicked: { //действия при нажатии кнопки
                 addserverWindow.close()
                 settingsWindow.show()
-                settings.save_server (user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
+                settings_handler.save_server(user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
 
             }
         }

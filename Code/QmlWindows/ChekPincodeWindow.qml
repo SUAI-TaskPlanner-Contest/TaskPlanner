@@ -255,6 +255,7 @@ ApplicationWindow { // окно
                                                      pinInput1.text +
                                                      pinInput2.text +
                                                      pinInput3.text)
+
                             mainWindow.show()
                             pincode_window.hide()
                         }
