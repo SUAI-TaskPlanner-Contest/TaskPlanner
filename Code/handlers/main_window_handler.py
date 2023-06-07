@@ -399,9 +399,8 @@ class MainWindow(QObject):
     @pyqtSlot()
     def set_services(self):
         self.conflicted_tasks = []
-        self.task_service = container.set('task_service', TaskService(TaskRepository[Task](session)))
-        self.server_service = container.set('server_service',
-                                            ServerService(ServerRepository[Server](session), container.get('pincode')))
+        self.task_service = container.get('task_service')
+        self.server_service = container.get('server_service')
         self.result_task = None
 
         self._servers_combobox_model = ComboBoxModel(list(map(lambda server:

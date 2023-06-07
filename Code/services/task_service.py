@@ -35,7 +35,7 @@ class TaskService():
 
     def add(self, item: Task) -> None:
         TaskValidate.from_orm(item)
-        self.add_label(item)
+        # self.add_label(item)
         item = TaskService.convert_time_to_utc(item)
         self.repo.add(item)
 

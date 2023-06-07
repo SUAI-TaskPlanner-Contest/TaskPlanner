@@ -65,7 +65,7 @@ def old_user(pincode):
 
 
 engine = create_engine('sqlite:///./database/taskplanner.db', echo=False)  # path to .db
-Base.metadata.drop_all(engine)
+# Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)  # create tables
 session = sessionmaker(bind=engine)()  # create transaction
 
