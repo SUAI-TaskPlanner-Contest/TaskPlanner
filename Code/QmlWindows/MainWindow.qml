@@ -266,6 +266,11 @@ Window {
                     font.pointSize: 20
                     anchors.horizontalCenter: parent.horizontalCenter; y:5
                 }
+                Text{
+                    id: ver_server_task_id
+                    text: 'task_id'
+                    visible: false
+                }
                 ScrollView {
                     y:50
                     x:10
@@ -393,6 +398,11 @@ Window {
                 font.family: localFont.name; font.weight: 400;color: "#232323"
                 anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 20; y:20
+            }
+            Text{
+                id: ver_intermediate_task_id
+                text: 'task_id'
+                visible: false
             }
             Rectangle{
                 width: parent.width-10; height: 550
@@ -565,6 +575,11 @@ Window {
                     font.pointSize: 20
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     anchors.horizontalCenter: parent.horizontalCenter; y:5
+                }
+                Text{
+                    id: ver_client_task_id
+                    text: 'task_id'
+                    visible: false
                 }
                 ScrollView {
                     y:50
@@ -857,6 +872,11 @@ Window {
             font.pointSize: 25
             text: "Новая  задача"
             font.family: localFont.name; font.weight: 500;color: "#232323"
+        }
+        Text{
+            id: task_id
+            text: 'task_id'
+            visible: false
         }
         //описание задачи
         TextField{
