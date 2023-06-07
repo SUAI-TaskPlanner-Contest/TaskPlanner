@@ -12,12 +12,7 @@ class TaskService():
         return True if isinstance(item_id, int) else False
 
     @staticmethod
-    def create_copy(item):
-        return deepcopy(item)
-
-    @staticmethod
     def convert_time_to_local(item: Task):
-        item = TaskService.create_copy(item)
         item.dtstamp = utc0_to_local(item.dtstamp)
         item.dtstart = utc0_to_local(item.dtstart)
         item.due = utc0_to_local(item.due)
@@ -26,23 +21,12 @@ class TaskService():
 
     @staticmethod
     def convert_time_to_utc(item: Task):
-        # item = TaskService.create_copy(item)
         item.dtstamp = local_to_utc0(item.dtstamp)
         item.dtstart = local_to_utc0(item.dtstart)
         item.due = local_to_utc0(item.due)
         item.last_mod = local_to_utc0(item.last_mod)
         item.sync_time = local_to_utc0(item.sync_time)
         return item
-
-    @staticmethod
-    def encrypt_data(item, pincode) -> Server:
-        # item = TaskService.create_copy(item)
-        item.user_email = encrypt(item.user_email, pincode)
-        item.user_password = encrypt(item.user_password, pincode)
-        return item
-
-    def set_pincode(self, pincode):
-        self.pincode = pincode
 
     def is_none(self, item_id: int):
         item = self.repo.get_by_id(item_id)
@@ -51,8 +35,7 @@ class TaskService():
 
     def add(self, item: Task) -> None:
         TaskValidate.from_orm(item)
-        self.add_label(item)
-        # item.server = TaskService.encrypt_data(item.server, self.pincode)
+        # self.add_label(item)
         item = TaskService.convert_time_to_utc(item)
         self.repo.add(item)
 
@@ -63,7 +46,6 @@ class TaskService():
         new_items = []
         for item in items:
             self.add_label(item)
-            # item.server = TaskService.encrypt_data(item.server, self.pincode)
             item = TaskService.convert_time_to_utc(item)
             new_items.append(item)
         self.repo.add_all(new_items)
@@ -87,12 +69,8 @@ class TaskService():
     def get_by_id(self, item_id: int) -> [Task | None]:
         if not TaskService.is_int(item_id):
             raise Invalid(f"Невозможно открыть задачу")
-        # self.is_none(item_id)
-        item = self.repo.get_by_id(item_id)
-        if item is not None:
-            item = TaskService.convert_time_to_utc(item)
-            return item
-        return None
+        self.is_none(item_id)
+        return self.repo.get_by_id(item_id)
 
     def get_many_by_ids(self, objects_ids: list[int]) -> list[Task]:
         if not isinstance(objects_ids, list):

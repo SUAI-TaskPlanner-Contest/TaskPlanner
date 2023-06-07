@@ -1,10 +1,21 @@
+from datetime import datetime
 from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject, QUrl
-from Code.entities.db_entities import Server, Task, Label
+from Code.entities.db_entities import Server, Task, Label, Priority, Status, Type, Size
 from Code.container import get_server_service
-from Code.container import container
+from PyQt6.QtCore import pyqtSlot, pyqtProperty, pyqtSignal, QObject
+from Code.entities.db_entities import Server
+from Code.container import get_server_service
+from Code.container import container, session
 from Code.services import CalDavService
 from Code.utils.time_helper import utc_now, local_to_utc0
-from datetime import datetime
+from Code.utils.time_helper import utc_now
+from Code.container import container
+from Code.services import TaskService, ServerService
+from Code.entities.db_entities import Task, Server
+from Code.repositories.server_repo import ServerRepository
+from Code.repositories.task_repo import TaskRepository
+
+CURRENT_SERVER_ID = 1
 
 
 class ItemModelTasks(QObject):
@@ -17,10 +28,10 @@ class ItemModelTasks(QObject):
         self._server = server
         self._label = label
         self._children = children
-        self._dtstamp = dtstamp.strftime('%Y-%m-%d %H:%M:%S')
-        self._dtstart = dtstart.strftime('%Y-%m-%d %H:%M:%S')
-        self._due = due.strftime('%Y-%m-%d %H:%M:%S')
-        self._last_mod = last_mod.strftime('%Y-%m-%d %H:%M:%S')
+        self._dtstamp = dtstamp.strftime('%Y.%m.%d %H:%M')
+        self._dtstart = dtstart.strftime('%Y.%m.%d %H:%M')
+        self._due = due.strftime('%Y.%m.%d %H:%M')
+        self._last_mod = last_mod.strftime('%Y.%m.%d %H:%M')
         self._summary = summary
         self._description = description
         self._tech_status = tech_status
@@ -46,7 +57,7 @@ class ItemModelTasks(QObject):
         return self._server
 
     # ItemLabel.name
-    @pyqtProperty(Label)
+    @pyqtProperty(str)
     def label(self):
         return self.label.name
 
@@ -102,55 +113,59 @@ class ItemModelTasks(QObject):
 class TaskItem(QObject):
     def __init__(self, task):
         QObject.__init__(self)
-        self._id = task.id
-        self._server_id = task.server_id
-        self._parent_id = task.parent_id
-        self._server = task.server
-        self._label = task.label
-        self._children = task.children
-        self._dtstamp = task.dtstamp
-        self._dtstart = task.dtstart
-        self._due = task.due
-        self._last_mod = task.last_mod
-        self._summary = task.summary
-        self._description = task.description
-        self._tech_status = task.tech_status
+        self._task = task
+
+    @pyqtProperty(str)
+    def priority_name(self):
+        return self._task.label.priority.name
+
+    @pyqtProperty(str)
+    def size_name(self):
+        return self._task.label.size.name
+
+    @pyqtProperty(str)
+    def type_name(self):
+        return self._task.label.type.name
+
+    @pyqtProperty(str)
+    def status_name(self):
+        return self._task.label.status.name
 
     @pyqtProperty(int)
     def id(self):
-        return self._id
+        return self._task.id
 
     @pyqtProperty(int)
     def server_id(self):
-        return self._server_id
+        return self._task.server_id
 
     @pyqtProperty(int)
     def parent_id(self):
-        return self._parent_id
+        return self._task.parent_id
 
     @pyqtProperty(str)
     def dtstart(self):
-        return self._dtstart
+        return self._task.dtstart
 
     @pyqtProperty(str)
     def due(self):
-        return self._due
+        return self._task.due
 
     @pyqtProperty(str)
     def last_mod(self):
-        return self._last_mod
+        return self._task.last_mod
 
     @pyqtProperty(str)
     def summary(self):
-        return self._summary
+        return self._task.summary
 
     @pyqtProperty(str)
     def description(self):
-        return self._description
+        return self._task.description
 
 
 class ConflictedTasks(QObject):
-    def __init__(self, client_task, server_task):
+    def __init__(self, client_task: TaskItem, server_task: TaskItem):
         QObject.__init__(self)
         self._client_task = client_task
         self._server_task = server_task
@@ -165,15 +180,31 @@ class ConflictedTasks(QObject):
 
     @pyqtProperty(str)
     def client_dtstart(self):
-        return self._client_task.dtstart.strftime('%Y-%m-%d %H:%M:%S')
+        return self._client_task.dtstart.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def client_due(self):
-        return self._client_task.due.strftime('%Y-%m-%d %H:%M:%S')
+        return self._client_task.due.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def client_summary(self):
         return self._client_task.summary
+
+    @pyqtProperty(str)
+    def client_size(self):
+        return self._client_task.size_name
+
+    @pyqtProperty(str)
+    def client_priority(self):
+        return self._client_task.priority_name
+
+    @pyqtProperty(str)
+    def client_type(self):
+        return self._client_task.type_name
+
+    @pyqtProperty(str)
+    def client_status(self):
+        return self._client_task.status_name
 
     @pyqtProperty(str)
     def client_description(self):
@@ -185,11 +216,11 @@ class ConflictedTasks(QObject):
 
     @pyqtProperty(str)
     def server_dtstart(self):
-        return self._server_task.dtstart.strftime('%Y-%m-%d %H:%M:%S')
+        return self._server_task.dtstart.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def server_due(self):
-        return self._server_task.due.strftime('%Y-%m-%d %H:%M:%S')
+        return self._server_task.due.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def server_summary(self):
@@ -198,6 +229,22 @@ class ConflictedTasks(QObject):
     @pyqtProperty(str)
     def server_description(self):
         return self._server_task.description
+
+    @pyqtProperty(str)
+    def server_size(self):
+        return self._server_task.size_name
+
+    @pyqtProperty(str)
+    def server_priority(self):
+        return self._server_task.priority_name
+
+    @pyqtProperty(str)
+    def server_type(self):
+        return self._server_task.type_name
+
+    @pyqtProperty(str)
+    def server_status(self):
+        return self._server_task.status_name
 
     @pyqtProperty(TaskItem)
     def client_task(self):
@@ -208,14 +255,14 @@ class ConflictedTasks(QObject):
         return self._server_task
 
 
-class ItemModel(QObject):
+class ServerItem(QObject):
     nameChanged = pyqtSignal()
 
     def __init__(self, server: Server):
         QObject.__init__(self)
         self.server = server
 
-    @pyqtProperty("QString", notify=nameChanged)
+    @pyqtProperty(str)
     def server_name(self):
         return self.server.server_name
 
@@ -225,33 +272,57 @@ class ListModelTasks(QObject):
         QObject.__init__(self)
         self.tasks = task_list
 
-    def add_item(self, id, server_id, parent_id, server, children,
-                 summary, description, dtstart, dtstamp, tech_status, due, label):
-        self.tasks.append(ItemModelTasks(summary=summary,
-                                         id=id,
-                                         server_id=server_id,
-                                         parent_id=parent_id,
-                                         server=server,
-                                         children=children,
-                                         description=description,
-                                         dtstart=dtstart,
-                                         dtstamp=dtstamp,
-                                         tech_status=tech_status,
-                                         due=due,
-                                         label=label,
-                                         last_mod=utc_now()
-                                         ))
+    def add_task(self, task):
+        self.tasks.append(ItemModelTasks(
+            id=task.id,
+            server_id=task.server.id,
+            parent_id=task.parent_id,
+            server=task.server,
+            label=task.label,
+            children=task.children,
+            dtstamp=task.dtstamp,
+            dtstart=task.dtstart,
+            due=task.due,
+            last_mod=task.last_mod,
+            summary=task.summary,
+            description=task.description,
+            tech_status=task.tech_status,
+            size=task.label.size,
+            type=task.label.type,
+            priority=task.label.priority,
+            status=task.label.status,
+            # last_mod=utc_now())
+        ))
 
-    def save_item(self, summary, description, dtstart, dtstamp, due, label, index):
-        self.tasks[index].summary = summary
-        self.tasks[index].description = description
-        self.tasks[index].dtstart = dtstart
-        self.tasks[index].dtstamp = dtstamp
-        self.tasks[index].due = due
-        self.tasks[index].label = label
-        self.tasks[index].last_mod = utc_now()
+    def save_task(self, index, task):
+        self.tasks[index] = ItemModelTasks(id=task.id,
+                                           server_id=task.server.id,
+                                           parent_id=task.parent_id,
+                                           server=task.server,
+                                           label=task.label,
+                                           children=task.children,
+                                           dtstamp=task.dtstamp,
+                                           dtstart=task.dtstart,
+                                           due=task.due,
+                                           last_mod=task.last_mod,
+                                           summary=task.summary,
+                                           description=task.description,
+                                           tech_status=task.tech_status,
+                                           size=task.label.size,
+                                           type=task.label.type,
+                                           priority=task.label.priority,
+                                           status=task.label.status,
+                                           # last_mod=utc_now())
+                                           )
+        # self.tasks[index].summary = task.summary
+        # self.tasks[index].description = task.description
+        # self.tasks[index].dtstart = task.dtstart
+        # self.tasks[index].dtstamp = task.dtstamp
+        # self.tasks[index].due = task.due
+        # self.tasks[index].label = task.label
+        # self.tasks[index].last_mod = utc_now()
 
-    def delete_item(self, index):
+    def delete_task(self, index):
         self.tasks.pop(index)
 
     @pyqtProperty(list)
@@ -259,144 +330,341 @@ class ListModelTasks(QObject):
         return self.tasks
 
 
-class ListModel(QObject):
+class TaskLabelItemModel(QObject):
+    nameChanged = pyqtSignal()
+    idChanged = pyqtSignal()
+
+    def __init__(self, label: Priority | Status | Type | Size):
+        QObject.__init__(self)
+        self.label = label
+
+    @pyqtProperty("QString", notify=nameChanged)
+    def label_text(self):
+        return self.label.name
+
+    @pyqtProperty(int, notify=idChanged)
+    def label_id(self):
+        return self.label.id
+
+
+class TaskLabelListModel(QObject):
+    itemChanged = pyqtSignal()
+    itemsChanged = pyqtSignal()
+
+    def __init__(self, labels):
+        QObject.__init__(self)
+        self._labels = labels
+        self._item = None
+
+    @pyqtProperty(TaskLabelItemModel, notify=itemChanged)
+    def item(self):
+        return self._item
+
+    @pyqtProperty(list, notify=itemsChanged)
+    def model(self):
+        return self._labels
+
+
+class ComboBoxModel(QObject):
     itemChanged = pyqtSignal()
     itemsChanged = pyqtSignal()
 
     def __init__(self, servers):
         QObject.__init__(self)
         self._servers = servers
-        self._item = servers[0]
-        # container.set('caldav_service', CalDavService(self._item.server))
+        self._server = None
 
-    @pyqtProperty(ItemModel, notify=itemChanged)
-    def item(self):
-        return self._item
+    @pyqtProperty(ServerItem, notify=itemChanged)
+    def server(self):
+        return self._server
 
     @pyqtProperty(list, notify=itemsChanged)
-    def model(self):
+    def servers(self):
         return self._servers
 
 
 class MainWindow(QObject):
+    updateComboBox = pyqtSignal(ConflictedTasks, arguments=['servers'])
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
-    updateListView = pyqtSignal(ListModel, arguments=['tasks'])
+    updateListView = pyqtSignal(ListModelTasks, arguments=['tasks'])
+    sizeListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    typeListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    statusListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    priorityListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
 
-    def __init__(self, task_service, server_service):
+    def __init__(self):
         QObject.__init__(self)
+        self._servers_combobox_model = ComboBoxModel([])
+        self._priority_model = TaskLabelListModel([])
+        self._status_model = TaskLabelListModel([])
+        self._type_model = TaskLabelListModel([])
+        self._size_model = TaskLabelListModel([])
+        self._tasks_list_model = ListModelTasks([])
         self.conflicted_tasks = []
-        self.task_service = task_service
-        self.server_service = server_service
         self.result_task = None
-        task_list_items = []
-        task_list = self.task_service.get_all()
-        self._model = ListModel(list(map(lambda server: ItemModel(server), get_server_service().get_all())))
-        for task in task_list:
-            task_list_items.append((ItemModelTasks(task.id, task.server_id, task.parent_id, task.server,
-                                                   task.label, task.children, task.dtstamp, task.dtstart,
-                                                   task.due, task.last_mod, task.summary, task.description,
-                                                   task.tech_status, task.label.size,
-                                                   task.label.type, task.label.priority, task.label.status))
-                                   )
-        # self._model = ListModel(task_list_items)
+        self.task_service = None
+        self.server_service = None
 
-    @pyqtSlot(str, str, datetime, datetime, int)
-    def save_item(self, summary, description, dtstart, due, label, id):
-        task = self.task_service.get_by_id(id)
+    @pyqtSlot()
+    def set_services(self):
+        self.conflicted_tasks = []
+        self.task_service = container.get('task_service')
+        self.server_service = container.get('server_service')
+        self.result_task = None
+
+        self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
+                                                              ServerItem(server),
+                                                              self.server_service.get_all())))
+
+        server_id = self._servers_combobox_model.servers[0].server.id
+        self._servers_combobox_model._server = self._servers_combobox_model.servers[0].server
+        tasks = self.server_service.get_tasks(server_id)
+        self._tasks_list_model = ListModelTasks(list(map(lambda task:
+                                                         ItemModelTasks(
+                                                             id=task.id,
+                                                             server_id=task.server.id,
+                                                             parent_id=task.parent_id,
+                                                             server=task.server,
+                                                             label=task.label,
+                                                             children=task.children,
+                                                             dtstamp=task.dtstamp,
+                                                             dtstart=task.dtstart,
+                                                             due=task.due,
+                                                             last_mod=task.last_mod,
+                                                             summary=task.summary,
+                                                             description=task.description,
+                                                             tech_status=task.tech_status,
+                                                             size=task.label.size,
+                                                             type=task.label.type,
+                                                             priority=task.label.priority,
+                                                             status=task.label.status,
+                                                             # last_mod=utc_now())
+                                                         ),
+                                                         tasks)))
+        self.init_label_models(server_id)
+        self.updateComboBox.emit(self._servers_combobox_model)
+        self.updateListView.emit(self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID)))
+
+    def init_label_models(self, server_id):
+        types = self.server_service.get_types(server_id)
+        sizes = self.server_service.get_sizes(server_id)
+        statuses = self.server_service.get_statuses(server_id)
+        priorities = self.server_service.get_priorities(server_id)
+        self._priority_model = TaskLabelListModel(list(map(lambda priority: TaskLabelItemModel(priority), priorities)))
+        self._status_model = TaskLabelListModel(list(map(lambda status: TaskLabelItemModel(status), statuses)))
+        self._type_model = TaskLabelListModel(list(map(lambda task_type: TaskLabelItemModel(task_type), types)))
+        self._size_model = TaskLabelListModel(list(map(lambda size: TaskLabelItemModel(size), sizes)))
+        self.sizeListUpdated.emit(self._size_model)
+        self.typeListUpdated.emit(self._type_model)
+        self.statusListUpdated.emit(self._status_model)
+        self.priorityListUpdated.emit(self._priority_model)
+
+    @pyqtSlot()
+    def update_combobox(self):
+        servers = get_server_service().get_all()
+        if len(servers) != len(self._servers_combobox_model.servers):
+            self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
+                                                                  ServerItem(server),
+                                                                  servers)))
+        # self.init_label_models()
+
+    def global_add(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
+                   status_index, summary, description, dtstart, due):
+
+        parent = None
+
+        server_id = self._servers_combobox_model.servers[server_index].server.id
+        # server = self.server_service.get_by_id(server_id)
+
+        size = self.size_model[size_index].label
+        status = self.status_model[status_index].label
+        type = self.type_model[type_index].label
+        priority = self.priority_model[priority_index].label
+
+        task = Task(server_id=server_id,
+                    summary=summary,
+                    description=description,
+                    dtstamp=utc_now(),
+                    dtstart=local_to_utc0(datetime.strptime(dtstart, '%Y.%m.%d %H:%M')),
+                    due=local_to_utc0(datetime.strptime(due, '%Y.%m.%d %H:%M')),
+                    last_mod=utc_now(),
+                    tech_status=0,
+                    parent=parent)
+
+        # TODO : fill labels
+        label = Label(task=task,
+                      size=size,
+                      status=status,
+                      type=type,
+                      priority=priority)
+
+        task.label = label
+        self.task_service.add(task)
+        self._tasks_list_model.add_task(task)
+        self.updateListView.emit(self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID)))
+
+    def local_add(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
+                  status_index, summary, description, dtstart, due):
+        parent = self.task_service.get_by_id(parent_id)
+
+        server_id = self._servers_combobox_model.servers[server_index].server.id
+
+        size = self.size_model[size_index].label
+        status = self.status_model[status_index].label
+        type = self.type_model[type_index].label
+        priority = self.priority_model[priority_index].label
+
+        task = Task(server_id=server_id,
+                    summary=summary,
+                    description=description,
+                    dtstamp=utc_now(),
+                    dtstart=local_to_utc0(datetime.strptime(dtstart, '%Y.%m.%d %H:%M')),
+                    due=local_to_utc0(datetime.strptime(due, '%Y.%m.%d %H:%M')),
+                    last_mod=utc_now(),
+                    tech_status=0,
+                    parent=parent)
+
+        # TODO : fill labels
+        label = Label(task=task,
+                      size=size,
+                      status=status,
+                      type=type,
+                      priority=priority)
+
+        task.label = label
+        self.task_service.add(task)
+        self._tasks_list_model.add_task(task)
+
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
+
+    def edit(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
+             status_index, summary, description, dtstart, due):
+
+        task = self.task_service.get_by_id(task_id)
+
+        # TODO : create combobox
+        size_id = self.size_model[size_index].label_id
+        status_id = self.status_model[status_index].label_id
+        type_id = self.type_model[type_index].label_id
+        priority_id = self.priority_model[priority_index].label_id
+
+        # обновили ее поля
         task.summary = summary
         task.description = description
-        # Если надо ещё и время выводить, надо стереть .date()
-        datetime.strptime(task.dtstart, '%Y-%m-%d %H:%M:%S').date()
-        task.dtstart = local_to_utc0(dtstart)
-        datetime.strptime(task.due, '%Y-%m-%d %H:%M:%S').date()
-        task.due = local_to_utc0(due)
-        # task.label.size = ItemSizeLabel
-        # task.label.type = ItemTypeLabel
-        # task.label.priority = ItemPriorityLabel
-        # task.label.status = ItemStatusLabel
-        task.last_mod = local_to_utc0(utc_now())
+        task.dtstart = local_to_utc0(datetime.strptime(dtstart, '%Y.%m.%d %H:%M'))
+        task.due = local_to_utc0(datetime.strptime(due, '%Y.%m.%d %H:%M'))
+        task.last_mod = utc_now()
+
+        task.label.size_id = size_id
+        task.label.status_id = status_id
+        task.label.type_id = type_id
+        task.label.priority_id = priority_id
+
+        # обновили задачу в БД и изменили модель
         self.task_service.edit(task)
 
-    @pyqtSlot(str, str, datetime, datetime, str, list, datetime)
-    def add_item(self, summary, description, dtstart, dtstamp, tech_status, server, due):
-        task = Task(server=server, summary=summary, description=description, dtstamp=dtstamp, dtstart=dtstart,
-                    due=due, last_mod=utc_now(), tech_status=tech_status, parent=None)
-        self.task_service.add(task)
-        task_list_items = []
-        task_list = self.task_service.get_all()
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
 
-        for task in task_list:
-            task_list_items.append((ItemModelTasks(task.id, task.server_id, task.parent_id, task.server,
-                                                   task.label, task.children, task.dtstamp, task.dtstart,
-                                                   task.due, task.last_mod, task.summary, task.description,
-                                                   task.tech_status, task.label.size,
-                                                   task.label.type, task.label.priority, task.label.status))
-                                   )
-        self._model = ListModel(task_list_items)
-        self.updateListView.emit(self._model)
+    @pyqtSlot(int, int, int, int, int, int, int, str, str, str, str)
+    def add_task(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
+                 status_index, summary, description, dtstart, due):
+
+        if parent_id == -1 and task_id == -1:
+            self.global_add(server_index, task_id, parent_id, type_index, size_index, priority_index,
+                            status_index, summary, description, dtstart, due)
+
+        if parent_id != -1 and task_id == -1:
+            self.local_add(server_index, task_id, parent_id, type_index, size_index, priority_index,
+                           status_index, summary, description, dtstart, due)
+
+        if parent_id != -1 and task_id != -1:
+            self.edit(server_index, task_id, parent_id, type_index, size_index, priority_index,
+                      status_index, summary, description, dtstart, due)
+
+    def tasks_to_task_item(self, tasks):
+        return ListModelTasks(list(map(lambda task:
+                                       ItemModelTasks(
+                                           id=task.id,
+                                           server_id=task.server.id,
+                                           parent_id=task.parent_id,
+                                           server=task.server,
+                                           label=task.label,
+                                           children=task.children,
+                                           dtstamp=task.dtstamp,
+                                           dtstart=task.dtstart,
+                                           due=task.due,
+                                           last_mod=task.last_mod,
+                                           summary=task.summary,
+                                           description=task.description,
+                                           tech_status=task.tech_status,
+                                           size=task.label.size,
+                                           type=task.label.type,
+                                           priority=task.label.priority,
+                                           status=task.label.status,
+                                           # last_mod=utc_now())),
+                                       ),
+                                       tasks)))
 
     @pyqtSlot(int)
-    def delete_item(self, index):
-        # self.delete_item(index)
-        self.task_service.delete_by_id(self.model[index].id)
-        task_list_items = []
-        task_list = self.task_service.get_all()
+    def delete_task(self, index):
+        global CURRENT_SERVER_ID
+        id_to_delete = self._tasks_list_model.tasks[index].id
+        self.task_service.delete_by_id(id_to_delete)
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
 
-        for task in task_list:
-            task_list_items.append((ItemModelTasks(task.id, task.server_id, task.parent_id, task.server,
-                                                   task.label, task.children, task.dtstamp, task.dtstart,
-                                                   task.due, task.last_mod, task.summary, task.description,
-                                                   task.tech_status, task.label.size,
-                                                   task.label.type, task.label.priority, task.label.status))
-                                   )
-        self._model = ListModel(task_list_items)
-        self.updateListView.emit(self._model)
-
+    # TODO : change tasks model also in QML by this slot
     @pyqtSlot(int)
     def change_server(self, index):
+        server = self._servers_combobox_model.servers[index].server
         if index != 0:
-            container.set('caldav_service', CalDavService(self._model.model[index].server))
-        # main window reload logic
+            container.set('caldav_service', CalDavService(server))
+        global CURRENT_SERVER_ID
+        CURRENT_SERVER_ID = server.id
+        self.init_label_models(server_id=server.id)
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
 
-    @pyqtSlot(int, str, str)
-    def update_result_task(self, id, summary, description):
+    def resolve_conflict(self, result_task):
         caldav_service = container.get('caldav_service')
 
-        # нашли задачу
-        self.result_task = self.task_service.get_by_id(id)
-
-        # обновили ее
-        self.result_task.summary = summary
-        self.result_task.description = description
-        self.result_task.last_mod = utc_now()
-        self.result_task.sync_time = utc_now()
-
-        # self.result_task = self.task_service.get_by_id(id)
-
-        if caldav_service.publish_task(self.result_task) is None:
+        if caldav_service.publish_task(result_task) is None:
             self.conflicted_tasks.pop(-1)
-            self.task_service.edit(self.result_task)
+            self.task_service.edit(result_task)
 
         if len(self.conflicted_tasks) > 0:
             conflicted_task = self.conflicted_tasks[-1]
+            self.detectedConflicts.emit(ConflictedTasks(conflicted_task[0], conflicted_task[1]))
 
-            qml_conflicted_tasks = ConflictedTasks(
-                TaskItem(conflicted_task[0]),
-                TaskItem(conflicted_task[1])
-            )
+    @pyqtSlot()
+    def accept_server(self):
+        self.resolve_conflict(self.conflicted_tasks[-1][1].task)
 
-            # print(qml_conflicted_tasks.client_task)
+    @pyqtSlot()
+    def accept_client(self):
+        self.conflicted_tasks[-1][0].task.sync_time = utc_now()
+        self.conflicted_tasks[-1][0].task.last_mod = utc_now()
+        self.resolve_conflict(self.conflicted_tasks[-1][0].task)
 
-            self.detectedConflicts.emit(qml_conflicted_tasks)
+    @pyqtSlot(int, str, str, str, str)
+    def merge_tasks(self, id, dtstart, due, summary, description,
+                    size_item, status_item, type_item, priority_item):
+        # size_id = size_item.
+        result_task = self.task_service.get_by_id(id)
+        result_task.summary = summary
+        result_task.dtstart = local_to_utc0(datetime.strptime(dtstart, '%Y.%m.%d %H:%M'))
+        result_task.due = local_to_utc0(datetime.strptime(due, '%Y.%m.%d %H:%M'))
+        result_task.description = description
+        result_task.last_mod = utc_now()
+        result_task.sync_time = utc_now()
+        # self.result_task.label
+        self.resolve_conflict(result_task)
 
     @pyqtSlot()
     def sync_tasks(self):
-        # tasks_list = self._model.tasks
-        tasks_list = self.task_service.get_all()
-
-        server = self.server_service.get_by_id(1)
-
-        container.set('caldav_service', CalDavService(server))
+        tasks_list = self.task_service.get_all()  # tasks_list = self._model.tasks
         caldav_service = container.get('caldav_service')
 
         for task in tasks_list:
@@ -404,31 +672,52 @@ class MainWindow(QObject):
             if result is not None:
                 server_task = result[0]
                 client_task = result[1]
-                self.conflicted_tasks.append([client_task, server_task])
+                self.conflicted_tasks.append([TaskItem(client_task), TaskItem(server_task)])
 
         if len(self.conflicted_tasks) > 0:
             conflicted_task = self.conflicted_tasks[-1]
+            self.detectedConflicts.emit(conflicted_task[0], conflicted_task[1])
 
-            qml_conflicted_tasks = ConflictedTasks(
-                TaskItem(conflicted_task[0]),
-                TaskItem(conflicted_task[1])
-            )
+    @pyqtProperty(list, notify=updateComboBox)
+    def server_combobox_model(self):
+        return self._servers_combobox_model.servers
 
-            # print(qml_conflicted_tasks.client_task)
+    @pyqtProperty(list, notify=updateListView)
+    def task_list_model(self):
+        return self._tasks_list_model.model
 
-            self.detectedConflicts.emit(qml_conflicted_tasks)
+    @pyqtProperty(ServerItem)
+    def server_combobox_item(self):
+        return self._servers_combobox_model.server
 
-    @pyqtProperty(list)
-    def model(self):
-        return self._model.model
+    @pyqtProperty(list, notify=priorityListUpdated)
+    def priority_model(self):
+        return self._priority_model.model
 
-    @pyqtProperty(ItemModel)
-    def item(self):
-        return self._model.item
+    @pyqtProperty(TaskLabelItemModel)
+    def priority_item(self):
+        return self._priority_model.item
 
-    @pyqtSlot()
-    def refresh(self):
-        print('REFREEEEEEEEEEEEEEEEEEEEEEEEEESH')
+    @pyqtProperty(list, notify=sizeListUpdated)
+    def status_model(self):
+        return self._status_model.model
 
-    def show(self):
-        super().load(QUrl('QmlWindows/MainWindow.qml'))
+    @pyqtProperty(TaskLabelItemModel)
+    def status_item(self):
+        return self._status_model.item
+
+    @pyqtProperty(list, notify=sizeListUpdated)
+    def type_model(self):
+        return self._type_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def type_item(self):
+        return self._type_model.item
+
+    @pyqtProperty(list, notify=sizeListUpdated)
+    def size_model(self):
+        return self._size_model.model
+
+    @pyqtProperty(TaskLabelItemModel)
+    def size_item(self):
+        return self._size_model.item

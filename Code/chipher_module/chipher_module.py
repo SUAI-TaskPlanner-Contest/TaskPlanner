@@ -12,6 +12,7 @@ def encrypt(raw_data: str, pincode: str) -> str:
 
      """
     en_data = cryptocode.encrypt(raw_data, pincode)
+    assert en_data != False
     return en_data
 
 
@@ -26,4 +27,5 @@ def decrypt(en_data: str, pincode: str) -> str:
 
     """
     dec_data = cryptocode.decrypt(en_data, pincode)
+    assert dec_data != False
     return dec_data

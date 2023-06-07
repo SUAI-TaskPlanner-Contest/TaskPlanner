@@ -2,7 +2,7 @@ from . import *
 from Code.entities.db_entities import Server, Task
 
 class TaskValidate(BaseModel):
-    server: Server
+    server_id: StrictInt
     parent: Task = None
     dtstamp: datetime
     dtstart: datetime

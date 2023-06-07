@@ -14,6 +14,7 @@ ApplicationWindow {
     height: 700// высота окна
     flags: Qt.FramelessWindowHint
     color: "transparent"
+    modality: (1)
 
     property int previousX
     property int previousY
@@ -160,9 +161,15 @@ ApplicationWindow {
             font.family: localFont1.name
 
             onClicked: { //действия при нажатии кнопки
-                pincodeWindow.close()
-                settingsWindow.show()
-                settings.save_pincode(oldpin.text, newpin.text)
+                change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)
+                if (change_pincode_handler.verify_pin) {
+                    pincodeWindow.close()
+                    settingsWindow.show()
+                }
+                else {
+                    shake_animation.start()
+                    shake_timer.start()
+                }
             }
         }
     }

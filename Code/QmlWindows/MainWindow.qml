@@ -8,7 +8,7 @@ import QtQuick.Dialogs
 Window {
     id: mainWindow
     signal signalExit
-    // visible: true
+    visible: false
 
     width: 1400; height: 700
     title: ("Task Planner")
@@ -47,11 +47,13 @@ Window {
                 id: control
                 font.family: localFont.name; font.weight: 400;
                 font.pointSize: 12
-                model: main_handler.model
-                currentIndex: getCurrentIndex(main_handler.model, main_handler.item)
-                onCurrentIndexChanged: main_handler.item = model[currentIndex]
+                model: main_handler.server_combobox_model
+                currentIndex: 0
+                onCurrentIndexChanged: main_handler.server_combobox_item = model[currentIndex]
                 textRole: 'server_name'
                 onActivated: {
+                    // console.log(index)
+                    control.currentIndex = index;
                     main_handler.change_server(index)
                 }
                 delegate: ItemDelegate {
@@ -67,7 +69,7 @@ Window {
                     highlighted: control.highlightedIndex === index
                 }
 
-                indicator: Canvas { 
+                indicator: Canvas {
                     id: canvas
                     x: control.width - width - control.rightPadding
                     y: control.topPadding + (control.availableHeight - height) / 2
@@ -75,7 +77,12 @@ Window {
                     contextType: "2d"
 
                     Connections {
-                        target: control; function onPressedChanged() { canvas.requestPaint(); }
+                        target: control
+                        function onPressedChanged() {
+                            main_handler.update_combobox()
+                            control.model = main_handler.server_combobox_model
+                            canvas.requestPaint();
+                        }
                     }
 
                     onPaint: {
@@ -125,9 +132,10 @@ Window {
                 hoverEnabled: false //не будет выделяться кнопка
 
                 onClicked:{
-                    console.log("I'm working!")
-                    main_handler.sync_tasks()
-                    // tab_merge_task.visible=!tab_merge_task.visible
+                    console.log("combobox index: " + control.currentIndex)
+                    if (control.currentIndex > 0)
+                        main_handler.sync_tasks()
+                        // tab_merge_task.visible=!tab_merge_task.visible
                 }
             }
         }
@@ -150,6 +158,9 @@ Window {
                     patentsearch_text.visible=false
                     patentsearch_combobox.visible=false
                     newtask.visible=!newtask.visible
+
+                    task_parent_id.text = -1
+                    task_id.text = -1
                 }
             }
 
@@ -163,15 +174,11 @@ Window {
             border.color: "lightgrey"
             border.width: 4
             radius: 20 // устанавливаем общий радиус для всех углов
-            ListModel {
-                id: dataModel
-                    ListElement{color: "yellow"; text: "first"}
-                    ListElement{color: "red"; text: "second"}
-            }
+
             ListView {
                 id: view
                 //model: dataModel // id того, что я хочу отобразить в listView
-                model: tasks.model
+                model: main_handler.task_list_model
                 anchors.margins: 10
                 anchors.fill: parent
                 spacing: 10
@@ -236,9 +243,9 @@ Window {
                         TaskWindow{msg: model.modelData.summary; id: model_text}
                         TaskWindow{Layout.column: 1; msg: model.modelData.type;id: model_charm}
                         TaskWindow{Layout.column: 2; msg: model.modelData.dtstart;id: model_date_of_start}
-                        TaskWindow{Layout.column: 3; msg: model.modelData.dtstamp;id: model_dtstamp}
+                        TaskWindow{Layout.column: 3; msg: model.modelData.due;id: model_due}
                         TaskWindow{Layout.column: 4; msg: model.modelData.status; id: model_tech_status}
-                        TaskWindow{Layout.column: 5; msg: model.modelData.last_mod; id: model_last_mod}
+                        TaskWindow{Layout.column: 5; msg: model.modelData.priority; id: model_priority}
                         TaskWindow{
                             Layout.column: 6
                             Button{anchors.centerIn: parent; width:50; height:50; font.pixelSize: 15;
@@ -259,6 +266,14 @@ Window {
                                             patentsearch_text.visible=true
                                             patentsearch_combobox.visible=true
                                             newtask.visible = !newtask.visible
+
+                                            // TODO: check if next code works
+                                            task_parent_id.text = model.modelData.id
+                                            task_id.text = -1
+
+                                            console.log(task_id.text)
+                                            console.log(task_parent_id.text)
+
                                         }
                                     }
                                     Button {
@@ -266,16 +281,29 @@ Window {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         onClicked:{
                                             popup.visible = !popup.visible
-                                            patentsearch_text.visible=true
-                                            patentsearch_combobox.visible=true
-                                            change_task_window.visible = !change_task_window.visible
+                                            // patentsearch_text.visible=true
+                                            // patentsearch_combobox.visible=true
+                                            newtask.visible = !newtask.visible
 
+
+                                            task_parent_id.text = model.modelData.id
+                                            task_id.text = model.modelData.id
+
+                                            console.log(task_parent_id.text)
+                                            console.log(task_id.text)
+
+                                            // TODO: check if next code works
+                                            // task_id.text = model.modelData.id
+                                            task_name.text = model.modelData.summary
+                                            task_description.text = model.modelData.description
+                                            task_data_start.text = model.modelData.dtstart
+                                            task_data_end.text = model.modelData.due
                                         }
                                     }
                                     Button {
                                         text: ("Удалить")
                                         anchors.horizontalCenter: parent.horizontalCenter
-                                        onClicked: tasks.delete_item(index)
+                                        onClicked: main_handler.delete_task(index)
                                     }
                                 }
                             }
@@ -284,345 +312,8 @@ Window {
                 }
             }
         }
-        //Окно добавления задачи
-        Rectangle{
-            id: newtask
-            width: 500; height: parent.height
-            anchors.right: parent.right
-            color: "white"
-            visible: false
-            border.width: 2
-            border.color: "lightgrey"
-            Button{//кнопка закрыть окно создания задачи
-                id: butclose
-                width: 45;  height: 45
-                y: 3;  x: 450
-                contentItem: Image{source: "Resources/close.svg"}
-                hoverEnabled: false
-                background: Rectangle{color: "white"}
-                onClicked:{newtask.visible=false}
-            }
-            //название задачи
-            TextField{
-                x: 10; y: 50
-                id: task_name
-                width:440
-                //maximumLength: 50
-                font.pointSize: 25
-                text: "Новая  задача"
-                font.family: localFont.name; font.weight: 500;color: "#232323"
-            }
-            //описание задачи
-            TextField{
-                id: task_description
-                x:10; y:100
-                width: 440; height: 150
-                wrapMode: TextInput.Wrap
-                //maximumLength: 200
-                font.pointSize: 17
-                font.family: localFont.name; font.weight: 500;color: "#232323"
-                text: "Введите описание задачи"
-            }
-
-            Rectangle{//делаем таблицу 6*2
-                x: 10; y: 260
-                width: 440; height: 500
-                GridLayout{ // разбиваем на сетку
-                    rows: 8; columns: 2
-                    Text{Layout.column: 2; Layout.row:1; text: "Дата начала:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 2; text: "Дата завершения:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{Layout.column: 2; Layout.row: 3; text: "Категория:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 4; text: "Статус:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 5; text: "Размер:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 6; text: "Приоритет:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ id: patentsearch_text
-                        visible: true
-                        Layout.column: 2; Layout.row: 7; text: "Родитель:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                    }
-                    TextField {
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        Layout.column: 1; Layout.row: 1
-                        id: task_data_start
-                        inputMask: " 99.99.9999"; text: "20.20.2020"
-                        font.pointSize: 14
-                    }
-                    TextField {
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        Layout.column: 1; Layout.row: 2
-                        id: task_data_end
-                        inputMask: " 99.99.9999"; text: "20.20.2020"
-                        font.pointSize: 14
-                    }
-                    ComboBox{
-                        id: task_category
-                        Layout.column: 1; Layout.row: 3
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Design", "UX", "UI", "Backend"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_status
-                        Layout.column: 1; Layout.row: 4
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_size
-                        Layout.column: 1; Layout.row: 5
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Легкая", "Средняя", "Тяжелая"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_priority
-                        Layout.column: 1; Layout.row: 6
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["1", "2", "3", "4"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: patentsearch_combobox
-                        Layout.column: 1; Layout.row: 7
-                        width: 200
-                        height: 45
-                        visible: true
-                        font.pointSize:14
-                        model: ["Не выбрано", "Одиночная задача", "Вторая", "Работа"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                }
-            }
-            Button{
-                id: but_add_newtask
-                text: "Добавить"
-                onClicked: {
-                    tasks.add_item(task_name.text, task_description.text, task_data_start.text, task_data_end.text, task_status.text, control.currentIndex,)
-                    newtask.visible=false
-                }
-                x:10; y:630
-                width: 200;height: 50
-                font.family: localFont.name; font.weight: 400;
-
-                background: Rectangle {
-                     color: "lightgreen"
-                     border.color: "green"
-                     radius: 5
-                }
-            }
-            Button{
-                id: but_cancel_newtask
-                text: "Отменить"
-                onClicked: {newtask.visible=false}
-                x:270; y:630
-                width: 200;height: 50
-                font.family: localFont.name; font.weight: 400;
-                background: Rectangle {
-                    color: "#F15A5A"; border.color: "#D64141"; radius: 5}
-            }
-       }
-       //Окно редактирования задачи
-       Rectangle{
-            id: change_task_window
-            width: 500; height: parent.height
-            anchors.right: parent.right
-            color: "white"
-            visible: false
-            border.width: 2
-            border.color: "lightgrey"
-            Button{//кнопка закрыть окно создания задачи
-                id: butclose_change
-                width: 45;  height: 45
-                y: 3;  x: 450
-                contentItem: Image{source: "Resources/close.svg"}
-                hoverEnabled: false
-                background: Rectangle{color: "white"}
-                onClicked:{newtask.visible=false}
-            }
-            //название задачи
-            TextField{
-                x: 10; y: 50
-                id: task_name_change
-                width:440
-                //maximumLength: 50
-                font.pointSize: 25
-                text: "Новая  задача"
-                font.family: localFont.name; font.weight: 500;color: "#232323"
-            }
-            //описание задачи
-            TextField{
-                id: task_description_change
-                x:10; y:100
-                width: 440; height: 150
-                wrapMode: TextInput.Wrap
-                //maximumLength: 200
-                font.pointSize: 17
-                font.family: localFont.name; font.weight: 500;color: "#232323"
-                text: "Введите описание задачи"
-            }
-
-          Rectangle{//делаем таблицу 6*2
-                x: 10; y: 260
-                width: 440; height: 500
-                GridLayout{ // разбиваем на сетку
-                    rows: 8; columns: 2
-                    Text{Layout.column: 2; Layout.row:1; text: "Дата начала:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 2; text: "Дата завершения:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{Layout.column: 2; Layout.row: 3; text: "Категория:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 4; text: "Статус:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 5; text: "Размер:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ Layout.column: 2; Layout.row: 6; text: "Приоритет:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        }
-                    Text{ id: patentsearch_text_change
-                        visible: true
-                        Layout.column: 2; Layout.row: 7; text: "Родитель:"
-                        font.pointSize: 14
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                    }
-                    TextField {
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        Layout.column: 1; Layout.row: 1
-                        id: task_data_start_change
-                        inputMask: " 99.99.9999"; text: "20.20.2020"
-                        font.pointSize: 14
-                    }
-                    TextField {
-                        font.family: localFont.name; font.weight: 400;color: "#232323"
-                        Layout.column: 1; Layout.row: 2
-                        id: task_data_end_change
-                        inputMask: " 99.99.9999"; text: "20.20.2020"
-                        font.pointSize: 14
-                    }
-                    ComboBox{
-                        id: task_category_change
-                        Layout.column: 1; Layout.row: 3
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Design", "UX", "UI", "Backend"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_status_change
-                        Layout.column: 1; Layout.row: 4
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_size_change
-                        Layout.column: 1; Layout.row: 5
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["Легкая", "Средняя", "Тяжелая"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: task_priority_change
-                        Layout.column: 1; Layout.row: 6
-                        width: 200
-                        height: 45
-                        font.pointSize:14
-                        model: ["1", "2", "3", "4"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                    ComboBox{
-                        id: patentsearch_combobox_change
-                        Layout.column: 1; Layout.row: 7
-                        width: 200
-                        height: 45
-                        visible: true
-                        font.pointSize:14
-                        model: ["Не выбрано", "Одиночная задача", "Вторая", "Работа"]
-                        onActivated: {}
-                        font.family: localFont.name; font.weight: 400;
-                    }
-                }
-          }
-          Button{
-            id: but_save_task
-            text: "Сохранить"
-            onClicked: {change_task_window.visible=false
-            tasks.edit(task_name.text, task_description.text, task_data_start.text, task_data_end.text, task_status.text, control.currentIndex,task_data_start.text)
-            }
-            x:10; y:630
-            width: 200;height: 50
-            font.family: localFont.name; font.weight: 400;
-
-            background: Rectangle {
-                color: "lightgreen"
-                border.color: "green"
-                radius: 5
-            }
-          }
-          Button{
-            id: but_cancel_change_task
-            text: "Отменить"
-            onClicked: {change_task_window.visible=false}
-            x:270; y:630
-            width: 200;height: 50
-            font.family: localFont.name; font.weight: 400;
-            background: Rectangle {color: "#F15A5A"; border.color: "#D64141"; radius: 5}
-          }
-       }
     }
+
     //ДОСКА ГАНТА
     Rectangle{
         id: workplace_gant
@@ -711,13 +402,13 @@ Window {
                         Text{
                             id: ver_server_data_start
                             Layout.column: 1; Layout.row: 1
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.09 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
                             id: ver_server_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.09 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
@@ -781,7 +472,7 @@ Window {
                     }
                     onReleased: {
                         but_ver_server.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_server_name.text, ver_server_description.text)
+                        main_handler.accept_server()
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -862,18 +553,18 @@ Window {
                             font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
+                        // TODO: fix everythere data format to Y.m.d H:M
+                        // research on what inputMask is and if it restricts input or not
                         TextField {
                             id: ver_intermediate_data_start
                             Layout.column: 1; Layout.row: 1
-                            text: "20.20.2020"; font.pointSize: 12
-                            inputMask: " 99.99.9999";
+                            text: "2023.06.09 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;
                         }
                         TextField {
                             id: ver_intermediate_data_end
-                            inputMask: " 99.99.9999";
                             Layout.column: 1; Layout.row: 2
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.09 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;
                         }
                         ComboBox{
@@ -944,7 +635,15 @@ Window {
                     }
                     onReleased: {
                         but_ver_intermediate.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_intermediate_name.text, ver_intermediate_description.text)
+                        main_handler.merge_tasks(ver_intermediate_task_id.text,
+                                                        ver_intermediate_data_start.text,
+                                                        ver_intermediate_data_end.text,
+                                                        ver_intermediate_name.text,
+                                                        ver_intermediate_description.text,
+                                                        ver_intermediate_status.currentIndex,
+                                                        ver_intermediate_type.curentIndex,
+                                                        ver_intermediate_size.currentIndex,
+                                                        ver_intermediate_priority.currentIndex)
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -1028,13 +727,13 @@ Window {
                         Text{
                             id:ver_client_data_start
                             Layout.column: 1; Layout.row: 1
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.07 19:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
                             id: ver_client_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "20.20.2020"; font.pointSize: 12
+                            text: "2023.06.07 19:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
@@ -1099,7 +798,7 @@ Window {
                     }
                     onReleased: {
                         but_ver_client.color = "#D3D3D3" // Исходный цвет кнопки
-                        main_handler.update_result_task(1, ver_client_name.text, ver_client_description.text)
+                        main_handler.accept_client()
                         tab_merge_task.visible=!tab_merge_task.visible
                     }
                 }
@@ -1130,7 +829,7 @@ Window {
             y:10
             anchors.horizontalCenter: parent.horizontalCenter
             visible: true
-            text: "Task Planner"; font.pointSize: 25
+            text: "Task Planner"; font.pointSize: 20
             font.family: localFont.name; font.weight: 500;
             hoverEnabled: false
             background: Rectangle{color: "lightgrey"}
@@ -1237,6 +936,7 @@ Window {
                 hoverEnabled: false
                 background: Rectangle{color: "lightgrey"}
                 onClicked: {
+                    settings_handler.set_server_service()
                     settingsWindow.show()//вызываем сигнал
                 }
             }
@@ -1261,8 +961,21 @@ Window {
             background: Rectangle{color: "white"}
             onClicked:{newtask.visible=false}
         }
+
+        Text {
+            id: task_id
+            text: '0'
+            visible: false
+        }
+
+        Text {
+            id: task_parent_id
+            text: '0'
+            visible: false
+        }
+
         //название задачи
-        TextField{
+        TextField {
             x: 10; y: 50
             id: task_name
             width:440
@@ -1271,11 +984,7 @@ Window {
             text: "Новая  задача"
             font.family: localFont.name; font.weight: 500;color: "#232323"
         }
-        Text{
-            id: task_id
-            text: 'task_id'
-            visible: false
-        }
+
         //описание задачи
         TextField{
             id: task_description
@@ -1318,7 +1027,7 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     }
                 Text{ id: patentsearch_text
-                    visible: true
+                    visible: false
                     Layout.column: 2; Layout.row: 7; text: "Родитель:"
                     font.pointSize: 14
                     font.family: localFont.name; font.weight: 400;color: "#232323"
@@ -1327,54 +1036,146 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 1
                     id: task_data_start
-                    inputMask: " 99.99.9999"; text: "20.20.2020"
+                    text: "2023.06.09 14:00"
                     font.pointSize: 14
                 }
                 TextField {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 2
                     id: task_data_end
-                    inputMask: " 99.99.9999"; text: "20.20.2020"
+                    text: "2023.06.09 14:00"
                     font.pointSize: 14
                 }
                 ComboBox{
                     id: task_category
                     Layout.column: 1; Layout.row: 3
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Design", "UX", "UI", "Backend"]
-                    onActivated: {}
+                    model: main_handler.type_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.type_model, main_handler.type_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.type_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_category.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_status
                     Layout.column: 1; Layout.row: 4
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Нет исполнителя", "В работе", "Завершена", "Конфликт"]
-                    onActivated: {}
+                    model: main_handler.status_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.status_model, main_handler.status_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.status_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_status.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_size
                     Layout.column: 1; Layout.row: 5
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["Легкая", "Средняя", "Тяжелая"]
-                    onActivated: {}
+                    model: main_handler.size_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.size_model, main_handler.size_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.size_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_size.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_priority
                     Layout.column: 1; Layout.row: 6
-                    width: 200
+                    width: 400
                     height: 45
                     font.pointSize:14
-                    model: ["1", "2", "3", "4"]
-                    onActivated: {}
+                    model: main_handler.priority_model
+                    textRole: 'label_text'
+                    currentIndex: getCurrentIndex(main_handler.priority_model, main_handler.priority_item)
+                    delegate: ItemDelegate {
+                        property int indexOfThisDelegate: index
+                        width: control.width
+                        contentItem: Text {
+                            text: model.modelData.label_text
+                            color: "black"
+                            font: control.font
+                            elide: Text.ElideRight
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                        highlighted: control.highlightedIndex === index
+                    }
+                    onActivated: {
+                        let item = main_handler.priority_model[index]
+                        console.log('ID = ', item.label_id , ', Label Text = ', item.label_text)
+                    }
+                    contentItem: Text {
+                        text: task_priority.displayText
+                        font: control.font;  color: control.pressed ? "black" : "black"
+                        verticalAlignment: Text.AlignVCenter
+                        elide: Text.ElideRight
+                    }
                     font.family: localFont.name; font.weight: 400;
                 }
                 ComboBox{
@@ -1393,7 +1194,23 @@ Window {
         Button{
             id: but_add_newtask
             text: "Добавить"
-            onClicked: newtask.visible=false
+            onClicked: {
+                // int, int, int, int, int, int, str, str, str, str
+                // TODO : check if this code works
+                main_handler.add_task(control.currentIndex,
+                                      task_id.text,
+                                      task_parent_id.text,
+                                      task_category.currentIndex,
+                                      task_size.currentIndex,
+                                      task_priority.currentIndex,
+                                      task_status.currentIndex,
+                                      task_name.text,
+                                      task_description.text,
+                                      task_data_start.text,
+                                      task_data_end.text)
+                newtask.visible=false
+
+            }
             x:10; y:630
             width: 200;height: 50
             font.family: localFont.name; font.weight: 400;
@@ -1403,6 +1220,7 @@ Window {
                  border.color: "green"
                  radius: 5
             }
+
         }
         Button{
             id: but_cancel
@@ -1420,22 +1238,27 @@ Window {
         target: main_handler
 
         onDetectedConflicts: {
-            // console.log("DDDDDDDDDDD")
-
+            ver_server_task_id.text = conflicted_tasks.server_id
             ver_server_name.text = conflicted_tasks.server_summary
-
             ver_server_description.text = conflicted_tasks.server_description
             ver_server_data_start.text = conflicted_tasks.server_dtstart
             ver_server_data_end.text = conflicted_tasks.server_due
+            ver_server_category.text = conflicted_tasks.server_type
+            ver_server_status.text = conflicted_tasks.server_status
+            ver_server_size.text = conflicted_tasks.server_size
+            ver_server_priority.text = conflicted_tasks.server_priority
 
-
+            ver_client_task_id.text = conflicted_tasks.client_id
             ver_client_name.text = conflicted_tasks.client_summary
             ver_client_description.text = conflicted_tasks.client_description
             ver_client_data_start.text = conflicted_tasks.client_dtstart
             ver_client_data_end.text = conflicted_tasks.client_due
+            ver_client_category.text = conflicted_tasks.client_type
+            ver_client_status.text = conflicted_tasks.client_status
+            ver_client_size.text = conflicted_tasks.client_size
+            ver_clientpriority.text = conflicted_tasks.client_priority
 
             tab_merge_task.visible = !tab_merge_task.visible
-
         }
 
         onCloseWindow: {

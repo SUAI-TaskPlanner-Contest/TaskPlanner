@@ -60,13 +60,13 @@ class Task(Base):
     parent_id = Column(Integer, ForeignKey("task.task_id", ondelete='CASCADE'))
 
     # M:1
-    server = relationship("Server", back_populates="tasks", lazy="subquery")
+    server = relationship("Server", back_populates="tasks")
 
     # 1:1
-    label = relationship("Label", cascade="all,delete", uselist=False, back_populates="task", lazy="subquery")
+    label = relationship("Label", cascade="all,delete", uselist=False, back_populates="task")
 
     # 1:M
-    children = relationship("Task", cascade="all", backref=backref("parent", remote_side="Task.id"), lazy="subquery")
+    children = relationship("Task", cascade="all", backref=backref("parent", remote_side="Task.id"))
 
     # other fields
     # caldav fields
@@ -82,7 +82,7 @@ class Task(Base):
     # own fields
     tech_status = Column(Integer)
 
-    def __init__(self, server: Server, summary: str, description: str,
+    def __init__(self, server_id: int, summary: str, description: str,
                  dtstamp: datetime, dtstart: datetime, due: datetime,
                  last_mod: datetime, tech_status: int, parent=None):
         self.dtstamp = dtstamp
@@ -92,7 +92,7 @@ class Task(Base):
         self.summary = summary
         self.description = description
         self.tech_status = tech_status
-        self.server = server
+        self.server_id = server_id
         self.parent = parent
         self.sync_time = dtstamp
 

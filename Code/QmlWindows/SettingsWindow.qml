@@ -18,6 +18,7 @@ Window {
     color: "transparent"
     property int previousX
     property int previousY
+    modality: (1)
 
     MouseArea {
         anchors.fill: parent
