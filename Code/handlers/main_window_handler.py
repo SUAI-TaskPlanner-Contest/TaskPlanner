@@ -384,6 +384,10 @@ class ComboBoxModel(QObject):
 class MainWindow(QObject):
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
     updateListView = pyqtSignal(ListModelTasks, arguments=['tasks'])
+    sizeListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    typeListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    statusListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
+    priorityListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
 
     def __init__(self):
         QObject.__init__(self)
@@ -395,6 +399,8 @@ class MainWindow(QObject):
         self._tasks_list_model = ListModelTasks([])
         self.conflicted_tasks = []
         self.result_task = None
+        self.task_service = None
+        self.server_service = None
 
     @pyqtSlot()
     def set_services(self):
@@ -408,17 +414,6 @@ class MainWindow(QObject):
                                                               self.server_service.get_all())))
 
         server_id = self._servers_combobox_model.servers[0].server.id
-
-        types = self.server_service.get_types(server_id)
-        sizes = self.server_service.get_sizes(server_id)
-        statuses = self.server_service.get_statuses(server_id)
-        priorities = self.server_service.get_priorities(server_id)
-
-        self._priority_model = TaskLabelListModel(list(map(lambda priority: TaskLabelItemModel(priority), priorities)))
-        self._status_model = TaskLabelListModel(list(map(lambda status: TaskLabelItemModel(status), statuses)))
-        self._type_model = TaskLabelListModel(list(map(lambda task_type: TaskLabelItemModel(task_type), types)))
-        self._size_model = TaskLabelListModel(list(map(lambda size: TaskLabelItemModel(size), sizes)))
-
         tasks = self.server_service.get_tasks(server_id)
         self._tasks_list_model = ListModelTasks(list(map(lambda task:
                                                          ItemModelTasks(
@@ -442,6 +437,21 @@ class MainWindow(QObject):
                                                              # last_mod=utc_now())
                                                          ),
                                                          tasks)))
+        self.init_label_models(server_id)
+
+    def init_label_models(self, server_id):
+        types = self.server_service.get_types(server_id)
+        sizes = self.server_service.get_sizes(server_id)
+        statuses = self.server_service.get_statuses(server_id)
+        priorities = self.server_service.get_priorities(server_id)
+        self._priority_model = TaskLabelListModel(list(map(lambda priority: TaskLabelItemModel(priority), priorities)))
+        self._status_model = TaskLabelListModel(list(map(lambda status: TaskLabelItemModel(status), statuses)))
+        self._type_model = TaskLabelListModel(list(map(lambda task_type: TaskLabelItemModel(task_type), types)))
+        self._size_model = TaskLabelListModel(list(map(lambda size: TaskLabelItemModel(size), sizes)))
+        self.sizeListUpdated.emit(self._size_model)
+        self.typeListUpdated.emit(self._type_model)
+        self.statusListUpdated.emit(self._status_model)
+        self.priorityListUpdated.emit(self._priority_model)
 
     @pyqtSlot()
     def update_combobox(self):
@@ -450,6 +460,7 @@ class MainWindow(QObject):
             self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
                                                                   ServerItem(server),
                                                                   servers)))
+        self.init_label_models()
 
     def global_add(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
                    status_index, summary, description, dtstart, due):
@@ -583,6 +594,7 @@ class MainWindow(QObject):
         if index != 0:
             container.set('caldav_service', CalDavService(server))
         self._tasks_list_model.tasks = self.task_service.get_all_by_server_id(server.id)
+        self.init_label_models(server_id=server.id)
 
     def resolve_conflict(self, result_task):
         caldav_service = container.get('caldav_service')
@@ -647,7 +659,7 @@ class MainWindow(QObject):
     def server_combobox_item(self):
         return self._servers_combobox_model.server
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, notify=priorityListUpdated)
     def priority_model(self):
         return self._priority_model.model
 
@@ -655,7 +667,7 @@ class MainWindow(QObject):
     def priority_item(self):
         return self._priority_model.item
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, notify=sizeListUpdated)
     def status_model(self):
         return self._status_model.model
 
@@ -663,7 +675,7 @@ class MainWindow(QObject):
     def status_item(self):
         return self._status_model.item
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, notify=sizeListUpdated)
     def type_model(self):
         return self._type_model.model
 
@@ -671,7 +683,7 @@ class MainWindow(QObject):
     def type_item(self):
         return self._type_model.item
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, notify=sizeListUpdated)
     def size_model(self):
         return self._size_model.model
 
