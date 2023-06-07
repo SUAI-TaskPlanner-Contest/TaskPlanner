@@ -17,10 +17,10 @@ class ItemModelTasks(QObject):
         self._server = server
         self._label = label
         self._children = children
-        self._dtstamp = dtstamp.strftime('%Y-%m-%d %H:%M:%S')
-        self._dtstart = dtstart.strftime('%Y-%m-%d %H:%M:%S')
-        self._due = due.strftime('%Y-%m-%d %H:%M:%S')
-        self._last_mod = last_mod.strftime('%Y-%m-%d %H:%M:%S')
+        self._dtstamp = dtstamp.strftime('%Y.%m.%d %H:%M')
+        self._dtstart = dtstart.strftime('%Y.%m.%d %H:%M')
+        self._due = due.strftime('%Y.%m.%d %H:%M')
+        self._last_mod = last_mod.strftime('%Y.%m.%d %H:%M')
         self._summary = summary
         self._description = description
         self._tech_status = tech_status
@@ -169,11 +169,11 @@ class ConflictedTasks(QObject):
 
     @pyqtProperty(str)
     def client_dtstart(self):
-        return self._client_task.dtstart.strftime('%Y-%m-%d %H:%M:%S')
+        return self._client_task.dtstart.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def client_due(self):
-        return self._client_task.due.strftime('%Y-%m-%d %H:%M:%S')
+        return self._client_task.due.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def client_summary(self):
@@ -205,11 +205,11 @@ class ConflictedTasks(QObject):
 
     @pyqtProperty(str)
     def server_dtstart(self):
-        return self._server_task.dtstart.strftime('%Y-%m-%d %H:%M:%S')
+        return self._server_task.dtstart.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def server_due(self):
-        return self._server_task.due.strftime('%Y-%m-%d %H:%M:%S')
+        return self._server_task.due.strftime('%Y.%m.%d %H:%M')
 
     @pyqtProperty(str)
     def server_summary(self):
@@ -325,7 +325,7 @@ class MainWindow(QObject):
         self.result_task = None
         self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
                                                               ServerItem(server),
-                                                              get_server_service().get_all())))
+                                                              self.task_service.get_all_by_server_id(1))))
 
         # TODO : tasks should load by current server
         self._tasks_list_model = ListModelTasks(list(map(lambda task:
@@ -356,8 +356,8 @@ class MainWindow(QObject):
         # обновили ее поля
         task.summary = summary
         task.description = description
-        task.dtstart = local_to_utc0(dtstart.strptime('%Y-%m-%d %H:%M:%S'))
-        task.due = local_to_utc0(due.strptime('%Y-%m-%d %H:%M:%S'))
+        task.dtstart = local_to_utc0(dtstart.strptime('%Y.%m.%d %H:%M'))
+        task.due = local_to_utc0(due.strptime('%Y.%m.%d %H:%M'))
         task.label.size_id = size_id
         task.label.status_id = status_id
         task.label.type_id = type_id
@@ -391,7 +391,7 @@ class MainWindow(QObject):
                     description=description,
                     dtstamp=utc_now(),
                     dtstart=local_to_utc0(dtstart.strptime('%Y.%m.%d %H:%M')),
-                    due=local_to_utc0(due.strptime('%Y-%m-%d %H:%M:%S')),
+                    due=local_to_utc0(due.strptime('%Y.%m.%d %H:%M')),
                     last_mod=utc_now(),
                     tech_status=0,
                     parent=parent)
@@ -448,8 +448,8 @@ class MainWindow(QObject):
         # size_id = size_item.
         result_task = self.task_service.get_by_id(id)
         result_task.summary = summary
-        result_task.dtstart = dtstart.strftime('%Y-%m-%d %H:%M:%S')
-        result_task.due = due.strftime('%Y-%m-%d %H:%M:%S')
+        result_task.dtstart = dtstart.strftime('%Y.%m.%d %H:%M')
+        result_task.due = due.strftime('%Y.%m.%d %H:%M')
         result_task.description = description
         result_task.last_mod = utc_now()
         result_task.sync_time = utc_now()
