@@ -15,6 +15,8 @@ from Code.entities.db_entities import Task, Server
 from Code.repositories.server_repo import ServerRepository
 from Code.repositories.task_repo import TaskRepository
 
+CURRENT_SERVER_ID = 1
+
 
 class ItemModelTasks(QObject):
     def __init__(self, id, server_id, parent_id, server, label, children, dtstamp, dtstart, due, last_mod, summary,
@@ -382,6 +384,7 @@ class ComboBoxModel(QObject):
 
 
 class MainWindow(QObject):
+    updateComboBox = pyqtSignal(ConflictedTasks, arguments=['servers'])
     detectedConflicts = pyqtSignal(ConflictedTasks, arguments=['conflicted_tasks'])
     updateListView = pyqtSignal(ListModelTasks, arguments=['tasks'])
     sizeListUpdated = pyqtSignal(TaskLabelListModel, arguments=['new_model'])
@@ -414,6 +417,7 @@ class MainWindow(QObject):
                                                               self.server_service.get_all())))
 
         server_id = self._servers_combobox_model.servers[0].server.id
+        self._servers_combobox_model._server = self._servers_combobox_model.servers[0].server
         tasks = self.server_service.get_tasks(server_id)
         self._tasks_list_model = ListModelTasks(list(map(lambda task:
                                                          ItemModelTasks(
@@ -438,6 +442,8 @@ class MainWindow(QObject):
                                                          ),
                                                          tasks)))
         self.init_label_models(server_id)
+        self.updateComboBox.emit(self._servers_combobox_model)
+        self.updateListView.emit(self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID)))
 
     def init_label_models(self, server_id):
         types = self.server_service.get_types(server_id)
@@ -460,7 +466,7 @@ class MainWindow(QObject):
             self._servers_combobox_model = ComboBoxModel(list(map(lambda server:
                                                                   ServerItem(server),
                                                                   servers)))
-        self.init_label_models()
+        # self.init_label_models()
 
     def global_add(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
                    status_index, summary, description, dtstart, due):
@@ -495,21 +501,20 @@ class MainWindow(QObject):
         task.label = label
         self.task_service.add(task)
         self._tasks_list_model.add_task(task)
-        self.updateListView.emit(self._tasks_list_model)
+        self.updateListView.emit(self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID)))
 
     def local_add(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
                   status_index, summary, description, dtstart, due):
         parent = self.task_service.get_by_id(parent_id)
 
         server_id = self._servers_combobox_model.servers[server_index].server.id
-        server = self.server_service.get_by_id(server_id)
 
         size = self.size_model[size_index].label
         status = self.status_model[status_index].label
         type = self.type_model[type_index].label
         priority = self.priority_model[priority_index].label
 
-        task = Task(server=server,
+        task = Task(server_id=server_id,
                     summary=summary,
                     description=description,
                     dtstamp=utc_now(),
@@ -529,18 +534,14 @@ class MainWindow(QObject):
         task.label = label
         self.task_service.add(task)
         self._tasks_list_model.add_task(task)
+
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
         self.updateListView.emit(self._tasks_list_model)
 
     def edit(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
              status_index, summary, description, dtstart, due):
 
-        parent = self.task_service.get_by_id(parent_id)
-
-        task = next(filter(lambda task: task.id == task_id, self._tasks_list_model.tasks))
-        task_index = self._tasks_list_model.tasks.index(task)
-
-        server_id = self._servers_combobox_model.servers[server_index].server.id
-        server = self.server_service.get_by_id(server_id)
+        task = self.task_service.get_by_id(task_id)
 
         # TODO : create combobox
         size_id = self.size_model[size_index].label_id
@@ -562,7 +563,9 @@ class MainWindow(QObject):
 
         # обновили задачу в БД и изменили модель
         self.task_service.edit(task)
-        self._tasks_list_model.save_task(task_index, task)
+
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
 
     @pyqtSlot(int, int, int, int, int, int, int, str, str, str, str)
     def add_task(self, server_index, task_id, parent_id, type_index, size_index, priority_index,
@@ -580,11 +583,36 @@ class MainWindow(QObject):
             self.edit(server_index, task_id, parent_id, type_index, size_index, priority_index,
                       status_index, summary, description, dtstart, due)
 
+    def tasks_to_task_item(self, tasks):
+        return ListModelTasks(list(map(lambda task:
+                                       ItemModelTasks(
+                                           id=task.id,
+                                           server_id=task.server.id,
+                                           parent_id=task.parent_id,
+                                           server=task.server,
+                                           label=task.label,
+                                           children=task.children,
+                                           dtstamp=task.dtstamp,
+                                           dtstart=task.dtstart,
+                                           due=task.due,
+                                           last_mod=task.last_mod,
+                                           summary=task.summary,
+                                           description=task.description,
+                                           tech_status=task.tech_status,
+                                           size=task.label.size,
+                                           type=task.label.type,
+                                           priority=task.label.priority,
+                                           status=task.label.status,
+                                           # last_mod=utc_now())),
+                                       ),
+                                       tasks)))
+
     @pyqtSlot(int)
     def delete_task(self, index):
+        global CURRENT_SERVER_ID
         id_to_delete = self._tasks_list_model.tasks[index].id
         self.task_service.delete_by_id(id_to_delete)
-        self._tasks_list_model.delete_task(index)
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
         self.updateListView.emit(self._tasks_list_model)
 
     # TODO : change tasks model also in QML by this slot
@@ -593,8 +621,11 @@ class MainWindow(QObject):
         server = self._servers_combobox_model.servers[index].server
         if index != 0:
             container.set('caldav_service', CalDavService(server))
-        self._tasks_list_model.tasks = self.task_service.get_all_by_server_id(server.id)
+        global CURRENT_SERVER_ID
+        CURRENT_SERVER_ID = server.id
         self.init_label_models(server_id=server.id)
+        self._tasks_list_model = self.tasks_to_task_item(self.task_service.get_all_by_server_id(CURRENT_SERVER_ID))
+        self.updateListView.emit(self._tasks_list_model)
 
     def resolve_conflict(self, result_task):
         caldav_service = container.get('caldav_service')
@@ -647,7 +678,7 @@ class MainWindow(QObject):
             conflicted_task = self.conflicted_tasks[-1]
             self.detectedConflicts.emit(conflicted_task[0], conflicted_task[1])
 
-    @pyqtProperty(list)
+    @pyqtProperty(list, notify=updateComboBox)
     def server_combobox_model(self):
         return self._servers_combobox_model.servers
 

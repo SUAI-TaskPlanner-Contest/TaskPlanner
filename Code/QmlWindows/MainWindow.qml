@@ -243,9 +243,9 @@ Window {
                         TaskWindow{msg: model.modelData.summary; id: model_text}
                         TaskWindow{Layout.column: 1; msg: model.modelData.type;id: model_charm}
                         TaskWindow{Layout.column: 2; msg: model.modelData.dtstart;id: model_date_of_start}
-                        TaskWindow{Layout.column: 3; msg: model.modelData.dtstamp;id: model_dtstamp}
+                        TaskWindow{Layout.column: 3; msg: model.modelData.due;id: model_due}
                         TaskWindow{Layout.column: 4; msg: model.modelData.status; id: model_tech_status}
-                        TaskWindow{Layout.column: 5; msg: model.modelData.last_mod; id: model_last_mod}
+                        TaskWindow{Layout.column: 5; msg: model.modelData.priority; id: model_priority}
                         TaskWindow{
                             Layout.column: 6
                             Button{anchors.centerIn: parent; width:50; height:50; font.pixelSize: 15;
@@ -268,11 +268,12 @@ Window {
                                             newtask.visible = !newtask.visible
 
                                             // TODO: check if next code works
-                                            task_parent_id.text = model.modelData.parent_id
+                                            task_parent_id.text = model.modelData.id
                                             task_id.text = -1
 
-                                            console.log(task_parent_id.text)
                                             console.log(task_id.text)
+                                            console.log(task_parent_id.text)
+
                                         }
                                     }
                                     Button {
@@ -284,8 +285,9 @@ Window {
                                             // patentsearch_combobox.visible=true
                                             newtask.visible = !newtask.visible
 
-                                            task_parent_id.text = view.model.modelData.parent_id
-                                            task_id.text = view.model.modelData.id
+
+                                            task_parent_id.text = model.modelData.id
+                                            task_id.text = model.modelData.id
 
                                             console.log(task_parent_id.text)
                                             console.log(task_id.text)
