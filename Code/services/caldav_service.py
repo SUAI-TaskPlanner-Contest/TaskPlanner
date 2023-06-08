@@ -88,8 +88,8 @@ class CalDavService:
             assert existing_task.last_mod.tzinfo == timezone.utc
             assert task.sync_time.tzinfo == timezone.utc
 
-            print(existing_task.last_mod.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
-            print(task.sync_time.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
+            # print(existing_task.last_mod.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
+            # print(task.sync_time.strftime('%Y-%m-%d %H:%M:%S.%f%z'))
 
             if existing_task.last_mod > task.sync_time:
                 return existing_task, task
@@ -151,10 +151,13 @@ class CalDavService:
                 return None
 
         def time_from_string(time_string: str) -> datetime:
-            return None if time_string is None else datetime.strptime(time_string, '%Y-%m-%d %H:%M:%S.%f%z')
+            try:
+                return None if time_string is None else datetime.strptime(time_string, '%Y-%m-%d %H:%M:%S.%f%z')
+            except:
+                return None if time_string is None else datetime.strptime(time_string, '%Y-%m-%d %H:%M:%S%z')
 
         task = Task(
-            server=self.server,
+            server_id=self.server.id,
             dtstart=time_from_string(get_value_or_none(event, 'DATE-START')),
             dtstamp=time_from_string(get_value_or_none(event, 'DATE-STAMP')),
             summary=get_value_or_none(event, 'SUMMARY'),

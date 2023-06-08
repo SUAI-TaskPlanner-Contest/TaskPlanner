@@ -127,6 +127,25 @@ ApplicationWindow {
 
         }
         Rectangle {
+            NumberAnimation on x{ // создание анимации "трясущихся" полей ввода
+                id: shake_animation
+                running: false
+                from: 1
+                to: 5
+                loops: 5
+                duration: 200
+            }
+
+            Timer {
+                id: shake_timer
+                interval: 5000  // Интервал в 5 секунд (в миллисекундах)
+                repeat: false  // Остановиться после одного срабатывания
+
+                onTriggered: {
+                    shake_animation.stop()  // Остановить анимацию
+                }
+            }
+
             id: newpinTxtRectangle
             anchors.top:emptyRectangle2.bottom
             anchors.horizontalCenter: parent.horizontalCenter
@@ -170,26 +189,6 @@ ApplicationWindow {
 
 
     Rectangle {
-
-        NumberAnimation on x{ // создание анимации "трясущихся" полей ввода
-                id: shake_animation
-                running: false
-                from: 1
-                to: 5
-                loops: 5
-                duration: 200
-            }
-
-            Timer {
-                id: shake_timer
-                interval: 5000  // Интервал в 5 секунд (в миллисекундах)
-                repeat: false  // Остановиться после одного срабатывания
-
-                onTriggered: {
-                    shake_animation.stop()  // Остановить анимацию
-                }
-            }
-
         width:120; height:30
         anchors.bottom:parent.bottom
         anchors.left: parent.left
@@ -230,8 +229,7 @@ ApplicationWindow {
                         shake_timer.start()
                     }
                     else {
-                        if (change_pincode_handler.verify_pin) {
-                            change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)
+                        if (change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)) {
                             pincodeWindow.close()
                             settingsWindow.show()
                         }

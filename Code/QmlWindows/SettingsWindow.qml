@@ -189,11 +189,14 @@ Window {
                             }
                             onPressed: {
                                 deleteServerButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
-                                severListview.currentIndex = index;
-                                messageDialog.title = "Удаление сервера"
-                                messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
-                                messageDialog.open()
-                                //settings_handler.delete(index)
+                                if (severListview.currentIndex > 1) {
+                                    severListview.currentIndex = index;
+                                    messageDialog.title = "Удаление сервера"
+                                    messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
+                                    messageDialog.open()
+                                    //settings_handler.delete(index)
+                                }
+
                             }
                             onReleased: {
                                 deleteServerButton.color = "#D3D3D3" // Исходный цвет кнопки
@@ -333,7 +336,8 @@ Window {
         modality: Qt.WindowModal
         buttons: MessageDialog.Ok | MessageDialog.Cancel
         onAccepted: {
-            settings_handler.delete(severListview.currentIndex)
+
+                settings_handler.delete(severListview.currentIndex)
         }
         onRejected: messageDialog.close()
         Component.onCompleted: {

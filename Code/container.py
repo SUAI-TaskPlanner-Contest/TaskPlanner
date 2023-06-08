@@ -83,6 +83,7 @@ def get_pincode() -> str:
 
 
 def set_pincode(pincode):
+    # ???
     pincode_hash = bcrypt.hashpw(pincode.encode('utf-8'), bcrypt.gensalt()).decode('utf8')
     with open(path_env, "w") as file:
         file.write(f"PINCODE={pincode_hash}")

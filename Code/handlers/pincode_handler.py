@@ -35,8 +35,9 @@ class PincodeWindow(QObject):
 class ChangePincodeWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
+        # self._check_pin = False
 
-    @pyqtSlot(str, str)
+    @pyqtSlot(str, str, result=bool)
     def set_new_pincode(self, old_pin, new_pin):
         """
             изменение пинкода для пользователя
@@ -45,8 +46,11 @@ class ChangePincodeWindow(QObject):
         if container.check_pincode(old_pin):
             self._check_pin = True
             set_pincode(new_pin)
+            return True
         else:
+            # TODO : видимо, не перезаписывает файл
             self._check_pin = False
+            return False
 
     @pyqtProperty(bool)
     def verify_pin(self):
