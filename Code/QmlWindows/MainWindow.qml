@@ -255,10 +255,11 @@ Window {
                                 onClicked: popup.open()}
                             Popup {
                                 id: popup
-                                y: 50; width: 150; height: 100; modal: true; focus: true; padding: 10;
-                                ColumnLayout {
-                                    anchors.fill: parent
+                                y: 50; width: 150; height: 90; modal: true; focus: true; padding: 10;
+
+                                    // anchors.fill: parent
                                     Button {
+                                        width: popup.width*0.9
                                         text: ("Добавить подзадачу")
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         onClicked:{
@@ -277,6 +278,8 @@ Window {
                                         }
                                     }
                                     Button {
+                                        width: popup.width*0.9
+                                        y: 25
                                         text: ("Редактировать")
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         onClicked:{
@@ -301,11 +304,13 @@ Window {
                                         }
                                     }
                                     Button {
+                                        y: 50
+                                        width: popup.width*0.9
                                         text: ("Удалить")
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         onClicked: main_handler.delete_task(index)
                                     }
-                                }
+
                             }
                         }
                     }
@@ -982,7 +987,7 @@ Window {
             //maximumLength: 50
             font.pointSize: 25
             text: "Новая  задача"
-            font.family: localFont.name; font.weight: 500;color: "#232323"
+            font.family: localFont1.name; font.weight: 500;color: "#232323"
         }
 
         //описание задачи
@@ -993,7 +998,7 @@ Window {
             wrapMode: TextInput.Wrap
             //maximumLength: 200
             font.pointSize: 17
-            font.family: localFont.name; font.weight: 500;color: "#232323"
+            font.family: localFont1.name; font.weight: 500;color: "#232323"
             text: "Введите описание задачи"
         }
 
@@ -1004,43 +1009,43 @@ Window {
                 rows: 8; columns: 2
                 Text{Layout.column: 2; Layout.row:1; text: "Дата начала:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{ Layout.column: 2; Layout.row: 2; text: "Дата завершения:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{Layout.column: 2; Layout.row: 3; text: "Категория:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{ Layout.column: 2; Layout.row: 4; text: "Статус:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{ Layout.column: 2; Layout.row: 5; text: "Размер:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{ Layout.column: 2; Layout.row: 6; text: "Приоритет:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     }
                 Text{ id: patentsearch_text
                     visible: false
                     Layout.column: 2; Layout.row: 7; text: "Родитель:"
                     font.pointSize: 14
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                 }
                 TextField {
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 1
                     id: task_data_start
                     text: "2023.06.09 14:00"
                     font.pointSize: 14
                 }
                 TextField {
-                    font.family: localFont.name; font.weight: 400;color: "#232323"
+                    font.family: localFont1.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 2
                     id: task_data_end
                     text: "2023.06.10 14:00"
@@ -1077,7 +1082,7 @@ Window {
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                     }
-                    font.family: localFont.name; font.weight: 400;
+                    font.family: localFont1.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_status
@@ -1110,7 +1115,7 @@ Window {
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                     }
-                    font.family: localFont.name; font.weight: 400;
+                    font.family: localFont1.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_size
@@ -1143,7 +1148,7 @@ Window {
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                     }
-                    font.family: localFont.name; font.weight: 400;
+                    font.family: localFont1.name; font.weight: 400;
                 }
                 ComboBox{
                     id: task_priority
@@ -1176,7 +1181,7 @@ Window {
                         verticalAlignment: Text.AlignVCenter
                         elide: Text.ElideRight
                     }
-                    font.family: localFont.name; font.weight: 400;
+                    font.family: localFont1.name; font.weight: 400;
                 }
                 ComboBox{
                     id: patentsearch_combobox
@@ -1187,7 +1192,7 @@ Window {
                     font.pointSize:14
                     model: ["Не выбрано", "Одиночная задача", "Вторая", "Работа"]
                     onActivated: {}
-                    font.family: localFont.name; font.weight: 400;
+                    font.family: localFont1.name; font.weight: 400;
                 }
             }
         }
@@ -1213,7 +1218,7 @@ Window {
             }
             x:10; y:630
             width: 200;height: 50
-            font.family: localFont.name; font.weight: 400;
+            font.family: localFont1.name; font.weight: 400;
 
             background: Rectangle {
                  color: "lightgreen"
@@ -1228,7 +1233,7 @@ Window {
             onClicked: {newtask.visible=false}
             x:270; y:630
             width: 200;height: 50
-            font.family: localFont.name; font.weight: 400;
+            font.family: localFont1.name; font.weight: 400;
             background: Rectangle {
                 color: "#F15A5A"; border.color: "#D64141"; radius: 5}
         }
