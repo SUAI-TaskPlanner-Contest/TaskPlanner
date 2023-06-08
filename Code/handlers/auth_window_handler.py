@@ -28,10 +28,9 @@ class AuthWindow(QObject):
                        calendar_name=calendar_name)
 
             # http://localhost:8080/remote.php/dav
-            # caldav_service = CalDavService(s)
-            # container.set('caldav_service', caldav_service)
-            #
-            # caldav_service.__exit__(None, None, None)
+            caldav_service = CalDavService(s)
+            container.set('caldav_service', caldav_service)
+            caldav_service.__exit__(None, None, None)
 
             self.server_service = container.get('server_service')
             self.server_service.add(s)

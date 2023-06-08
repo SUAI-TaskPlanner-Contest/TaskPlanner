@@ -7,7 +7,6 @@ import QtQuick.Dialogs
 Window {
     id: settingsWindow // идентификатор
     signal signalExit // задаем сигнал
-    // visible: true // отображение
     FontLoader { id: localFont; source: "fonts/Inter-Thin.ttf" }
     FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
     x: Screen.width / 2 - width / 2
@@ -127,80 +126,80 @@ Window {
                 model: settings_handler.model
                 focus: true
                 delegate: Item {
-                        property int indexOfThisDelegate: index
-                        width: parent.width; height: 60
-                        Rectangle {
-                            id:serverNameRec
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: (parent.width / 3)
-                            height: parent.height-10
-                            anchors.left: severListview.left
+                    property int indexOfThisDelegate: index
+                    width: parent.width; height: 60
+                    Rectangle {
+                        id:serverNameRec
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: (parent.width / 3)
+                        height: parent.height-10
+                        anchors.left: severListview.left
+
+                        // Устанавливаем текстовое поле для размещения индекса кнопки
+                        Text {
+                            id: textServername
+                            anchors.fill: parent
+                            text: model.modelData.server_name
+                            font.family: localFont.name
+                            verticalAlignment: Text.AlignVCenter
+                        horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
+                    Rectangle {
+                        id:serverLoginRec
+                        anchors.left: serverNameRec.right
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: (parent.width / 3) + 10
+                        height: parent.height-10
 
                             // Устанавливаем текстовое поле для размещения индекса кнопки
-                            Text {
-                                id: textServername
-                                anchors.fill: parent
-                                text: model.modelData.server_name
-                                font.family: localFont.name
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
+                        Text {
+                            id: textSeverlogin
+                            anchors.fill: parent
+                            text: model.modelData.user_email
+                            font.family: localFont.name
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
                         }
-                        Rectangle {
-                            id:serverLoginRec
-                            anchors.left: serverNameRec.right
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: (parent.width / 3) + 10
-                            height: parent.height-10
-
-                            // Устанавливаем текстовое поле для размещения индекса кнопки
-                            Text {
-                                id: textSeverlogin
-                                anchors.fill: parent
-                                text: model.modelData.user_email
-                                font.family: localFont.name
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
+                    }
+                    Button {
+                        anchors.right: parent.right
+                        text: "Удалить сервер"
+                        font.family: localFont1.name
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: (parent.width / 3) - 20
+                        height: parent.height-25
+                        hoverEnabled: false
+                        background: Rectangle {
+                            id: deleteServerButton
+                            color: "#F0F0F0"
+                            border.color: "#848484"
+                            border.width: 1
+                            anchors.margins: 5
+                            radius: 8
                         }
-                        Button {
-                            anchors.right: parent.right
-                            text: "Удалить сервер"
-                            font.family: localFont1.name
-                            anchors.verticalCenter: parent.verticalCenter
-                            width: (parent.width / 3) - 20
-                            height: parent.height-25
-                            hoverEnabled: false
-                            background: Rectangle {
-                                id: delitserver
-                                color: "#F0F0F0"
-                                border.color: "#848484"
-                                border.width: 1
-                                anchors.margins: 5
-                                radius: 8
-                            }
-                            MouseArea{
+                        MouseArea{
                             anchors.fill: parent
                             hoverEnabled: true
-                                    onEntered: {
-                                        delitserver.color = "#C2C2C2" // Цвет при наведении на кнопку
-                                    }
-                                    onExited: {
-                                        delitserver.color = "#F0F0F0" // Исходный цвет кнопки
-                                    }
-                                    onPressed: {
-                                        delitserver.color = "#AAAAAA" // Цвет при нажатии кнопки\
-                                        severListview.currentIndex = index;
-                                        messageDialog.title = "Удаление сервера"
-                                        messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
-                                        messageDialog.open()
-                                        //settings_handler.delete(index)
-                                    }
-                                    onReleased: {
-                                        delitserver.color = "#D3D3D3" // Исходный цвет кнопки
-                                    }
+                            onEntered: {
+                                deleteServerButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                            }
+                            onExited: {
+                                deleteServerButton.color = "#F0F0F0" // Исходный цвет кнопки
+                            }
+                            onPressed: {
+                                deleteServerButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                                severListview.currentIndex = index;
+                                messageDialog.title = "Удаление сервера"
+                                messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
+                                messageDialog.open()
+                                //settings_handler.delete(index)
+                            }
+                            onReleased: {
+                                deleteServerButton.color = "#D3D3D3" // Исходный цвет кнопки
                             }
                         }
+                    }
                 }
             }
         }
@@ -220,7 +219,7 @@ Window {
             height: parent.height
             hoverEnabled: false
             background: Rectangle {
-                id: clousButton
+                id: closeButton
                 color: "#F0F0F0"
                 border.color: "#848484"
                 border.width: 1
@@ -230,17 +229,17 @@ Window {
             anchors.fill: parent
             hoverEnabled: true
                     onEntered: {
-                        clousButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                        closeButton.color = "#C2C2C2" // Цвет при наведении на кнопку
                     }
                     onExited: {
-                        clousButton.color = "#F0F0F0" // Исходный цвет кнопки
+                        closeButton.color = "#F0F0F0" // Исходный цвет кнопки
                     }
                     onPressed: {
-                        clousButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                        closeButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
                         settingsWindow.close()
                     }
                     onReleased: {
-                        clousButton.color = "#D3D3D3" // Исходный цвет кнопки
+                        closeButton.color = "#D3D3D3" // Исходный цвет кнопки
                     }
             }
         }
