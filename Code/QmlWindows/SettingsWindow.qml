@@ -333,7 +333,8 @@ Window {
         modality: Qt.WindowModal
         buttons: MessageDialog.Ok | MessageDialog.Cancel
         onAccepted: {
-            settings_handler.delete(severListview.currentIndex)
+            if (severListview.currentIndex > 1)
+                settings_handler.delete(severListview.currentIndex)
         }
         onRejected: messageDialog.close()
         Component.onCompleted: {

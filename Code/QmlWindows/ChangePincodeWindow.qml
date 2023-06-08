@@ -230,8 +230,7 @@ ApplicationWindow {
                         shake_timer.start()
                     }
                     else {
-                        if (change_pincode_handler.verify_pin) {
-                            change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)
+                        if (change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)) {
                             pincodeWindow.close()
                             settingsWindow.show()
                         }
