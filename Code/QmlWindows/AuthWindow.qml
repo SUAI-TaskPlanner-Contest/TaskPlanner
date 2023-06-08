@@ -55,7 +55,7 @@ ApplicationWindow {
         height: 41
         visible: true
         text:"user"
-        //placeholderText: "user"
+        placeholderText: "Логин"
         horizontalAlignment: Text.AlignLeft
         color: "#000000"
         verticalAlignment: Text.AlignVCenter
@@ -88,7 +88,7 @@ ApplicationWindow {
         height: 41
         visible: true
         text: "user"
-        //placeholderText: "user2"
+        placeholderText: "Пароль"
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
@@ -124,7 +124,7 @@ ApplicationWindow {
         visible: true
         color: "#000000"
         text: 'test'
-        //placeholderText: "test"
+        placeholderText: "Название календаря"
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
         clip: false
@@ -156,7 +156,7 @@ ApplicationWindow {
         visible: true
         color: "#000000"
         text: "http://localhost:8080/remote.php/dav"
-        //placeholderText: "http://localhost:8080/remote.php/dav"
+        placeholderText: "Ссылка на сервер"
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
         clip: false
