@@ -54,6 +54,7 @@ ApplicationWindow {
         width: 250
         height: 41
         visible: true
+        text: 'user'
         placeholderText: qsTr("Nextcloud логин")
         horizontalAlignment: Text.AlignLeft
         color: "#000000"
@@ -86,6 +87,7 @@ ApplicationWindow {
         width: 250
         height: 41
         visible: true
+        text: 'user'
         placeholderText: qsTr("Nextcloud пароль")
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
@@ -121,6 +123,7 @@ ApplicationWindow {
         height: 41
         visible: true
         color: "#000000"
+        text: 'test'
         placeholderText: qsTr("Название календаря")
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
@@ -152,6 +155,7 @@ ApplicationWindow {
         height: 41
         visible: true
         color: "#000000"
+        text: 'http://localhost:8080/remote.php/dav'
         placeholderText: qsTr("Ссылка на сервер")
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
@@ -238,7 +242,7 @@ ApplicationWindow {
         font.bold: false
         font.family: localFont1.name
         font.pixelSize: 15
-        
+        visible: false
         text: qsTr("Продолжить локально")
         MouseArea {
             id: buttonArea2
