@@ -402,13 +402,13 @@ Window {
                         Text{
                             id: ver_server_data_start
                             Layout.column: 1; Layout.row: 1
-                            text: "2023.06.09 14:00"; font.pointSize: 12
+                            text: "2023.06.10 10:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
                             id: ver_server_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "2023.06.09 14:00"; font.pointSize: 12
+                            text: "2023.06.12 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
@@ -564,7 +564,7 @@ Window {
                         TextField {
                             id: ver_intermediate_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "2023.06.09 14:00"; font.pointSize: 12
+                            text: "2023.06.12 14:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;
                         }
                         ComboBox{
@@ -733,7 +733,7 @@ Window {
                         Text{
                             id: ver_client_data_end
                             Layout.column: 1; Layout.row: 2
-                            text: "2023.06.07 19:00"; font.pointSize: 12
+                            text: "2023.06.10 19:00"; font.pointSize: 12
                             font.family: localFont.name; font.weight: 400;color: "#232323"
                         }
                         Text{
@@ -1043,7 +1043,7 @@ Window {
                     font.family: localFont.name; font.weight: 400;color: "#232323"
                     Layout.column: 1; Layout.row: 2
                     id: task_data_end
-                    text: "2023.06.09 14:00"
+                    text: "2023.06.10 14:00"
                     font.pointSize: 14
                 }
                 ComboBox{

@@ -189,8 +189,8 @@ Window {
                             }
                             onPressed: {
                                 deleteServerButton.color = "#AAAAAA" // Цвет при нажатии кнопки\
+                                severListview.currentIndex = index;
                                 if (severListview.currentIndex > 1) {
-                                    severListview.currentIndex = index;
                                     messageDialog.title = "Удаление сервера"
                                     messageDialog.informativeText = "В случае удаления сервера, все задачи на нем также будут удалены."
                                     messageDialog.open()

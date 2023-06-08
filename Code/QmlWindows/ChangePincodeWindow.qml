@@ -234,6 +234,7 @@ ApplicationWindow {
                             settingsWindow.show()
                         }
                         else {
+                            oldpinTxt.color = "red";
                             shake_animation.start()
                             shake_timer.start()
                         }
