@@ -81,15 +81,6 @@ class SettingsWindow(QObject):
         self._model = ListModel(servers_list_items)
         self.updateListView.emit(self._model)
 
-    @pyqtSlot(str, str)
-    def save_pincode(self, oldpin, newpin):
-        servers_list = self.server_service.get_all()
-
-        for server in servers_list:
-            server.user_email = encrypt(decrypt(server.user_email, oldpin), newpin)
-            server.user_password = encrypt(decrypt(server.user_password, oldpin), newpin)
-            self.server_service.edit(server)
-
     @pyqtSlot(str, str, str, str, str)
     def save_server(self, user_email, user_password, server_name, calendar_name, server_uri):
         try:

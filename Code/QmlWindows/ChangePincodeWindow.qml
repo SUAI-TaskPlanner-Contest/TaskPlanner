@@ -45,6 +45,7 @@ ApplicationWindow {
         border.width: 2
         border.color: "lightgrey"
         //radius: 60
+
     }
         Rectangle {
             id: emptyRectangle3
@@ -170,6 +171,25 @@ ApplicationWindow {
 
     Rectangle {
 
+        NumberAnimation on x{ // создание анимации "трясущихся" полей ввода
+                id: shake_animation
+                running: false
+                from: 1
+                to: 5
+                loops: 5
+                duration: 200
+            }
+
+            Timer {
+                id: shake_timer
+                interval: 5000  // Интервал в 5 секунд (в миллисекундах)
+                repeat: false  // Остановиться после одного срабатывания
+
+                onTriggered: {
+                    shake_animation.stop()  // Остановить анимацию
+                }
+            }
+
         width:120; height:30
         anchors.bottom:parent.bottom
         anchors.left: parent.left
@@ -198,15 +218,28 @@ ApplicationWindow {
                 }
                 onPressed: {
                     savepinButton.color = "#AAAAAA" // Цвет при нажатии кнопки\addserverWindow.close()
-                    empty_imput_score = 0
-                    if(oldpin.text.length != 4){oldpinTxt.color = "red"; empty_imput_score++}
-                    if(newpin.text.length != 4){newpinTxt.color = "red"; empty_imput_score++}
-                    if(empty_imput_score==0){
-                        settings_handler.save_pincode(oldpin.text, newpin.text)
-                        pincodeWindow.close()
-                        settingsWindow.show()
-                    }
 
+                    if (oldpin.text.length != 4) {
+                        oldpinTxt.color = "red";
+                        shake_animation.start()
+                        shake_timer.start()
+                    }
+                    else if(newpin.text.length != 4) {
+                        newpinTxt.color = "red"
+                        shake_animation.start()
+                        shake_timer.start()
+                    }
+                    else {
+                        if (change_pincode_handler.verify_pin) {
+                            change_pincode_handler.set_new_pincode(oldpin.text, newpin.text)
+                            pincodeWindow.close()
+                            settingsWindow.show()
+                        }
+                        else {
+                            shake_animation.start()
+                            shake_timer.start()
+                        }
+                    }
                 }
                 onReleased: {
                     savepinButton.color = "#D3D3D3" // Исходный цвет кнопки
