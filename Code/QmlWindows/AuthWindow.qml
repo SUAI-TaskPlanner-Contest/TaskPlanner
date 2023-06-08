@@ -11,7 +11,8 @@ ApplicationWindow {
     color: "transparent"
     title: "Окно авторизации"
     modality: Qt.Modal
-    
+    flags: Qt.FramelessWindowHint
+
     minimumWidth: authWindow.width
     minimumHeight: authWindow.height
     maximumWidth: authWindow.width
