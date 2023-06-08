@@ -12,12 +12,13 @@ ApplicationWindow {
     FontLoader { id: localFont1; source: "fonts/Inter-ExtraLight.ttf" }
     width: 400// ширина окна
     height: 700// высота окна
-    // flags: Qt.FramelessWindowHint
-    // color: "transparent"
-    modality: (1)
+    flags: Qt.FramelessWindowHint
+    color: "transparent"
+    modality: Qt.NonModal
 
     property int previousX
     property int previousY
+    property int empty_imput_score
 
     MouseArea {
         anchors.fill: parent
@@ -44,7 +45,7 @@ ApplicationWindow {
         anchors.right: parent.right
         border.width: 2
         border.color: "lightgrey"
-        radius: 60
+        //radius: 60
         Rectangle{
             id: addserversTxt
             width: parent.width-40; height: 40
@@ -64,24 +65,32 @@ ApplicationWindow {
             }
         }
         Rectangle {
-            id: serverurlTxt
+            id: emptyRectangle
+            color: "transparent"
             anchors.top:addserversTxt.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+            width: 35; height: 40
+
+        }
+        Rectangle {
+            id: serverurlTxtRectangle
+            anchors.top:emptyRectangle.bottom
             width: parent.width-40; height: 30
+            anchors.left: emptyRectangle.right
+            color: "transparent"
             anchors.margins: 5
             Text {
+                id: serverurlTxt
                 text: "URL сервера"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
-                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 14; font.bold: true
                 font.weight: 150
             }
         }
         Rectangle {
             id: serverurlInputara
-            anchors.top:serverurlTxt.bottom
+            anchors.top:serverurlTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
             anchors.margins: 5
@@ -98,27 +107,31 @@ ApplicationWindow {
                 font.pointSize: 14
                 color: "#000000"
                 font.pixelSize: 16
+                onPressed: {
+                    serverurlTxt.color = "#232323"
+                }
             }
         }
         Rectangle {
-            id: server_nameTxt
+            id: server_nameTxtRectangle
             anchors.top:serverurlInputara.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
+            anchors.left: emptyRectangle.right
+            color: "transparent"
             anchors.margins: 5
             Text {
+                id: server_nameTxt
                 text: "Название сервера"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
-                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 14; font.bold: true
                 font.weight: 150
             }
         }
         Rectangle {
             id: server_nameInputara
-            anchors.top:server_nameTxt.bottom
+            anchors.top:server_nameTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
             anchors.margins: 5
@@ -135,27 +148,31 @@ ApplicationWindow {
                 font.pointSize: 14
                 color: "#000000"
                 font.pixelSize: 16
+                onPressed: {
+                    server_nameTxt.color = "#232323"
+                }
             }
         }
         Rectangle {
-            id: user_emailTxt
+            id: user_emailTxtRectangle
             anchors.top:server_nameInputara.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
+            anchors.left: emptyRectangle.right
+            color: "transparent"
             anchors.margins: 5
             Text {
+                id: user_emailTxt
                 text: "Почта"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
-                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 14; font.bold: true
                 font.weight: 150
             }
         }
         Rectangle {
             id: user_emailInputara
-            anchors.top:user_emailTxt.bottom
+            anchors.top:user_emailTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
             anchors.margins: 5
@@ -172,31 +189,52 @@ ApplicationWindow {
                 font.pointSize: 14
                 color: "#000000"
                 font.pixelSize: 16
+                onPressed: {
+                    user_emailTxt.color = "#232323"
+                }
             }
         }
 
         Rectangle {
-            id: user_passwordTxt
+            id: user_passwordTxtRectangle
             anchors.top:user_emailInputara.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
+            anchors.left: emptyRectangle.right
+            color: "transparent"
             anchors.margins: 5
             Text {
+                id: user_passwordTxt
                 text: "Пароль"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
-                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 14; font.bold: true
                 font.weight: 150
             }
         }
         Rectangle {
             id: user_passwordInputara
-            anchors.top:user_passwordTxt.bottom
+            anchors.top:user_passwordTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
             anchors.margins: 5
+            NumberAnimation on x{ // создание анимации "трясущихся" полей ввода
+                id: user_password_shake_animation
+                running: false
+                from: 1
+                to: 5
+                loops: 5
+                duration: 200
+            }
+            Timer {
+                id: user_password_shake_timer
+                interval: 5000  // Интервал в 5 секунд (в миллисекундах)
+                repeat: false  // Остановиться после одного срабатывания
+
+                onTriggered: {
+                    user_password_shake_animation.stop()  // Остановить анимацию
+                }
+            }
             TextField {
                 id: user_password
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -210,27 +248,31 @@ ApplicationWindow {
                 font.pointSize: 14
                 color: "#000000"
                 font.pixelSize: 16
+                onPressed: {
+                    user_passwordTxt.color = "#232323"
+                }
             }
         }
         Rectangle {
-            id: calendar_nameTxt
+            id: calendar_nameTxtRectangle
             anchors.top:user_passwordInputara.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.left: emptyRectangle.right
+            color: "transparent"
             width: parent.width-40; height: 30
             anchors.margins: 5
             Text {
+                id: calendar_nameTxt
                 text: "Название календаря"
                 anchors.verticalCenter: parent.verticalCenter
                 color: "#232323"
                 font.family: localFont1.name
-                anchors.horizontalCenter: parent.horizontalCenter
                 font.pointSize: 14; font.bold: true
                 font.weight: 150
             }
         }
         Rectangle {
             id: calendar_nameInputara
-            anchors.top:calendar_nameTxt.bottom
+            anchors.top:calendar_nameTxtRectangle.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width-40; height: 30
             anchors.margins: 5
@@ -247,6 +289,9 @@ ApplicationWindow {
                 font.pointSize: 14
                 color: "#000000"
                 font.pixelSize: 16
+                onPressed: {
+                    calendar_nameTxt.color = "#232323"
+                }
             }
         }
     }
@@ -258,16 +303,49 @@ ApplicationWindow {
         anchors.margins: 20
 
         Button{
-            id: addserverButton
             text:("Добавить")
             width: parent.width; height: parent.height
             font.family: localFont1.name
-
-            onClicked: { //действия при нажатии кнопки
-                addserverWindow.close()
-                settingsWindow.show()
-                settings_handler.save_server(user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
-
+            hoverEnabled: false
+            background: Rectangle {
+                id: addserverButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    addserverButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                }
+                onExited: {
+                    addserverButton.color = "#F0F0F0" // Исходный цвет кнопки
+                }
+                onPressed: {
+                    addserverButton.color = "#AAAAAA" // Цвет при нажатии кнопки\addserverWindow.close()
+                    empty_imput_score = 0
+                    if(serverurl.text.length === 0){
+                        serverurlTxt.color = "red"
+                        empty_imput_score++
+                    }
+                    if(server_name.text.length === 0){server_nameTxt.color = "red"; empty_imput_score++}
+                    if(user_email.text.length === 0){user_emailTxt.color = "red"; empty_imput_score++}
+                    if(user_password.text.length === 0){
+                        user_passwordTxt.color = "red";
+                        empty_imput_score++
+                    }
+                    if(calendar_name.text.length === 0){calendar_nameTxt.color = "red"; empty_imput_score++}
+                    if(empty_imput_score==0){
+                        settings_handler.save_server (user_email.text, user_password.text, server_name.text, calendar_name.text, serverurl.text)
+                        addserverWindow.close()
+                        settingsWindow.show()
+                    }
+                }
+                onReleased: {
+                    addserverButton.color = "#D3D3D3" // Исходный цвет кнопки
+                }
             }
         }
     }
@@ -278,16 +356,42 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 20
         Button {
-            id: clousButton
             anchors.fill: parent
             text: "Закрыть"
             font.family: localFont1.name
             width: (parent.width / 3)
             height: parent.height
+            hoverEnabled: false
+            background: Rectangle {
+                id: closeButton
+                color: "#F0F0F0"
+                border.color: "#848484"
+                border.width: 1
+                radius: 8
+            }
+            MouseArea{
+                anchors.fill: parent
+                hoverEnabled: true
+                onEntered: {
+                    closeButton.color = "#C2C2C2" // Цвет при наведении на кнопку
+                }
+                onExited: {
+                    closeButton.color = "#F0F0F0" // Исходный цвет кнопки
+                }
+                onPressed: {
+                    closeButton.color = "#AAAAAA" // Цвет при нажатии кнопки\addserverWindow.close()
+                    addserverWindow.close()
+                    settingsWindow.show()
+                    calendar_nameTxt.color = "#232323"
+                    user_passwordTxt.color = "#232323"
+                    user_emailTxt.color = "#232323"
+                    server_nameTxt.color = "#232323"
+                    serverurlTxt.color = "#232323"
 
-            onClicked: {
-                addserverWindow.close()
-                settingsWindow.show()
+                }
+                onReleased: {
+                    closeButton.color = "#D3D3D3" // Исходный цвет кнопки
+                }
             }
         }
     }
