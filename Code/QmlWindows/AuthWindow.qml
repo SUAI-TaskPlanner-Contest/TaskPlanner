@@ -54,7 +54,8 @@ ApplicationWindow {
         width: 250
         height: 41
         visible: true
-        placeholderText: qsTr("Nextcloud логин")
+        text:"user"
+        //placeholderText: "user"
         horizontalAlignment: Text.AlignLeft
         color: "#000000"
         verticalAlignment: Text.AlignVCenter
@@ -86,7 +87,8 @@ ApplicationWindow {
         width: 250
         height: 41
         visible: true
-        placeholderText: qsTr("Nextcloud пароль")
+        text: "user"
+        //placeholderText: "user2"
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
@@ -121,7 +123,8 @@ ApplicationWindow {
         height: 41
         visible: true
         color: "#000000"
-        placeholderText: qsTr("Название календаря")
+        text: 'test'
+        //placeholderText: "test"
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
         clip: false
@@ -152,7 +155,8 @@ ApplicationWindow {
         height: 41
         visible: true
         color: "#000000"
-        placeholderText: qsTr("Ссылка на сервер")
+        text: "http://localhost:8080/remote.php/dav"
+        //placeholderText: "http://localhost:8080/remote.php/dav"
         verticalAlignment: Text.AlignVCenter
         leftPadding: 20
         clip: false
@@ -230,7 +234,7 @@ ApplicationWindow {
         width: 162
         height: 20
         color: "#000000"
-
+        visible: false
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignTop
         styleColor: "#000000"
